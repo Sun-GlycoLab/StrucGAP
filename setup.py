@@ -39,6 +39,7 @@ setup(
         'upsetplot',
         'venn',
         'werkzeug',
+        'sphinx-autodoc-typehints',
 
     ],
     classifiers=[
