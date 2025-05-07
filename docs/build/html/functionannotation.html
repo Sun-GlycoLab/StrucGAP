@@ -163,7 +163,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora">
-<span class="sig-name descname"><span class="pre">ora</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.ora"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ora</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['GO:MF',</span> <span class="pre">'GO:CC',</span> <span class="pre">'GO:BP']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.ora"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora" title="Permalink to this definition"></a></dt>
 <dd><p>Performs over-representation analysis using the g:Profiler API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -172,6 +172,7 @@
 <li><p><strong>up_down_fc_threshold</strong> – FC threshold used to differentiate up and down regulated features.</p></li>
 <li><p><strong>background_input</strong> – use both proteins as background or not.</p></li>
 <li><p><strong>pvalue_type</strong> – ‘pvalue_ttest’, ‘pvalue_mannwhitneyu’ or ‘pvalue_ttest_mannwhitneyu’.</p></li>
+<li><p><strong>selected_terms</strong> – enrichment database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -219,11 +220,15 @@ self.ora_background_both_proteins_result</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure">
-<span class="sig-name descname"><span class="pre">go_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.go_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">go_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.go_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure" title="Permalink to this definition"></a></dt>
 <dd><p>Performs integrated analysis between enriched GO terms and glycan substructural features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p></li>
+<li><p><strong>p_value</strong> – [‘P-value’, ‘Adjusted P-value’] used to screen enrichment terms.</p></li>
+<li><p><strong>cutoff</strong> – p_value threshold.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>self.bp_core_structure
@@ -308,11 +313,15 @@ self.cc_acgc_count</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure">
-<span class="sig-name descname"><span class="pre">kegg_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.kegg_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kegg_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.kegg_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure" title="Permalink to this definition"></a></dt>
 <dd><p>Performs integrated analysis between enriched KEGG terms and glycan substructural features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p></li>
+<li><p><strong>p_value</strong> – [‘P-value’, ‘Adjusted P-value’] used to screen enrichment terms.</p></li>
+<li><p><strong>cutoff</strong> – p_value threshold.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>self.kegg_core_structure

@@ -2422,7 +2422,7 @@
                 <span class="n">yaxis_opts</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">AxisOpts</span><span class="p">(</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">data_filtered</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">],</span>
                     <span class="n">name_location</span> <span class="o">=</span> <span class="s1">&#39;middle&#39;</span><span class="p">,</span>
-                    <span class="n">name_gap</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+                    <span class="n">name_gap</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
                     <span class="n">name_rotate</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
                     <span class="n">name_textstyle_opts</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">TextStyleOpts</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="n">yaxis_label_color</span><span class="p">,</span> 
                                                     <span class="n">font_family</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span><span class="p">,</span>
@@ -2493,6 +2493,7 @@
         <span class="n">pix</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">png_file</span><span class="p">)</span>
         
         <span class="n">png_file</span> <span class="o">=</span> <span class="n">png_file</span>
+        <span class="n">Image</span><span class="o">.</span><span class="n">MAX_IMAGE_PIXELS</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">png_file</span><span class="p">)</span>
         <span class="n">trimmed_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trim_white_border</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="n">trimmed_image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">png_file</span><span class="p">)</span>
@@ -4690,9 +4691,18 @@
         <span class="n">all_lists</span> <span class="o">=</span> <span class="n">generate_all_lists</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">)</span>
         
         <span class="n">c</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">init_opts</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">InitOpts</span><span class="p">(</span>
-                <span class="n">renderer</span><span class="o">=</span><span class="n">RenderType</span><span class="o">.</span><span class="n">SVG</span><span class="p">,</span><span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;#fff&#39;</span>
+                <span class="n">renderer</span><span class="o">=</span><span class="n">RenderType</span><span class="o">.</span><span class="n">SVG</span><span class="p">,</span><span class="n">bg_color</span><span class="o">=</span><span class="s1">&#39;#fff&#39;</span><span class="p">,</span>
             <span class="p">))</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">add_xaxis</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x_columns</span><span class="p">))</span> 
+
+        <span class="k">if</span> <span class="n">xaxis_label_text_split</span><span class="p">:</span>
+            <span class="n">xaxis_labels</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">xaxis_label_text_split</span><span class="p">]</span> 
+                           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">xaxis_label_text_split</span><span class="p">)])</span>
+                <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_columns</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xaxis_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_columns</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">add_xaxis</span><span class="p">(</span><span class="n">xaxis_labels</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">legend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">legend</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -4762,11 +4772,6 @@
                       <span class="p">)</span>
 
         <span class="n">c</span><span class="o">.</span><span class="n">set_colors</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">xaxis_label_text_split</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">wrapped_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">xaxis_label_text_split</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="n">xaxis_label_text_split</span><span class="p">)])</span> 
-                      <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">x_columns</span><span class="p">)]</span>
-            <span class="n">c</span><span class="o">.</span><span class="n">add_xaxis</span><span class="p">(</span><span class="n">wrapped_labels</span><span class="p">)</span>
         
         <span class="n">c</span><span class="o">.</span><span class="n">set_global_opts</span><span class="p">(</span>
             <span class="n">xaxis_opts</span><span class="o">=</span><span class="n">opts</span><span class="o">.</span><span class="n">AxisOpts</span><span class="p">(</span>
@@ -5727,11 +5732,11 @@
         <span class="c1"># 设置 x 轴标签，确保每个 item 只在中间显示</span>
         <span class="n">group_labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item_name</span><span class="p">]</span>
         <span class="n">mid_positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item_name</span><span class="p">))]</span>  
-        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">mid_positions</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">xaxis_label_color</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">mid_positions</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">xaxis_label_color</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">xaxis_label_color</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">xaxis_label_font_weight</span><span class="p">)</span>
         
         <span class="c1"># 设置 y 轴标签</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">yaxis_label_font_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">yaxis_label_color</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">yaxis_label_font_weight</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">yaxis_label_font_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">yaxis_label_color</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">yaxis_label_font_weight</span><span class="p">)</span>
 
         <span class="c1"># 只添加分组之间的垂直分割线</span>
         <span class="k">if</span> <span class="n">add_group_lines</span><span class="p">:</span>
