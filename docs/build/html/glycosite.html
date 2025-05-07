@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StrucGAP_GlycoSite Module &mdash; StrucGAP 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="StrucGAP_GlycoPeptideQuant Module" href="glycopeptidequant.html" />
+    <link rel="prev" title="StrucGAP_GlycanStructure Module" href="glycanstructure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GENERAL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preprocess.html">StrucGAP_Preprocess Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glycanstructure.html">StrucGAP_GlycanStructure Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">StrucGAP_GlycoSite Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-strucgap.glycosite">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite.map_protein_to_gene"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite.map_protein_to_gene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite.glycoprotein_site"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite.glycoprotein_site()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite.glycopeptide_site"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite.glycopeptide_site()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite.specific_site"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite.specific_site()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycosite.StrucGAP_GlycoSite.output"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoSite.output()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glycopeptidequant.html">StrucGAP_GlycoPeptideQuant Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionannotation.html">StrucGAP_FunctionAnnotation Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glyconetwork.html">StrucGAP_GlycoNetwork Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datavisulization.html">StrucGAP_DataVisulization Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="insighttracker.html">StrucGAP_InsightTracker Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">StrucGAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">StrucGAP_GlycoSite Module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="strucgap-glycosite-module">
+<h1>StrucGAP_GlycoSite Module<a class="headerlink" href="#strucgap-glycosite-module" title="Permalink to this heading"></a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>This module mapped site-level heterogeneities.</p>
+</div>
+<div class="section" id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+<p>Instantiate and use the module as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.glycosite</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycoSite</span>
+
+<span class="n">module3</span> <span class="o">=</span> <span class="n">StrucGAP_GlycoSite</span><span class="p">(</span><span class="n">module1</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
+<span class="n">module3</span><span class="o">.</span><span class="n">glycoprotein_site</span><span class="p">()</span>
+<span class="n">module3</span><span class="o">.</span><span class="n">glycopeptide_site</span><span class="p">()</span>
+<span class="n">module3</span><span class="o">.</span><span class="n">specific_site</span><span class="p">()</span>
+<span class="n">module3</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-strucgap.glycosite">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glycosite" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glycosite.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycoSite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'psm_filtered'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.map_protein_to_gene">
+<span class="sig-name descname"><span class="pre">map_protein_to_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.map_protein_to_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.map_protein_to_gene" title="Permalink to this definition"></a></dt>
+<dd><p>An auxiliary function called by other functions to map protein to gene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – the data that needs to be processed.</p></li>
+<li><p><strong>protein_column</strong> – The column in the data containing protein accession.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Column named ‘gene_name’.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.glycoprotein_site">
+<span class="sig-name descname"><span class="pre">glycoprotein_site</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.glycoprotein_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.glycoprotein_site" title="Permalink to this definition"></a></dt>
+<dd><p>Summarizes glycosylation at the protein level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.glycoprotein_glycosite_count
+self.glycoprotein_glycan_count
+self.glycoprotein_glycan_type
+self.glycoprotein_glycosite</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.glycopeptide_site">
+<span class="sig-name descname"><span class="pre">glycopeptide_site</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.glycopeptide_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.glycopeptide_site" title="Permalink to this definition"></a></dt>
+<dd><p>Summarizes glycosylation at the glycopeptide level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.glycopeptide_glycosite_count
+self.glycopeptide_glycan_count
+self.glycopeptide_glycan_type
+self.glycopeptide_glycosite</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.specific_site">
+<span class="sig-name descname"><span class="pre">specific_site</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.specific_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.specific_site" title="Permalink to this definition"></a></dt>
+<dd><p>Conducts in-depth analysis of individual glycosylation sites.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.protein_glycosite_glycan_count
+self.protein_glycosite_glycan_type
+self.protein_glycosite_glycan_composition_count
+self.protein_glycosite_isoforms_count
+self.peptide_glycosite_glycan_count
+self.peptide_glycosite_glycan_type
+self.peptide_glycosite_glycan_composition_count
+self.peptide_glycosite_isoforms_count</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.output" title="Permalink to this definition"></a></dt>
+<dd><p>Outputs both analysis results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="glycanstructure.html" class="btn btn-neutral float-left" title="StrucGAP_GlycanStructure Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="glycopeptidequant.html" class="btn btn-neutral float-right" title="StrucGAP_GlycoPeptideQuant Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Sun-GlycoLab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

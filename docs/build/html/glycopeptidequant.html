@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StrucGAP_GlycoPeptideQuant Module &mdash; StrucGAP 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="StrucGAP_FunctionAnnotation Module" href="functionannotation.html" />
+    <link rel="prev" title="StrucGAP_GlycoSite Module" href="glycosite.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GENERAL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preprocess.html">StrucGAP_Preprocess Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glycanstructure.html">StrucGAP_GlycanStructure Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glycosite.html">StrucGAP_GlycoSite Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">StrucGAP_GlycoPeptideQuant Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-strucgap.glycopeptidequant">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.statistics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics_index"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.statistics_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_core_structure"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.identify_core_structure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.differential_analysis"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.differential_analysis()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_glycan_composition"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.identify_glycan_composition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.threshold_variation_analysis"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.threshold_variation_analysis()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.output"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoPeptideQuant.output()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functionannotation.html">StrucGAP_FunctionAnnotation Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glyconetwork.html">StrucGAP_GlycoNetwork Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datavisulization.html">StrucGAP_DataVisulization Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="insighttracker.html">StrucGAP_InsightTracker Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">StrucGAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">StrucGAP_GlycoPeptideQuant Module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="strucgap-glycopeptidequant-module">
+<h1>StrucGAP_GlycoPeptideQuant Module<a class="headerlink" href="#strucgap-glycopeptidequant-module" title="Permalink to this heading"></a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>This module is a comprehensive module for differential analysis in glycoproteomics, utilizing various statistical methods and machine learning techniques to identify and quantify dynamic changes in N-glycan substructures and glycosite-specific alterations.</p>
+</div>
+<div class="section" id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+<p>Instantiate and use the module as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.glycopeptidequant</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycoPeptideQuant</span>
+
+<span class="n">module4</span> <span class="o">=</span> <span class="n">StrucGAP_GlycoPeptideQuant</span><span class="p">(</span><span class="n">module1</span><span class="p">,</span> <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;psm_filtered&#39;</span><span class="p">,</span>   <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">statistics</span><span class="p">()</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">statistics_index</span><span class="p">()</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">differential_analysis</span><span class="p">(</span><span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">)</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">threshold_variation_analysis</span><span class="p">(</span><span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">)</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">glycopeptide_glycosite_glycan_variation</span><span class="p">()</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">glycoprotein_glycosite_glycan_variation</span><span class="p">()</span>
+<span class="n">module4</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
+<span class="c1"># key information extraction</span>
+<span class="n">data_manager</span><span class="o">.</span><span class="n">key_information_extraction</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-strucgap.glycopeptidequant">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glycopeptidequant" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glycopeptidequant.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycoPeptideQuant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'psm_filtered'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics">
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics" title="Permalink to this definition"></a></dt>
+<dd><p>Provides a comprehensive overview of glycoproteomic identification results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.number_of_identified_spectrum
+self.number_of_identified_peptide
+self.type_of_identified_peptide
+self.number_of_identified_glycopeptide
+self.type_of_identified_glycopeptide
+self.number_of_identified_glycoprotein
+self.type_of_identified_glycoprotein</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle">
+<span class="sig-name descname"><span class="pre">geometric_mean_of_middle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle" title="Permalink to this definition"></a></dt>
+<dd><p>An auxiliary function called by other functions to calculates the geometric mean of the middle ‘n’ elements in a given dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em> or </em><em>iterable</em>) – the dataset from which the middle ‘n’ elements will be selected.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – the number of elements from the center of the data to use for the calculation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The geometric mean of the selected middle ‘n’ elements.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics_index">
+<span class="sig-name descname"><span class="pre">statistics_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.statistics_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics_index" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Computes multiple indices for differential analysis,including:</dt><dd><p>FC with significance tests (P values from t-tests and Mann-Whitney U tests),
+area under the ROC curve (AUC) with P values,
+feature importance scores from pca, random forest and XGBoost,
+Other indices include ANOVA F-scores and chi-squared scores with corresponding P values.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.fc_result.
+self.roc_result.
+self.ml_result (random forest and XGBoost).
+self.pca_result.
+self.anova_result.
+self.chi2_result.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_core_structure">
+<span class="sig-name descname"><span class="pre">identify_core_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.identify_core_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_core_structure" title="Permalink to this definition"></a></dt>
+<dd><p>An auxiliary function called by other functions to identify core structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.differential_analysis">
+<span class="sig-name descname"><span class="pre">differential_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.differential_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.differential_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Identifies significantly regulated glycopeptides under user-defined thresholds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – statistic indices used for differential analysis (‘fc’, ‘roc’, ‘ml’, ‘pca’, ‘anova’, ‘chi2’).</p></li>
+<li><p><strong>pvalue</strong> – P value used for differential analysis.</p></li>
+<li><p><strong>fc</strong> – FC used for differential analysis.</p></li>
+<li><p><strong>pvalue_type</strong> – ‘pvalue_ttest’, ‘pvalue_mannwhitneyu’ or ‘pvalue_ttest_mannwhitneyu’ used for FC-based differential analysis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.differential_analysis_data.
+self.up_data (upregulated IGPs).
+self.down_data (downregulated IGPs).
+self.differential_analysis_overview.
+self.differential_analysis_structure_coding (the number of different glycan structures in upregulated and downregulated glycopeptides).
+self.differential_analysis_structure_coding_no_oligomannose. (the number of different glycan structures in upregulated and downregulated glycopeptides except oligo mannose).
+self.differential_analysis_core_structure (the number of different core structures in upregulated and downregulated glycopeptides).
+self.differential_analysis_glycan_type (the number of different glycan types in upregulated and downregulated glycopeptides).
+self.differential_analysis_branches_structure (the number of different branch structures in upregulated and downregulated glycopeptides).
+self.differential_analysis_branches_count (the number of different branch counts in upregulated and downregulated glycopeptides).
+self.differential_analysis_sialicacid_count (the number of different sialic acid counts in upregulated and downregulated glycopeptides).
+self.differential_analysis_fucose_count (the number of different fucose counts in upregulated and downregulated glycopeptides).
+self.differential_analysis_sialicacid_structure (the number of different sialic acid structures in upregulated and downregulated glycopeptides).
+self.differential_analysis_fucose_structure (the number of different fucose structures in upregulated and downregulated glycopeptides).
+self.differential_analysis_lacdinac (the number of different LacdiNAc in upregulated and downregulated glycopeptides).
+self.differential_analysis_fucosylated_type (the number of different fucosylated types in upregulated and downregulated glycopeptides).
+self.differential_analysis_acgc (the number of different sialylated types in upregulated and downregulated glycopeptides).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_glycan_composition">
+<span class="sig-name descname"><span class="pre">identify_glycan_composition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.identify_glycan_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_glycan_composition" title="Permalink to this definition"></a></dt>
+<dd><p>An auxiliary function called by other functions to identify glycan composition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.threshold_variation_analysis">
+<span class="sig-name descname"><span class="pre">threshold_variation_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistic_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.threshold_variation_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.threshold_variation_analysis" title="Permalink to this definition"></a></dt>
+<dd><p>Explores how glycan substructural regulation varies across a range of index thresholds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statistic_index</strong> – the statistic index (‘fc’, ‘roc’, ‘ml’, ‘pca’, ‘anova’, ‘chi2’) would like to use for threshold variation analysis.</p></li>
+<li><p><strong>pvalue_type</strong> – ‘pvalue_ttest’, ‘pvalue_mannwhitneyu’ or ‘pvalue_ttest_mannwhitneyu’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.result_branches_structure
+self.result_branches_structure_up
+self.result_branches_structure_down
+self.result_branches_structure_split
+self.result_branches_structure_ratio
+self.result_core_structure
+self.result_core_structure_up
+self.result_core_structure_down
+self.result_core_structure_split
+self.result_core_structure_ratio
+self.result_glycan_type
+self.result_glycan_type_up
+self.result_glycan_type_down
+self.result_glycan_type_split
+self.result_glycan_type_ratio
+self.result_branches_count
+self.result_branches_count_up
+self.result_branches_count_down
+self.result_branches_count_split
+self.result_branches_count_ratio
+self.result_glycan_composition
+self.result_glycan_composition_up
+self.result_glycan_composition_down
+self.result_glycan_composition_split
+self.result_glycan_composition_ratio
+self.result_lacdinac
+self.result_lacdinac_up
+self.result_lacdinac_down
+self.result_lacdinac_split
+self.result_lacdinac_ratio
+self.result_fucosylated_type
+self.result_fucosylated_type_up
+self.result_fucosylated_type_down
+self.result_fucosylated_type_split
+self.result_fucosylated_type_ratio
+self.result_acgc
+self.result_acgc_up
+self.result_acgc_down
+self.result_acgc_split
+self.result_acgc_ratio</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation">
+<span class="sig-name descname"><span class="pre">glycopeptide_glycosite_glycan_variation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation" title="Permalink to this definition"></a></dt>
+<dd><p>Quantifies the number and distribution of upregulated and downregulated glycan structures associated with each glycosylation site at glycopeptide level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fc</strong> – FC threshold used for analysis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.result_glycopeptide_glycosite_glycan_variation</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation">
+<span class="sig-name descname"><span class="pre">glycoprotein_glycosite_glycan_variation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation" title="Permalink to this definition"></a></dt>
+<dd><p>Quantifies the number and distribution of upregulated and downregulated glycan structures associated with each glycosylation site at glycoprotein level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fc</strong> – FC threshold used for analysis.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.result_glycoprotein_glycosite_glycan_variation</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycopeptidequant.html#StrucGAP_GlycoPeptideQuant.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.output" title="Permalink to this definition"></a></dt>
+<dd><p>Outputs both analysis results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="glycosite.html" class="btn btn-neutral float-left" title="StrucGAP_GlycoSite Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="functionannotation.html" class="btn btn-neutral float-right" title="StrucGAP_FunctionAnnotation Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Sun-GlycoLab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

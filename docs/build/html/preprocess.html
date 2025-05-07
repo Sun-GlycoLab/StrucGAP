@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StrucGAP_Preprocess Module &mdash; StrucGAP 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="StrucGAP_GlycanStructure Module" href="glycanstructure.html" />
+    <link rel="prev" title="Get Started" href="get_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GENERAL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">StrucGAP_Preprocess Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-strucgap.preprocess">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.median_cheng"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.median_cheng()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.data_cleaning"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.data_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.fdr"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.fdr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.outliers"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.outliers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.cv"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.cv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.psm"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.psm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.preprocess.StrucGAP_Preprocess.output"><code class="docutils literal notranslate"><span class="pre">StrucGAP_Preprocess.output()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glycanstructure.html">StrucGAP_GlycanStructure Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glycosite.html">StrucGAP_GlycoSite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glycopeptidequant.html">StrucGAP_GlycoPeptideQuant Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionannotation.html">StrucGAP_FunctionAnnotation Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glyconetwork.html">StrucGAP_GlycoNetwork Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datavisulization.html">StrucGAP_DataVisulization Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="insighttracker.html">StrucGAP_InsightTracker Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">StrucGAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">StrucGAP_Preprocess Module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="strucgap-preprocess-module">
+<h1>StrucGAP_Preprocess Module<a class="headerlink" href="#strucgap-preprocess-module" title="Permalink to this heading"></a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>This module processes outputs from StrucGP alongside sample metadata and a glycan branch library through sequential correction and filtering steps, harmonizing heterogeneous data into a unified format.</p>
+</div>
+<div class="section" id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+<p>Instantiate and use the module as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.preprocess</span> <span class="kn">import</span> <span class="n">StrucGAP_Preprocess</span>
+
+<span class="n">module1</span> <span class="o">=</span> <span class="n">StrucGAP_Preprocess</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">data</span><span class="se">\\</span><span class="s2">mouse uterus.xlsx&quot;</span><span class="p">,</span>
+                  <span class="n">data_sheet_name</span> <span class="o">=</span> <span class="s1">&#39;1 PSM&#39;</span><span class="p">,</span>
+                  <span class="n">sample_group_data_dir</span> <span class="o">=</span> <span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">doctor</span><span class="se">\\</span><span class="s1">analysisys</span><span class="se">\\</span><span class="s1">data</span><span class="se">\\</span><span class="s1">sample_group.xlsx&#39;</span><span class="p">,</span>
+                  <span class="n">branch_list_dir</span> <span class="o">=</span> <span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">wyq</span><span class="se">\\</span><span class="s2">branch_structures_18_mice uterus.0240401.xlsx&quot;</span><span class="p">,</span>
+                  <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">data_cleaning</span><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;tmt&#39;</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">fdr</span><span class="p">(</span><span class="n">feature_type</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">outliers</span><span class="p">(</span><span class="n">abundance_ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">1.172277596</span><span class="p">,</span><span class="mf">1.142983373</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.46390136</span><span class="p">,</span><span class="mf">1.466662624</span><span class="p">,</span>
+<span class="mf">1.449428354</span><span class="p">,</span><span class="mf">1.109519196</span><span class="p">,</span><span class="mf">1.387464059</span><span class="p">,</span><span class="mf">1.291746761</span><span class="p">,</span><span class="mf">1.487440464</span><span class="p">])</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">threshold</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">psm</span><span class="p">()</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-strucgap.preprocess">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.preprocess" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.preprocess.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_Preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_group_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_list_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.median_cheng">
+<span class="sig-name descname"><span class="pre">median_cheng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.median_cheng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.median_cheng" title="Permalink to this definition"></a></dt>
+<dd><p>An auxiliary function called by other functions to calculates the median.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.data_cleaning">
+<span class="sig-name descname"><span class="pre">data_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.data_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.data_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Data cleaning and glycan substructure features extraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_type</strong> – output data of StrucGP with TMT or label-free type. Select data_type in [‘tmt’, ‘label free’].</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.data (cleaned data).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.fdr">
+<span class="sig-name descname"><span class="pre">fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.fdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.fdr" title="Permalink to this definition"></a></dt>
+<dd><p>Supports four filtering levels—no control, peptide-level, glycan-level, and both—providing customizable stringency for data confidence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feature_type</strong> – fdr control level from [‘peptide’,’glycan’,’both’ or ‘no’].</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.data_peptide_fdr_data (peptide-level fdr filtered data).
+self.data_glycan_fdr_data (glycan-level fdr filtered data).
+self.data_fdr_data (both-level fdr filtered data).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.outliers">
+<span class="sig-name descname"><span class="pre">outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abundance_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.outliers" title="Permalink to this definition"></a></dt>
+<dd><p>Corrects and normalizes TMT quantification data from matched reporter ions for each IGP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>abundance_ratio</strong> – normalized factors from global proteomics data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.data_outliers_filtered (corrected and normalized TMT quantification data).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.cv">
+<span class="sig-name descname"><span class="pre">cv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.cv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.cv" title="Permalink to this definition"></a></dt>
+<dd><p>Enables optional coefficient-of-variation filtering based on user-defined sample groupings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>threshold</strong> – cv filter threshold (e.g. 0.3).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.data_cv_filtered (cv filtered data).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.psm">
+<span class="sig-name descname"><span class="pre">psm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.psm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.psm" title="Permalink to this definition"></a></dt>
+<dd><p>Filters IGPs by the minimum number of supporting PSMs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None.</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.data_psm_filtered (psm filtered data).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Return type:</dt><dd><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.output" title="Permalink to this definition"></a></dt>
+<dd><p>Outputs both analysis results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Get Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="glycanstructure.html" class="btn btn-neutral float-right" title="StrucGAP_GlycanStructure Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Sun-GlycoLab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

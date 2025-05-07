@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>strucgap.insighttracker &mdash; StrucGAP 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GENERAL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocess.html">StrucGAP_Preprocess Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycanstructure.html">StrucGAP_GlycanStructure Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycosite.html">StrucGAP_GlycoSite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycopeptidequant.html">StrucGAP_GlycoPeptideQuant Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functionannotation.html">StrucGAP_FunctionAnnotation Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glyconetwork.html">StrucGAP_GlycoNetwork Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../datavisulization.html">StrucGAP_DataVisulization Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../insighttracker.html">StrucGAP_InsightTracker Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">StrucGAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">strucgap.insighttracker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for strucgap.insighttracker</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">## 数据分析管理模块</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_InsightTracker</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+        
+<div class="viewcode-block" id="StrucGAP_InsightTracker.register_module"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.register_module">[docs]</a>    <span class="k">def</span> <span class="nf">register_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module_instance</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a module instance, records the initial parameters, and output locations.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            module_name (str): The name of the module being registered.</span>
+<span class="sd">            module_instance (object): The instance of the module to be registered.</span>
+<span class="sd">            params (dict): The initial parameters used to configure the module.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;instance&#39;</span><span class="p">:</span> <span class="n">module_instance</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.log_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_params">[docs]</a>    <span class="k">def</span> <span class="nf">log_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs the parameters for each function call.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            module_name (str): The name of the module.</span>
+<span class="sd">            function_name (str): The name of the function being logged.</span>
+<span class="sd">            params (dict): The parameters passed to the function.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span></div>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.log_output"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_output">[docs]</a>    <span class="k">def</span> <span class="nf">log_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">output_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Logs the output data of a module.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            module_name (str): The name of the module.</span>
+<span class="sd">            output_name (str): The name of the output being logged.</span>
+<span class="sd">            output_data (object): The output data produced by the module.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_data</span></div>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.retrieve_data"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data">[docs]</a>    <span class="k">def</span> <span class="nf">retrieve_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves output data from a specified module for use in other modules.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            module_name (str): The name of the module.</span>
+<span class="sd">            output_name (str): The name of the output to retrieve.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            object or None: The output data if found, otherwise None.</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.show_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.show_params">[docs]</a>    <span class="k">def</span> <span class="nf">show_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the analysis parameters for a specified module.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            module_name (str): The name of the module whose parameters are to be displayed.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict or None: The analysis parameters for the specified module, or None if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.get_all_data"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all registered modules&#39; parameters and output data.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            None.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary containing all registered module parameters and output data.</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_InsightTracker.output_analysis_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params">[docs]</a>    <span class="k">def</span> <span class="nf">output_analysis_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./analysis_result&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;GAP_analysis_params.xlsx&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Outputs the analysis parameters to an Excel file.</span>
+<span class="sd">    </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            output_dir (str): The directory where the output file will be saved (default is &#39;./analysis_result&#39;).</span>
+<span class="sd">            output_file (str): The name of the output Excel file (default is &#39;GAP_analysis_params.xlsx&#39;).</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># 创建输出目录</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+
+        <span class="c1"># 使用ExcelWriter管理多个Sheet</span>
+        <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;xlsxwriter&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module_params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">module_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  
+                        <span class="k">for</span> <span class="n">sub_key</span><span class="p">,</span> <span class="n">sub_value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">function_name</span><span class="p">,</span> <span class="n">sub_key</span><span class="p">,</span> <span class="n">sub_value</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># 如果不是字典，直接存储</span>
+                        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">function_name</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">])</span>
+                <span class="c1"># 创建一个DataFrame用于存储结果</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">])</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+                
+<div class="viewcode-block" id="StrucGAP_InsightTracker.key_information_extraction"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">key_information_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mines outputs from both StrucGAP_GlycoPeptideQuant and StrucGAP_FunctionAnnotation to identify structurally and functionally relevant glycan substructural features.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            module:  StrucGAP_GlycoPeptideQuant or StrucGAP_FunctionAnnotation.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None (output key information directly as a table).</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please select module in [&#39;StrucGAP_GlycoPeptideQuant&#39; or &#39;StrucGAP_FunctionAnnotation&#39;]!&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="n">module</span> <span class="o">==</span> <span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span> <span class="ow">and</span> <span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span> <span class="ow">in</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">module_records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">StrucGAP_GlycoPeptideQuant_key_set</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant module has been executed, key information extracting ...&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;core_structure&#39;</span><span class="p">,</span><span class="s1">&#39;branches_structure&#39;</span><span class="p">,</span><span class="s1">&#39;glycan_type&#39;</span><span class="p">,</span><span class="s1">&#39;branches_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;glycan_composition&#39;</span><span class="p">,</span><span class="s1">&#39;lacdinac&#39;</span><span class="p">,</span><span class="s1">&#39;fucosylated_type&#39;</span><span class="p">,</span><span class="s1">&#39;acgc&#39;</span><span class="p">]:</span> <span class="c1"># i=&#39;glycan_type&#39;</span>
+                <span class="n">ratio_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_ratio&quot;</span>
+                <span class="n">up_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_up&quot;</span>
+                <span class="n">up_ratio_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_up_ratio&quot;</span>
+                <span class="n">down_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_down&quot;</span>
+                <span class="n">down_ratio_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_down_ratio&quot;</span>
+                <span class="c1">#</span>
+                <span class="n">data_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">ratio_sheetname</span><span class="p">)</span>
+                <span class="n">data_ratio</span> <span class="o">=</span> <span class="n">data_ratio</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">data_up</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">up_sheetname</span><span class="p">)</span>
+                <span class="n">data_up</span> <span class="o">=</span> <span class="n">data_up</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">data_up_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">up_ratio_sheetname</span><span class="p">)</span>
+                <span class="n">data_up_ratio</span> <span class="o">=</span> <span class="n">data_up_ratio</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">data_down</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">down_sheetname</span><span class="p">)</span>
+                <span class="n">data_down</span> <span class="o">=</span> <span class="n">data_down</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">data_down_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">down_ratio_sheetname</span><span class="p">)</span>
+                <span class="n">data_down_ratio</span> <span class="o">=</span> <span class="n">data_down_ratio</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                
+                <span class="k">def</span> <span class="nf">is_monotonic</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  
+                    <span class="n">increasing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">decreasing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="n">increasing</span> <span class="ow">or</span> <span class="n">decreasing</span>
+                
+                <span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                
+                <span class="k">def</span> <span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">new_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">column_names</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_names</span>  
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> 
+                        <span class="n">new_df</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+                        <span class="c1"># 堆叠数据</span>
+                        <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="c1"># 插入空行</span>
+                        <span class="n">empty_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">col</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">final_df</span><span class="p">,</span> <span class="n">empty_row</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">final_df</span>
+                
+                <span class="c1"># ratio</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_ratio</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+                <span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="n">df_filtered</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">is_monotonic</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                    
+                <span class="c1"># up</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_up_ratio</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+                <span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="n">df_filtered</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">is_monotonic</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">data_up</span><span class="p">[</span><span class="n">data_up</span><span class="p">[</span><span class="n">data_up</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">data_up</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
+                    <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">result1</span><span class="p">[</span><span class="n">result1</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">]</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">])</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">result1</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">result1</span><span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                        
+                <span class="c1"># down</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_down_ratio</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+                <span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="n">df_filtered</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">is_monotonic</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">data_down</span><span class="p">[</span><span class="n">data_down</span><span class="p">[</span><span class="n">data_down</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">data_down</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
+                    <span class="n">result1</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">result1</span><span class="p">[</span><span class="n">result1</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">]</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">result1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;min_value&#39;</span><span class="p">])</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">result1</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">result1</span><span class="p">[</span><span class="n">result1</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]])]</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                        
+                <span class="n">StrucGAP_GlycoPeptideQuant_key_set</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+                <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;./analysis_result&#39;</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_GlycoPeptideQuant_key_information.xlsx&#39;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;xlsxwriter&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">StrucGAP_GlycoPeptideQuant_key_set</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        
+        <span class="k">if</span> <span class="n">module</span> <span class="o">==</span> <span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span> <span class="ow">and</span> <span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span> <span class="ow">in</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">module_records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">StrucGAP_FunctionAnnotation_key_set</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">function_data_type</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">][</span><span class="s1">&#39;go_function_structure&#39;</span><span class="p">][</span><span class="s1">&#39;function_data&#39;</span><span class="p">]</span>
+            <span class="n">database</span> <span class="o">=</span> <span class="n">data_manager</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">][</span><span class="s1">&#39;ora&#39;</span><span class="p">][</span><span class="s1">&#39;terms&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;GO&#39;</span> <span class="ow">in</span> <span class="n">database</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">database</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">database</span> <span class="o">=</span> <span class="s1">&#39;GO&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
+            <span class="k">if</span> <span class="s1">&#39;KEGG&#39;</span> <span class="ow">in</span> <span class="n">database</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">database</span> <span class="o">=</span> <span class="s1">&#39;KEGG&#39;</span>
+            
+            <span class="k">if</span> <span class="n">database</span> <span class="o">==</span> <span class="s1">&#39;GO&#39;</span><span class="p">:</span>
+                <span class="n">term_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bp_core_structure&#39;</span><span class="p">,</span><span class="s1">&#39;mf_core_structure&#39;</span><span class="p">,</span><span class="s1">&#39;cc_core_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_glycan_type&#39;</span><span class="p">,</span><span class="s1">&#39;mf_glycan_type&#39;</span><span class="p">,</span><span class="s1">&#39;cc_glycan_type&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_branches_structure&#39;</span><span class="p">,</span><span class="s1">&#39;mf_branches_structure&#39;</span><span class="p">,</span><span class="s1">&#39;cc_branches_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_branches_count&#39;</span><span class="p">,</span><span class="s1">&#39;mf_branches_count&#39;</span><span class="p">,</span><span class="s1">&#39;cc_branches_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_sialicacid_count&#39;</span><span class="p">,</span><span class="s1">&#39;mf_sialicacid_count&#39;</span><span class="p">,</span><span class="s1">&#39;cc_sialicacid_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_fucose_count&#39;</span><span class="p">,</span><span class="s1">&#39;mf_fucose_count&#39;</span><span class="p">,</span><span class="s1">&#39;cc_fucose_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_sialicacid_structure&#39;</span><span class="p">,</span><span class="s1">&#39;mf_sialicacid_structure&#39;</span><span class="p">,</span><span class="s1">&#39;cc_sialicacid_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_fucose_structure&#39;</span><span class="p">,</span><span class="s1">&#39;mf_fucose_structure&#39;</span><span class="p">,</span><span class="s1">&#39;cc_fucose_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_lacdinac&#39;</span><span class="p">,</span><span class="s1">&#39;mf_lacdinac&#39;</span><span class="p">,</span><span class="s1">&#39;cc_lacdinac&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_structurecoding&#39;</span><span class="p">,</span><span class="s1">&#39;mf_structurecoding&#39;</span><span class="p">,</span><span class="s1">&#39;cc_structurecoding&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_fucosylated_type&#39;</span><span class="p">,</span><span class="s1">&#39;mf_fucosylated_type&#39;</span><span class="p">,</span><span class="s1">&#39;cc_fucosylated_type&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;bp_acgc&#39;</span><span class="p">,</span><span class="s1">&#39;mf_acgc&#39;</span><span class="p">,</span><span class="s1">&#39;cc_acgc&#39;</span><span class="p">,</span>
+                      <span class="p">]</span>
+            <span class="k">elif</span> <span class="n">database</span> <span class="o">==</span> <span class="s1">&#39;KEGG&#39;</span><span class="p">:</span>
+                <span class="n">term_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;kegg_core_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_glycan_type&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_branches_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_branches_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_sialicacid_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_fucose_count&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_sialicacid_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_fucose_structure&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_lacdinac&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_structurecoding&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_fucosylated_type&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;kegg_acgc&#39;</span><span class="p">,</span>
+                      <span class="p">]</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">term_list</span><span class="p">:</span> <span class="c1"># i=&#39;mf_branches_count&#39;</span>
+                
+                <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">count_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_count&quot;</span>
+                <span class="n">ratio_sheetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                
+                <span class="n">data_count</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module5</span><span class="p">,</span> <span class="n">count_sheetname</span><span class="p">)</span>
+                <span class="n">data_count</span> <span class="o">=</span> <span class="n">data_count</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">data_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module5</span><span class="p">,</span> <span class="n">ratio_sheetname</span><span class="p">)</span>
+                <span class="n">data_ratio</span> <span class="o">=</span> <span class="n">data_ratio</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                
+                <span class="k">def</span> <span class="nf">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+                    <span class="n">num_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+                        <span class="n">target_percentage</span><span class="o">=</span><span class="mf">0.5</span>
+                    <span class="n">target_columns</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_columns</span> <span class="o">*</span> <span class="n">target_percentage</span><span class="p">)</span>
+                    <span class="n">first_column</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+                    
+                    <span class="n">best_threshold</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">best_column_count</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+                    
+                    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+                        <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">target_columns</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">best_column_count</span> <span class="o">-</span> <span class="n">target_columns</span><span class="p">):</span>
+                            <span class="n">best_threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+                            <span class="n">best_column_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span>
+                    
+                    <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">first_column</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">best_threshold</span><span class="p">]</span>
+                    
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using threshold </span><span class="si">{</span><span class="n">best_threshold</span><span class="si">}</span><span class="s2">, selected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns out of </span><span class="si">{</span><span class="n">num_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
+                
+                <span class="k">def</span> <span class="nf">filter_columns_by_min_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+                    <span class="n">first_column</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">first_column</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">min_value</span><span class="p">]</span>
+                    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
+                
+                <span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                
+                <span class="k">def</span> <span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">new_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">column_names</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_names</span>  
+                        <span class="n">new_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> 
+                        <span class="n">new_df</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+                        <span class="c1"># 堆叠数据</span>
+                        <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="c1"># 插入空行</span>
+                        <span class="n">empty_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">col</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">final_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">final_df</span><span class="p">,</span> <span class="n">empty_row</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">final_df</span>
+                
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_ratio</span><span class="p">)</span>
+                <span class="n">columns_to_keep</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns_to_keep</span><span class="p">)]</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">data_count</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+                    <span class="n">result1</span> <span class="o">=</span> <span class="n">filter_columns_by_min_value</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">result1</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">result1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+                        <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                    <span class="n">StrucGAP_FunctionAnnotation_key_set</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+                <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;./analysis_result&#39;</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;StrucGAP_FunctionAnnotation_</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">function_data_type</span><span class="si">}</span><span class="s1">_key_information.xlsx&#39;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;xlsxwriter&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">StrucGAP_FunctionAnnotation_key_set</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_InsightTracker.output_pickle"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">output_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serializes and saves all picklable variables (excluding Flask-related objects) to a file.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 定义一个函数来检查对象是否可以被序列化</span>
+        <span class="k">def</span> <span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">PicklingError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># 过滤出可序列化且非Flask相关的变量</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;all_variables.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">variables_to_save</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># 先过滤掉 Flask 相关的上下文代理对象和模块类型</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">werkzeug</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalProxy</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="c1"># 只保存可以序列化的对象</span>
+                <span class="k">if</span> <span class="n">is_picklable</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                    <span class="n">variables_to_save</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">variables_to_save</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+            
+<div class="viewcode-block" id="StrucGAP_InsightTracker.read_pickle"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">read_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads and restores previously serialized variables from a pickle file.</span>
+<span class="sd">    </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 确保在加载前定义所需的自定义函数和类</span>
+        <span class="k">def</span> <span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">PicklingError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># 从保存的文件中加载变量</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;all_variables.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">loaded_variables</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="c1"># 将变量重新加载到当前全局命名空间中</span>
+        <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loaded_variables</span><span class="p">)</span></div></div>
+    
+    
+ 
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Sun-GlycoLab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

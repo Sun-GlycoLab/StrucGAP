@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>strucgap.preprocess &mdash; StrucGAP 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GENERAL</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started.html">Get Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../preprocess.html">StrucGAP_Preprocess Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycanstructure.html">StrucGAP_GlycanStructure Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycosite.html">StrucGAP_GlycoSite Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glycopeptidequant.html">StrucGAP_GlycoPeptideQuant Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../functionannotation.html">StrucGAP_FunctionAnnotation Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glyconetwork.html">StrucGAP_GlycoNetwork Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../datavisulization.html">StrucGAP_DataVisulization Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../insighttracker.html">StrucGAP_InsightTracker Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">StrucGAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">strucgap.preprocess</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for strucgap.preprocess</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">## 数据质控模块--7</span>
+<div class="viewcode-block" id="StrucGAP_Preprocess"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_Preprocess</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_group_data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_sheet_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">branch_list_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_dir</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please enter your data file path (such as: &#39;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">data</span><span class="se">\\</span><span class="s2">mouse uterus.xlsx&#39;): &quot;</span><span class="p">)</span>
+            
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">data_sheet_name</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">sample_group_data_dir</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sample_group_data_dir</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please enter your sample group data file path (such as: &#39;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">data</span><span class="se">\\</span><span class="s2">sample_group.xlsx&#39;): &quot;</span><span class="p">)</span>
+        <span class="n">sample_group</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">sample_group_data_dir</span><span class="p">)</span>
+        <span class="n">sample_group</span> <span class="o">=</span> <span class="n">sample_group</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;sample&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span> <span class="o">=</span> <span class="n">sample_group</span>
+        
+        <span class="c1"># data[&#39;PeptideSequence+structure_coding+ProteinID&#39;] = data[&#39;PeptideSequence&#39;] + &#39;+&#39; + data[&#39;structure_coding&#39;] + &#39;+&#39; + data[&#39;ProteinID&#39;]</span>
+        
+        <span class="c1"># if branch_list_dir == None:</span>
+        <span class="c1">#     branch_list_dir = input(f&quot;Please enter your branch list data file path (such as: &#39;D:\doctor\wyq\branch_structures_18_mice uterus.0240401.xlsx&#39;): &quot;)</span>
+        
+        <span class="k">if</span> <span class="n">branch_list_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">branch_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">branch_list_dir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">branch_list</span> <span class="o">=</span> <span class="n">branch_list</span><span class="p">[</span><span class="s1">&#39;Structure coding&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branch_list_dir</span> <span class="o">=</span> <span class="n">branch_list_dir</span>
+        <span class="c1"># data = data[~data[&#39;PeptideSequence+structure_coding+ProteinID&#39;].duplicated()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span> <span class="o">=</span> <span class="n">data_manager</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">register_module</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;input_data&#39;</span><span class="p">:</span> <span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;sample_group&#39;</span><span class="p">:</span> <span class="n">sample_group_data_dir</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;input_data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;input_data&#39;</span><span class="p">:</span> <span class="n">data_dir</span><span class="p">,</span> <span class="s1">&#39;sample_group&#39;</span><span class="p">:</span> <span class="n">sample_group_data_dir</span><span class="p">})</span>
+        
+<div class="viewcode-block" id="StrucGAP_Preprocess.median_cheng"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.median_cheng">[docs]</a>    <span class="k">def</span> <span class="nf">median_cheng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An auxiliary function called by other functions to calculates the median.&quot;&quot;&quot;</span>
+        <span class="n">filtered_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+        <span class="n">filtered_data</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">half</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filtered_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> 
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">filtered_data</span><span class="p">[</span><span class="n">half</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">filtered_data</span><span class="p">[</span><span class="n">half</span><span class="p">])</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">filtered_data</span><span class="p">[</span><span class="n">half</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_Preprocess.data_cleaning"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.data_cleaning">[docs]</a>    <span class="k">def</span> <span class="nf">data_cleaning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Data cleaning and glycan substructure features extraction.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            data_type: output data of StrucGP with TMT or label-free type. Select data_type in [&#39;tmt&#39;, &#39;label free&#39;].</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self.data (cleaned data). </span>
+<span class="sd">            </span>
+<span class="sd">        Return type:</span>
+<span class="sd">            dataframe</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;tmt&#39;</span><span class="p">,</span> <span class="s1">&#39;label free&#39;</span><span class="p">]:</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please select data_type in [&#39;tmt&#39;, &#39;label free&#39;]&quot;</span><span class="p">)</span>
+            <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;tmt&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+Ammonium\(\+17\)&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Glycosite_Position&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Glycosite_Position&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+Ammonium\(\+17\)&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideSequence&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ProteinID&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+Ammonium\(\+17\)&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># branches</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">branch_list_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">branches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
+                <span class="n">branch</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">branch_list</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                            <span class="n">branch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">branches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">branch</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">branches</span>
+        
+        <span class="k">def</span> <span class="nf">parse_branches</span><span class="p">(</span><span class="n">branch_str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">branch_str</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">SyntaxError</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">parse_branches</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">expand_branches</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="n">structure</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span>
+            <span class="n">branches</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span>
+            <span class="n">expanded_branches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">branch</span> <span class="ow">in</span> <span class="n">branches</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>  
+                <span class="n">expanded_branches</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">branch</span><span class="p">]</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span>  
+            <span class="k">return</span> <span class="n">expanded_branches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">expand_branches</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">format_list_as_string</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">format_list_as_string</span><span class="p">)</span>
+        
+        <span class="c1"># glycan type</span>
+        <span class="n">glycantype</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]),</span> 
+                              <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]),</span> 
+                              <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Bisection&#39;</span><span class="p">]),</span> 
+                              <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;BranchNumber&#39;</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s1">&#39;N2&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Oligo mannose&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s1">&#39;N3&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Oligo mannose&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s1">&#39;N4&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="c1"># if &#39;D1d&#39; in j:</span>
+                    <span class="c1">#     glycantype.append(&#39;Complex&#39;)</span>
+                    <span class="c1"># else:</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="s1">&#39;D1d&#39;</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex&#39;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="s1">&#39;E1&#39;</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s1">&#39;N5&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;E1&#39;</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+                            <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="s1">&#39;E1&#39;</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">n</span> <span class="ow">in</span> <span class="n">i</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N6&#39;</span><span class="p">,</span> <span class="s1">&#39;N7&#39;</span><span class="p">,</span> <span class="s1">&#39;N8&#39;</span><span class="p">,</span> <span class="s1">&#39;N9&#39;</span><span class="p">,</span> <span class="s1">&#39;N10&#39;</span><span class="p">,</span> <span class="s1">&#39;N11&#39;</span><span class="p">,</span> <span class="s1">&#39;N12&#39;</span><span class="p">,</span> <span class="s1">&#39;N13&#39;</span><span class="p">,</span> <span class="s1">&#39;N14&#39;</span><span class="p">,</span> <span class="s1">&#39;N15&#39;</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="s1">&#39;E1&#39;</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+                        <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Hybrid&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">glycantype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Glycan_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">glycantype</span>
+        
+        
+        <span class="c1"># branch number</span>
+        <span class="c1"># self.data[&#39;BranchNumber&#39;] = self.data[&#39;structure_coding&#39;].apply(lambda x: x.count(&#39;E&#39;))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;BranchNumber&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># core structure</span>
+        <span class="n">temp_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">core_structure_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">temp_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N2H2&#39;</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N2H2F1&#39;</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="s1">&#39;A2B2C1D2d&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A2B2C1D1&#39;</span> <span class="ow">and</span> <span class="s1">&#39;D1&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;D2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;B5&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]:</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;A2B2C1D1dD1&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A2B2C1D1&#39;</span> <span class="ow">and</span> <span class="s1">&#39;D1&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;D2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;B5&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]:</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;A2B2C1D1dD1dcbB5&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A2B2C1D1&#39;</span> <span class="ow">and</span> <span class="s1">&#39;D1&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;D2&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;B5&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]:</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;A2B2C1D1dD2dD1&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A2B2C1D1&#39;</span> <span class="ow">and</span> <span class="s1">&#39;D1&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;D2&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]</span> <span class="ow">and</span> <span class="s1">&#39;B5&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">][</span><span class="mi">9</span><span class="p">:]:</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;A2B2C1D1dD2dD1dcbB5&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">core_structure_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;core_structure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">core_structure_list</span>
+        
+        <span class="c1"># lacdinac</span>
+        <span class="k">def</span> <span class="nf">extract_key_strings</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>  
+                <span class="k">return</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(E2F2.*?fe)&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s1">&#39; &#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lacdinac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_key_strings</span><span class="p">)</span>
+        
+        <span class="c1"># Ac Gc</span>
+        <span class="n">acgc</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">contains_3</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span> <span class="ow">in</span> <span class="n">value</span>
+                <span class="n">contains_4</span> <span class="o">=</span> <span class="s2">&quot;4&quot;</span> <span class="ow">in</span> <span class="n">value</span>
+                <span class="k">if</span> <span class="n">contains_3</span> <span class="ow">and</span> <span class="n">contains_4</span><span class="p">:</span>
+                    <span class="n">acgc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;dual&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">contains_3</span><span class="p">:</span>
+                    <span class="n">acgc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Ac&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">contains_4</span><span class="p">:</span>
+                    <span class="n">acgc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Gc&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">acgc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">acgc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Ac/Gc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">acgc</span>
+        
+        <span class="c1"># core antenna fucosylated</span>
+        <span class="k">def</span> <span class="nf">fucosylated_type</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s1">&#39; &#39;</span>
+            <span class="k">if</span> <span class="s1">&#39;5&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>  
+                <span class="k">if</span> <span class="s1">&#39;B5&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>  
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">row</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;E5&#39;</span><span class="p">,</span> <span class="s1">&#39;F5&#39;</span><span class="p">,</span> <span class="s1">&#39;G5&#39;</span><span class="p">,</span> <span class="s1">&#39;H5&#39;</span><span class="p">]):</span>  
+                        <span class="k">return</span> <span class="s1">&#39;dual&#39;</span> 
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="s1">&#39;core fucosylated&#39;</span>  
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s1">&#39;antenna fucosylated&#39;</span>  
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39; &#39;</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fucosylated type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fucosylated_type</span><span class="p">)</span>
+        
+        <span class="c1"># F S G</span>
+        <span class="n">fsg</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="s1">&#39;F&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;F + S&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;F + G&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;S + G&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;F + S + G&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;F&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;S&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="ow">and</span> <span class="s1">&#39;G&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">fsg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Others&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;FSG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fsg</span>
+        
+        <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;label free&#39;</span><span class="p">:</span>
+            <span class="n">quantnum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+            <span class="n">quantnum</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;quantnum&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">quantnum</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_cleaning&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_cleaned&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+<div class="viewcode-block" id="StrucGAP_Preprocess.fdr"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.fdr">[docs]</a>    <span class="k">def</span> <span class="nf">fdr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supports four filtering levels—no control, peptide-level, glycan-level, and both—providing customizable stringency for data confidence.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            feature_type: fdr control level from [&#39;peptide&#39;,&#39;glycan&#39;,&#39;both&#39; or &#39;no&#39;].</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self.data_peptide_fdr_data (peptide-level fdr filtered data). </span>
+<span class="sd">            self.data_glycan_fdr_data (glycan-level fdr filtered data). </span>
+<span class="sd">            self.data_fdr_data (both-level fdr filtered data). </span>
+<span class="sd">            </span>
+<span class="sd">        Return type:</span>
+<span class="sd">            dataframe</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">feature_type</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feature_type</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter fdr level from [&#39;peptide&#39;,&#39;glycan&#39;,&#39;both&#39; or &#39;no&#39;]: &quot;</span><span class="p">)</span>
+            <span class="n">expected_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;peptide&#39;</span><span class="p">,</span><span class="s1">&#39;glycan&#39;</span><span class="p">,</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">]</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">get_close_matches</span><span class="p">(</span><span class="n">feature_type</span><span class="p">,</span> <span class="n">expected_options</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">feature_type</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using &#39;</span><span class="si">{</span><span class="n">feature_type</span><span class="si">}</span><span class="s2">&#39; as the input.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No close match found. Using &#39;no&#39; as the input.&quot;</span><span class="p">)</span>
+                <span class="n">feature_type</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span>
+            
+        <span class="k">if</span> <span class="n">feature_type</span> <span class="o">==</span> <span class="s1">&#39;peptide&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">24.22</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;NORMAL&#39;</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;peptide&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span>
+        <span class="k">if</span> <span class="n">feature_type</span> <span class="o">==</span> <span class="s1">&#39;glycan&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">53.80</span><span class="p">))</span><span class="o">|</span>
+                 <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">128.88</span><span class="p">))</span><span class="o">|</span>
+                 <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">175.28</span><span class="p">))]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;glycan&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span>
+        <span class="k">if</span> <span class="n">feature_type</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Status&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">24.22</span><span class="p">))]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span>
+                                      <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">53.80</span><span class="p">))</span><span class="o">|</span>
+                                       <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">128.88</span><span class="p">))</span><span class="o">|</span>
+                                       <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">175.28</span><span class="p">)))]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span>
+                <span class="c1"># self.data_fdr_filtered = self.data[((self.data[&#39;PeptideScore&#39;]&gt;24.22))&amp;</span>
+                <span class="c1">#                       (((self.data[&#39;PMZShift&#39;]==0)&amp;(self.data[&#39;GlycanScore&#39;]&gt;53.80))|</span>
+                <span class="c1">#                        ((self.data[&#39;PMZShift&#39;]==1)&amp;(self.data[&#39;GlycanScore&#39;]&gt;128.88))|</span>
+                <span class="c1">#                        ((self.data[&#39;PMZShift&#39;]==2)&amp;(self.data[&#39;GlycanScore&#39;]&gt;175.28)))]</span>
+            <span class="k">else</span><span class="p">:</span>  
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[((</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;PeptideScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">24.22</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;NORMAL&#39;</span><span class="p">))]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span>
+                                      <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">53.80</span><span class="p">))</span><span class="o">|</span>
+                                       <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">128.88</span><span class="p">))</span><span class="o">|</span>
+                                       <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;PMZShift&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">[</span><span class="s1">&#39;GlycanScore&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">175.28</span><span class="p">)))]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span>
+                <span class="c1"># self.data_fdr_filtered = self.data[((self.data[&#39;PeptideScore&#39;]&gt;24.22)&amp;(self.data[&#39;Status&#39;]==&#39;NORMAL&#39;))&amp;</span>
+                <span class="c1">#                       (((self.data[&#39;PMZShift&#39;]==0)&amp;(self.data[&#39;GlycanScore&#39;]&gt;53.80))|</span>
+                <span class="c1">#                        ((self.data[&#39;PMZShift&#39;]==1)&amp;(self.data[&#39;GlycanScore&#39;]&gt;128.88))|</span>
+                <span class="c1">#                        ((self.data[&#39;PMZShift&#39;]==2)&amp;(self.data[&#39;GlycanScore&#39;]&gt;175.28)))]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">feature_type</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;fdr&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;feature_type&#39;</span><span class="p">:</span> <span class="n">feature_type</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_peptide_fdr_data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_glycan_fdr_data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_fdr_filtered&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_Preprocess.outliers"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.outliers">[docs]</a>    <span class="k">def</span> <span class="nf">outliers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abundance_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Corrects and normalizes TMT quantification data from matched reporter ions for each IGP.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            abundance_ratio: normalized factors from global proteomics data.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self.data_outliers_filtered (corrected and normalized TMT quantification data). </span>
+<span class="sd">            </span>
+<span class="sd">        Return type:</span>
+<span class="sd">            dataframe</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Pep0</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="p">[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">])</span>
+        <span class="n">Pep1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="p">[</span><span class="s1">&#39;Matched_Reporter_Ions&#39;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">abundance_ratio</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">abundance_ratio</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter the abundance ratio as a comma-separated list (e.g., 1, 1.019488, 1.740756, 1.554661, 2.674981,1.071297, 1.145732, 1.082529, 1.733719, 1.850238), when you done, please click &#39;Enter&#39; in your keyboard:  &quot;</span><span class="p">)</span>
+            <span class="n">abundance_ratio</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">abundance_ratio</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Your data has been successfully entered, please waiting ... &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abundance_ratio</span> <span class="o">=</span> <span class="n">abundance_ratio</span>
+        <span class="c1">#    </span>
+        <span class="n">glycopep</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Pep0</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+            <span class="n">glycopep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Pep1</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span> 
+            <span class="n">tmp0</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;),&#39;</span><span class="p">)</span>  
+            <span class="n">tmp1</span> <span class="o">=</span> <span class="p">[</span><span class="n">glycopep</span><span class="p">[</span><span class="n">z</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">tmp0</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">tmp1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">tmp1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="n">z</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">tmp2</span> <span class="o">=</span> <span class="p">[</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">rat</span> <span class="o">=</span> <span class="n">abundance_ratio</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">abundance</span> <span class="o">=</span> <span class="n">tmp1</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">abundance</span><span class="o">*</span><span class="n">rat</span><span class="p">)</span>
+                    <span class="n">tmp2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">continue</span>
+            <span class="n">ions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp2</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">index</span><span class="p">),</span><span class="s1">&#39;psm&#39;</span><span class="p">]]</span>
+        <span class="n">result1</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">index</span><span class="p">),</span><span class="s1">&#39;psm&#39;</span><span class="p">]]</span>
+        <span class="n">unique</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">glycopep</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">unique</span><span class="p">:</span> 
+            <span class="n">tmp2</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">index</span><span class="p">))]</span>  <span class="c1"># len(tmp2) module1.data_c</span>
+            <span class="n">tmp3</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">j</span><span class="p">)):</span>
+                        <span class="n">tmp2</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> 
+                    <span class="n">data_c</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp2</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">int</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp2</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>  
+                    <span class="n">data_s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp2</span><span class="p">[</span><span class="nb">int</span><span class="p">((</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp2</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp2</span><span class="p">))])</span>
+                    <span class="n">data_c</span><span class="p">[</span><span class="s1">&#39;Zero_Count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">data_s</span><span class="p">[</span><span class="s1">&#39;Zero_Count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">data_c</span> <span class="o">=</span> <span class="n">data_c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                    <span class="n">data_s</span> <span class="o">=</span> <span class="n">data_s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data_c</span> <span class="o">=</span> <span class="n">data_c</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                        
+                        <span class="c1">######### outliers identification and imputation</span>
+                        
+                        <span class="n">list1</span> <span class="o">=</span> <span class="n">data_c</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+                        <span class="n">median1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">median_cheng</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">list1</span><span class="p">))</span>
+                        <span class="n">data_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span><span class="o">/</span><span class="n">median1</span>
+                        <span class="n">data_s</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_s</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span><span class="o">/</span><span class="n">median1</span>
+                    <span class="n">data_c</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Zero_Count&#39;</span><span class="p">],</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+                    <span class="n">data_s</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Zero_Count&#39;</span><span class="p">],</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+                    
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span> 
+                <span class="n">tmp3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">median_cheng</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">l</span><span class="p">])))</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span> 
+                <span class="n">tmp3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">median_cheng</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_s</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">l</span><span class="p">])))</span>
+            <span class="c1">#</span>
+            <span class="n">tmp3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_s</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">result1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp3</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="n">data_outliers_filtered_cleaned</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">dropped_columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">data_outliers_filtered_cleaned</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">dropped_columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dropped_columns</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">dropped_columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="n">data_outliers_filtered_cleaned</span>
+        
+        <span class="c1"># self.data_outliers_filtered = pd.concat([self.data_fdr_filtered, self.data_outliers_filtered],axis=1,join=&#39;inner&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID_x&#39;</span><span class="p">:</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span>
+                                                                                  <span class="s1">&#39;PeptideSequence+structure_coding+ProteinID_y&#39;</span><span class="p">:</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">})</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="p">[</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;outliers&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;abundance_ratio&#39;</span><span class="p">:</span> <span class="n">abundance_ratio</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_outliers_filtered&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_Preprocess.cv"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.cv">[docs]</a>    <span class="k">def</span> <span class="nf">cv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables optional coefficient-of-variation filtering based on user-defined sample groupings.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            threshold: cv filter threshold (e.g. 0.3).</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self.data_cv_filtered (cv filtered data). </span>
+<span class="sd">            </span>
+<span class="sd">        Return type:</span>
+<span class="sd">            dataframe</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="p">)</span>      
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="s1">&#39;cv_control&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="s1">&#39;cv_sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter a threshold for CV filtering (e.g., 0.3), or &#39;no&#39; to skip: &quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">threshold</span> <span class="o">!=</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span>  
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="s1">&#39;cv_control&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">)</span> <span class="o">&amp;</span> 
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="s1">&#39;cv_sample&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid input. Skipping CV filtering.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping CV filtering.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;cv&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_cv_filtered&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_Preprocess.psm"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.psm">[docs]</a>    <span class="k">def</span> <span class="nf">psm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters IGPs by the minimum number of supporting PSMs.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            None.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self.data_psm_filtered (psm filtered data). </span>
+<span class="sd">            </span>
+<span class="sd">        Return type:</span>
+<span class="sd">            dataframe</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">psm_number</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter a PSM number for filtering (e.g., 3), or &#39;no&#39; to skip: &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">psm_number</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">psm_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">psm_number</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="p">[</span><span class="s1">&#39;psm&#39;</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">psm_number</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid input. Skipping PSM filtering.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping PSM filtering.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span>
+        
+        <span class="c1"># imoputation</span>
+        <span class="n">sample_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">control_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span>
+        <span class="n">experiment_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span>
+        
+        <span class="n">knn_imputer</span> <span class="o">=</span> <span class="n">KNNImputer</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)</span>
+        
+        <span class="n">control_filled</span> <span class="o">=</span> <span class="n">knn_imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">control_data</span><span class="p">)</span>
+        <span class="n">experiment_filled</span> <span class="o">=</span> <span class="n">knn_imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">experiment_data</span><span class="p">)</span>
+        
+        <span class="n">control_filled_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">control_filled</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">control_data</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">control_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">experiment_filled_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">experiment_filled</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">experiment_data</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">control_data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">no_missing_value_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">control_filled_df</span><span class="p">,</span> <span class="n">experiment_filled_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)]</span> <span class="o">=</span> <span class="n">no_missing_value_data</span>
+   
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;psm&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;psm_number&#39;</span><span class="p">:</span> <span class="n">psm_number</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">,</span> <span class="s1">&#39;data_psm_filtered&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="StrucGAP_Preprocess.output"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Outputs both analysis results.&quot;&quot;&quot;</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;./analysis_result&#39;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_Preprocess.xlsx&#39;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;xlsxwriter&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;cleaned_data&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_peptide_fdr_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_peptide_fdr_data&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_glycan_fdr_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_glycan_fdr_data&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_fdr_filtered</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_fdr_filtered&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_outliers_filtered</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_outliers_filtered&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_cv_filtered</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_cv_filtered&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;data_psm_filtered&#39;</span><span class="p">)</span></div></div>
+            
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Sun-GlycoLab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
