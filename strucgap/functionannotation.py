@@ -181,7 +181,8 @@ class StrucGAP_FunctionAnnotation:
     
         return final_protein_fc, upregulated_proteins, downregulated_proteins
         
-    def ora(self, organism=None, up_down_fc_threshold=None, background_input=False, pvalue_type='pvalue_ttest'):
+    def ora(self, organism=None, up_down_fc_threshold=None, background_input=False, pvalue_type='pvalue_ttest_mannwhitneyu',
+            selected_terms=['GO:MF', 'GO:CC', 'GO:BP']):
         """
         Performs over-representation analysis using the g:Profiler API.
         
@@ -190,6 +191,7 @@ class StrucGAP_FunctionAnnotation:
             up_down_fc_threshold: FC threshold used to differentiate up and down regulated features.
             background_input: use both proteins as background or not.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
+            selected_terms: enrichment database.
         
         Returns:
             self.final_protein_fc
@@ -494,13 +496,15 @@ class StrucGAP_FunctionAnnotation:
     
         return core_structure
     
-    def go_function_structure(self, function_data = None): 
+    def go_function_structure(self, function_data = None, p_value='P-value', cutoff=0.05): 
         """
         Performs integrated analysis between enriched GO terms and glycan substructural features.
         
         Parameters:
             function_data: enrichment result in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_up_result', 'gsea_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result'].
-        
+            p_value: ['P-value', 'Adjusted P-value'] used to screen enrichment terms.
+            cutoff: p_value threshold.
+                
         Returns:
             self.bp_core_structure
             self.mf_core_structure
@@ -677,17 +681,18 @@ class StrucGAP_FunctionAnnotation:
                 function_data = getattr(self, function_data, None)
                 # function_data['GO_name'] = function_data['Term'].str.split(' \(', n=1, expand=True)[0].str.upper()
                 function_data = function_data.set_index('GO_name',drop=False)
-                p_value = input('Please enter the type of p_value (select from: P-value, Adjusted P-value) you would like to use to select the differential pathway: ')
-                expected_options = ['P-value', 'Adjusted P-value']
-                matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
-                if matches:
-                    p_value = matches[0]
-                    print(f"Using '{p_value}' as the input.")
-                else:
-                    print("No close match found. Using 'P-value' as the input.")
-                    p_value = 'P-value'
-                    
-                cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
+                if p_value is None:
+                    p_value = input('Please enter the type of p_value (select from: P-value, Adjusted P-value) you would like to use to select the differential pathway: ')
+                    expected_options = ['P-value', 'Adjusted P-value']
+                    matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
+                    if matches:
+                        p_value = matches[0]
+                        print(f"Using '{p_value}' as the input.")
+                    else:
+                        print("No close match found. Using 'P-value' as the input.")
+                        p_value = 'P-value'
+                if cutoff is None:
+                    cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
                 function_data = function_data[function_data[p_value]<float(cutoff)]
             elif function_data == 'gsea_result':
                 function_data = getattr(self, function_data, None)
@@ -695,17 +700,18 @@ class StrucGAP_FunctionAnnotation:
                 function_data['GO_name'] = [x[1] for x in function_data['Term'].str.split('__')]
                 function_data['GO_name'] = [x[0].upper() for x in function_data['GO_name'].str.split(' \(')]
                 function_data = function_data.set_index('GO_name',drop=False)
-                p_value = input('Please enter the type of p_value (select from: NOM p-val, FDR q-val) you would like to use to select the differential pathway: ')
-                expected_options = ['NOM p-val', 'FDR q-val']
-                matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
-                if matches:
-                    p_value = matches[0]
-                    print(f"Using '{p_value}' as the input.")
-                else:
-                    print("No close match found. Using 'P-value' as the input.")
-                    p_value = 'P-value'
-                
-                cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
+                if p_value is None:
+                    p_value = input('Please enter the type of p_value (select from: NOM p-val, FDR q-val) you would like to use to select the differential pathway: ')
+                    expected_options = ['NOM p-val', 'FDR q-val']
+                    matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
+                    if matches:
+                        p_value = matches[0]
+                        print(f"Using '{p_value}' as the input.")
+                    else:
+                        print("No close match found. Using 'P-value' as the input.")
+                        p_value = 'P-value'
+                if cutoff is None:
+                    cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
                 function_data = function_data[function_data[p_value]<float(cutoff)]
                 function_data = function_data.rename(columns={'Lead_genes': 'Genes'})
             # GO_data = GO_data[GO_data['relationship']=='part_of']
@@ -1136,12 +1142,14 @@ class StrucGAP_FunctionAnnotation:
 
         return self
     
-    def kegg_function_structure(self, function_data = None):
+    def kegg_function_structure(self, function_data = None, p_value='P-value', cutoff=0.05):
         """
         Performs integrated analysis between enriched KEGG terms and glycan substructural features.
         
         Parameters:
             function_data: enrichment result in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_up_result', 'gsea_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result'].
+            p_value: ['P-value', 'Adjusted P-value'] used to screen enrichment terms.
+            cutoff: p_value threshold.
         
         Returns:
             self.kegg_core_structure
@@ -1198,33 +1206,35 @@ class StrucGAP_FunctionAnnotation:
                 function_data = getattr(self, function_data, None)
                 function_data['Term'] = function_data['Term'].str.upper()
                 function_data = function_data.set_index('Term',drop=False)
-                p_value = input('Please enter the type of p_value (select from: P-value, Adjusted P-value) you would like to use to select the differential pathway: ')
-                expected_options = ['P-value', 'Adjusted P-value']
-                matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
-                if matches:
-                    p_value = matches[0]
-                    print(f"Using '{p_value}' as the input.")
-                else:
-                    print("No close match found. Using 'P-value' as the input.")
-                    p_value = 'P-value'
-                    
-                cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
+                if p_value is None:
+                    p_value = input('Please enter the type of p_value (select from: P-value, Adjusted P-value) you would like to use to select the differential pathway: ')
+                    expected_options = ['P-value', 'Adjusted P-value']
+                    matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
+                    if matches:
+                        p_value = matches[0]
+                        print(f"Using '{p_value}' as the input.")
+                    else:
+                        print("No close match found. Using 'P-value' as the input.")
+                        p_value = 'P-value'
+                if cutoff is None:
+                    cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
                 function_data = function_data[function_data[p_value]<float(cutoff)]
             elif function_data == 'gsea_result':
                 function_data = getattr(self, function_data, None)
                 function_data['Term'] = [x[1].upper() for x in function_data['Term'].str.split('__')]
                 function_data = function_data.set_index('Term',drop=False)
-                p_value = input('Please enter the type of p_value (select from: NOM p-val, FDR q-val) you would like to use to select the differential pathway: ')
-                expected_options = ['NOM p-val', 'FDR q-val']
-                matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
-                if matches:
-                    p_value = matches[0]
-                    print(f"Using '{p_value}' as the input.")
-                else:
-                    print("No close match found. Using 'P-value' as the input.")
-                    p_value = 'P-value'
-                    
-                cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
+                if p_value is None:
+                    p_value = input('Please enter the type of p_value (select from: NOM p-val, FDR q-val) you would like to use to select the differential pathway: ')
+                    expected_options = ['NOM p-val', 'FDR q-val']
+                    matches = get_close_matches(p_value, expected_options, n=1, cutoff=0.5)
+                    if matches:
+                        p_value = matches[0]
+                        print(f"Using '{p_value}' as the input.")
+                    else:
+                        print("No close match found. Using 'P-value' as the input.")
+                        p_value = 'P-value'
+                if cutoff is None:
+                    cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
                 function_data = function_data[function_data[p_value]<float(cutoff)]
                 function_data = function_data.rename(columns={'Lead_genes': 'Genes'})
                 

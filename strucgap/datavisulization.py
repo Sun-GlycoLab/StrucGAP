@@ -2328,7 +2328,7 @@ class StrucGAP_DataVisulization:
                 yaxis_opts=opts.AxisOpts(
                     name = data_filtered['Branches'][index],
                     name_location = 'middle',
-                    name_gap = 60,
+                    name_gap = 15,
                     name_rotate = 90,
                     name_textstyle_opts = opts.TextStyleOpts(color = yaxis_label_color, 
                                                     font_family = 'Arial',
@@ -2399,6 +2399,7 @@ class StrucGAP_DataVisulization:
         pix.save(png_file)
         
         png_file = png_file
+        Image.MAX_IMAGE_PIXELS = None
         image = Image.open(png_file)
         trimmed_image = self.trim_white_border(image)
         trimmed_image.save(png_file)
@@ -4596,9 +4597,18 @@ class StrucGAP_DataVisulization:
         all_lists = generate_all_lists(data, y_column, x_columns)
         
         c = Line(init_opts=opts.InitOpts(
-                renderer=RenderType.SVG,bg_color='#fff'
+                renderer=RenderType.SVG,bg_color='#fff',
             ))
-        c.add_xaxis(list(x_columns)) 
+
+        if xaxis_label_text_split:
+            xaxis_labels = [
+                '\n'.join([label[i:i+xaxis_label_text_split] 
+                           for i in range(0, len(label), xaxis_label_text_split)])
+                for label in list(x_columns)
+            ]
+        else:
+            xaxis_labels = list(x_columns)
+        c.add_xaxis(xaxis_labels)
         
         if legend is not None:
             if isinstance(legend, str):
@@ -4668,11 +4678,6 @@ class StrucGAP_DataVisulization:
                       )
 
         c.set_colors(colors)
-        
-        if xaxis_label_text_split != 0:
-            wrapped_labels = ['\n'.join([label[i:i+xaxis_label_text_split] for i in range(0, len(label), xaxis_label_text_split)]) 
-                      for label in list(x_columns)]
-            c.add_xaxis(wrapped_labels)
         
         c.set_global_opts(
             xaxis_opts=opts.AxisOpts(
@@ -5633,11 +5638,11 @@ class StrucGAP_DataVisulization:
         # 设置 x 轴标签，确保每个 item 只在中间显示
         group_labels = [f"{name}" for name in item_name]
         mid_positions = [i * 2 + 1.5 for i in range(len(item_name))]  
-        plt.xticks(mid_positions, group_labels, rotation=15, fontsize=xaxis_label_font_size, color=xaxis_label_color)
+        plt.xticks(mid_positions, group_labels, rotation=0, fontsize=xaxis_label_font_size, color=xaxis_label_color)
         plt.xlabel('', fontsize=xaxis_label_font_size, color=xaxis_label_color, weight=xaxis_label_font_weight)
         
         # 设置 y 轴标签
-        plt.ylabel('', fontsize=yaxis_label_font_size, color=yaxis_label_color, weight=yaxis_label_font_weight)
+        plt.yticks(fontsize=yaxis_label_font_size, color=yaxis_label_color, weight=yaxis_label_font_weight)
 
         # 只添加分组之间的垂直分割线
         if add_group_lines:
