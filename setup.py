@@ -40,6 +40,7 @@ setup(
         'venn',
         'werkzeug',
         'sphinx-autodoc-typehints',
+        'renku-sphinx-theme',
 
     ],
     classifiers=[
