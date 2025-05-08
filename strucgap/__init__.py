@@ -101,7 +101,7 @@ import matplotlib
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 
-os.chdir('D:\\doctor\\StrucGAP\\strucgap')
+# os.chdir('D:\\doctor\\StrucGAP\\strucgap')
 
 ##
 from .preprocess import StrucGAP_Preprocess
