@@ -18,7 +18,7 @@ setup(
         'scikit-learn',
         'xgboost',
         'tqdm',
-        'gprofiler',
+        'gprofiler-official',
         'umap-learn',
         'matplotlib', 
         'Pillow',
