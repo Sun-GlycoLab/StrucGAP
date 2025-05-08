@@ -11,7 +11,7 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
     from strucgap.glycopeptidequant import StrucGAP_GlycoPeptideQuant
     from strucgap.functionannotation import StrucGAP_FunctionAnnotation
     from strucgap.glyconetwork import StrucGAP_GlycoNetwork
-    from strucgap.datavisulization import StrucGAP_DataVisulization
+    from strucgap.datavisualization import StrucGAP_DataVisualization
     from strucgap.insighttracker import StrucGAP_InsightTracker
 
     # Initialization
@@ -112,7 +112,7 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
     data_manager.output_pickle()
     
     # Plotting
-    module7 = StrucGAP_DataVisulization(data_manager=data_manager)
+    module7 = StrucGAP_DataVisualization(data_manager=data_manager)
     # Example
     module7.heatmap_multi_data('module1.data',  
                   'module1.data_psm_filtered',   

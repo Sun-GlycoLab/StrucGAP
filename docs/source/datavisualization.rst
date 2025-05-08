@@ -1,4 +1,4 @@
-StrucGAP_DataVisulization Module
+StrucGAP_DataVisualization Module
 ================================================
 
 Overview
@@ -13,9 +13,9 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .datavisulization import StrucGAP_DataVisulization
+    from .datavisualization import StrucGAP_DataVisualization
 
-    module7 = StrucGAP_DataVisulization(data_manager=data_manager)
+    module7 = StrucGAP_DataVisualization(data_manager=data_manager)
     # pie chart
     module7.pie(data = module2.core_structure, 
               item_column = 'Core_structure', 
@@ -36,7 +36,7 @@ Instantiate and use the module as follows:
 Analytical report generation
 --------------------------------------------------------------
 
-By default, we generate a four‑page analysis report here, containing basic glycan substructure feature analysis, functional analysis, quantitative analysis, and upstream/downstream analysis. Essentially, this invokes the plotting functions and analysis results of the StrucGAP_DataVisulization module, so users can further adjust it to meet their advanced requirements:
+By default, we generate a four‑page analysis report here, containing basic glycan substructure feature analysis, functional analysis, quantitative analysis, and upstream/downstream analysis. Essentially, this invokes the plotting functions and analysis results of the StrucGAP_DataVisualization module, so users can further adjust it to meet their advanced requirements:
 
 .. code-block:: python
 
@@ -888,7 +888,7 @@ By default, we generate a four‑page analysis report here, containing basic gly
 API Reference
 ------------------
 
-.. automodule:: strucgap.datavisulization
+.. automodule:: strucgap.datavisualization
     :members:
     :undoc-members:
     :show-inheritance:

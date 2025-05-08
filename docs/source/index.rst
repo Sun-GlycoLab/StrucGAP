@@ -45,7 +45,7 @@ Please see our manuscript Palla, Spitzer et al. (2022) in Nature Methods to lear
    glycopeptidequant
    functionannotation
    glyconetwork
-   datavisulization
+   datavisualization
    insighttracker
 
 .. toctree::

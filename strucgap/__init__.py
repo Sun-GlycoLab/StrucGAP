@@ -110,6 +110,6 @@ from .glycosite import StrucGAP_GlycoSite
 from .glycopeptidequant import StrucGAP_GlycoPeptideQuant
 from .functionannotation import StrucGAP_FunctionAnnotation
 from .glyconetwork import StrucGAP_GlycoNetwork
-from .datavisulization import StrucGAP_DataVisulization
+from .datavisualization import StrucGAP_DataVisualization
 from .insighttracker import StrucGAP_InsightTracker
 

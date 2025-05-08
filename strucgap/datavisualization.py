@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 ## 数据可视化和报告生成模块
-class StrucGAP_DataVisulization:
+class StrucGAP_DataVisualization:
     
     def __init__(self, data_manager):
         self.data_manager = data_manager    
-        self.data_manager.register_module('StrucGAP_DataVisulization', self, {})
-        self.data_manager.log_params('StrucGAP_DataVisulization', '', {}) 
+        self.data_manager.register_module('StrucGAP_DataVisualization', self, {})
+        self.data_manager.log_params('StrucGAP_DataVisualization', '', {}) 
         
         # 初始化其他原有数据存储结构
         self.analysis_records = []  # 假设已有分析记录存储
@@ -319,8 +319,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'radar', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'radar', f"{'_'.join(dataframe_names)}_radar.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'radar', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'radar', f"{'_'.join(dataframe_names)}_radar.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -605,8 +605,8 @@ class StrucGAP_DataVisulization:
             # 去掉不需要记录的局部变量 'self'
             params.pop('self')
             # 使用data_manager记录这些参数
-            self.data_manager.log_params('StrucGAP_DataVisulization', 'polar1', params)
-            self.data_manager.log_output('StrucGAP_DataVisulization', 'polar1',  f"{'_'.join(dataframe_names)}_polar1.pdf")
+            self.data_manager.log_params('StrucGAP_DataVisualization', 'polar1', params)
+            self.data_manager.log_output('StrucGAP_DataVisualization', 'polar1',  f"{'_'.join(dataframe_names)}_polar1.pdf")
     
             return {'file_path': png_file, 'legend': figure_description}
     
@@ -856,8 +856,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'polar2', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'polar2',  f"{'_'.join(dataframe_names)}_polar2.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'polar2', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'polar2',  f"{'_'.join(dataframe_names)}_polar2.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -962,8 +962,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'funnel', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'funnel',  f"{item_column}_{number_column}_funnel.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'funnel', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'funnel',  f"{item_column}_{number_column}_funnel.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1114,8 +1114,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'parallel', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'parallel',  f"{'_'.join(dataframe_names)}_parallel.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'parallel', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'parallel',  f"{'_'.join(dataframe_names)}_parallel.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1223,8 +1223,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'pie', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'pie',f"{item_column}_{number_column}_pie.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'pie', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'pie',f"{item_column}_{number_column}_pie.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1377,8 +1377,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'nested_pie', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'nested_pie',f"{item_column}_{number_column}_nested_pie.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'nested_pie', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'nested_pie',f"{item_column}_{number_column}_nested_pie.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1465,8 +1465,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'sankey', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'sankey',f"{node1_column}_{node2_column}_sankey.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'sankey', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'sankey',f"{node1_column}_{node2_column}_sankey.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1588,8 +1588,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'sunburst_mulit', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'sunburst_mulit',f"{root_column}_sunburst_mulit.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'sunburst_mulit', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'sunburst_mulit',f"{root_column}_sunburst_mulit.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -1728,8 +1728,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'sunburst', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'sunburst',f"{root_column}_sunburst.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'sunburst', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'sunburst',f"{root_column}_sunburst.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -2092,8 +2092,8 @@ class StrucGAP_DataVisulization:
             # 去掉不需要记录的局部变量 'self'
             params.pop('self')
             # 使用data_manager记录这些参数
-            self.data_manager.log_params('StrucGAP_DataVisulization', 'bar', params)
-            self.data_manager.log_output('StrucGAP_DataVisulization', 'bar',f"{x_column}_{y_column}_bar.pdf")
+            self.data_manager.log_params('StrucGAP_DataVisualization', 'bar', params)
+            self.data_manager.log_output('StrucGAP_DataVisualization', 'bar',f"{x_column}_{y_column}_bar.pdf")
     
             return {'file_path': png_file, 'legend': figure_description}
     
@@ -2216,8 +2216,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'butterfly_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'butterfly_plot',f"{filename}_butterfly_plot_{timestamp}.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'butterfly_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'butterfly_plot',f"{filename}_butterfly_plot_{timestamp}.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_butterfly_plot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -2409,8 +2409,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'multi_bar', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'multi_bar',f"{x_column}_multi_bar.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'multi_bar', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'multi_bar',f"{x_column}_multi_bar.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -2738,8 +2738,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'bar_up_down', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'bar_up_down',f"{x_column}_bar_up_down.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'bar_up_down', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'bar_up_down',f"{x_column}_bar_up_down.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -2880,8 +2880,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'bar_up_down_ratio', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'bar_up_down_ratio',f"{feature}_bar_up_down_ratio.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'bar_up_down_ratio', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'bar_up_down_ratio',f"{feature}_bar_up_down_ratio.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_bar_up_down_ratio_{timestamp}.png"), 
                 'legend': figure_description}
@@ -3176,8 +3176,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'bar_multi_columns', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'bar_multi_columns',f"{y_column}_bar_multi_columns.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'bar_multi_columns', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'bar_multi_columns',f"{y_column}_bar_multi_columns.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -3292,8 +3292,8 @@ class StrucGAP_DataVisulization:
         # 自动记录参数和输出
         params = locals()
         params.pop('self')
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'histogram_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'histogram_plot', pdf_name)
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'histogram_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'histogram_plot', pdf_name)
 
         return {'file_path': os.path.join(output_dir, png_file), 'legend': figure_description}
     
@@ -3554,8 +3554,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'boxplot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'boxplot',f"{item_column}_item_{p_column}_boxplot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'boxplot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'boxplot',f"{item_column}_item_{p_column}_boxplot.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -3729,8 +3729,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'heatmap1', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'heatmap1',f"{columns}_heatmap1.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'heatmap1', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'heatmap1',f"{columns}_heatmap1.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -3925,8 +3925,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'heatmap2', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'heatmap2', f"{columns}_heatmap2.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'heatmap2', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'heatmap2', f"{columns}_heatmap2.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_heatmap2_{timestamp}.png"), 
                 'legend': figure_description}
@@ -4051,8 +4051,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'correlation_heatmap', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'correlation_heatmap', f"{filename}_correlation_heatmap.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'correlation_heatmap', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'correlation_heatmap', f"{filename}_correlation_heatmap.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_correlation_heatmap_{timestamp}.png"), 
                 'legend': figure_description}
@@ -4338,8 +4338,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'heatmap_multi_data', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'heatmap_multi_data',f"{columns}_heatmap_multi_data.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'heatmap_multi_data', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'heatmap_multi_data',f"{columns}_heatmap_multi_data.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_heatmap_multi_data_{timestamp}.png"), 
                 'legend': figure_description}
@@ -4486,8 +4486,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'complexheatmap', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'complexheatmap',f"{columns}_complexheatmap.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'complexheatmap', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'complexheatmap',f"{columns}_complexheatmap.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_complexheatmap_{timestamp}.png"), 
                 'legend': figure_description}
@@ -4803,8 +4803,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'line', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'line',f"{y_column}_line.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'line', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'line',f"{y_column}_line.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -5078,8 +5078,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'scatter', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'scatter',f"{y_column}_scatter.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'scatter', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'scatter',f"{y_column}_scatter.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -5193,8 +5193,8 @@ class StrucGAP_DataVisulization:
         
         params = locals()
         params.pop('self')
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'up_down_scatter', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'up_down_scatter',f"{labels}_up_down_scatter_plot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'up_down_scatter', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'up_down_scatter',f"{labels}_up_down_scatter_plot.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_up_down_scatter_plot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5348,8 +5348,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'tree', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'tree',f"{node1_column}_tree.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'tree', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'tree',f"{node1_column}_tree.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -5444,8 +5444,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'venn', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'venn',f"{len(data_names)}_data_venn.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'venn', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'venn',f"{len(data_names)}_data_venn.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_venn_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5532,8 +5532,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'upset_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'upset_plot',f"{len(data_names)}_upset_plot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'upset_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'upset_plot',f"{len(data_names)}_upset_plot.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_upset_plot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5706,8 +5706,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'violin_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'violin_plot',f"{item_column}_item_{p_column}_violin_plot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'violin_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'violin_plot',f"{item_column}_item_{p_column}_violin_plot.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_violin_plot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5815,8 +5815,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'volcano_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'volcano_plot',f"{fc_column}_{p_column}_volcano_plot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'volcano_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'volcano_plot',f"{fc_column}_{p_column}_volcano_plot.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_volcano_plot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5896,8 +5896,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'dotplot_col', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'dotplot_col',f"{term}_dotplot_col.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'dotplot_col', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'dotplot_col',f"{term}_dotplot_col.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_dotplot_col_{timestamp}.png"), 
                 'legend': figure_description}
@@ -5979,8 +5979,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'dotplot_row', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'dotplot_row',f"{term}_dotplot_row.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'dotplot_row', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'dotplot_row',f"{term}_dotplot_row.pdf")
 
         return {'file_path': os.path.join(output_dir, f"{filename}_dotplot_row_{timestamp}.png"), 
                 'legend': figure_description}
@@ -6127,8 +6127,8 @@ class StrucGAP_DataVisulization:
         # 自动记录参数
         params = locals()
         params.pop('self')
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'dotplot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'dotplot', f"{term}_dotplot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'dotplot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'dotplot', f"{term}_dotplot.pdf")
     
         return {'file_path': os.path.join(output_dir, f"{filename}_dotplot_{timestamp}.png"), 
                 'legend': figure_description}
@@ -6404,8 +6404,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'sankey_dotplot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'sankey_dotplot',"sankey_dotplot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'sankey_dotplot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'sankey_dotplot',"sankey_dotplot.pdf")
 
         return {'file_path': png_file, 'legend': figure_description}
     
@@ -6546,8 +6546,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'dimension_reduction', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'dimension_reduction',f'{data_columns}_{method}.pdf')
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'dimension_reduction', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'dimension_reduction',f'{data_columns}_{method}.pdf')
 
         return {'file_path': os.path.join(output_dir, f'{filename}_{method}_{timestamp}.png'), 
                 'legend': figure_description}
@@ -6780,8 +6780,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'network_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'network_plot','network_plot.pdf')
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'network_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'network_plot','network_plot.pdf')
 
         return {'file_path': os.path.join(output_dir, '{filename}_network_plot_{timestamp}.png'), 
                 'legend': figure_description}
@@ -6986,8 +6986,8 @@ class StrucGAP_DataVisulization:
         # 去掉不需要记录的局部变量 'self'
         params.pop('self')
         # 使用data_manager记录这些参数
-        self.data_manager.log_params('StrucGAP_DataVisulization', 'glycans_plot', params)
-        self.data_manager.log_output('StrucGAP_DataVisulization', 'glycans_plot',f"glycans_plot.pdf")
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'glycans_plot', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'glycans_plot',f"glycans_plot.pdf")
         return {'file_path': os.path.join(output_dir, f"{filename}_glycans_plot_{timestamp}.png"), 
                 'legend': figure_description}
         fig.savefig(output_pdf)
