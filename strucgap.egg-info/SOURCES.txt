@@ -1,0 +1,16 @@
+README.md
+setup.py
+strucgap/__init__.py
+strucgap/datavisualization.py
+strucgap/functionannotation.py
+strucgap/glycanstructure.py
+strucgap/glyconetwork.py
+strucgap/glycopeptidequant.py
+strucgap/glycosite.py
+strucgap/insighttracker.py
+strucgap/preprocess.py
+strucgap.egg-info/PKG-INFO
+strucgap.egg-info/SOURCES.txt
+strucgap.egg-info/dependency_links.txt
+strucgap.egg-info/requires.txt
+strucgap.egg-info/top_level.txt

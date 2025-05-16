@@ -17,15 +17,15 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
     # Initialization
     data_manager = StrucGAP_InsightTracker()
     # Setting the result storage path (folder)
-    os.chdir('D:\\doctor\\analysisys\\StrucGAP')
+    os.chdir('tests/')
     # Read it if you've already done the analysis
     data_manager.read_pickle()
     
     # Robust data quality control
-    module1 = StrucGAP_Preprocess(data_dir="D:\\doctor\\analysisys\\data\\mouse uterus.xlsx",
+    module1 = StrucGAP_Preprocess(data_dir="tests/mouse uterus.xlsx",
                       data_sheet_name = '1 PSM',
-                      sample_group_data_dir = 'D:\\doctor\\analysisys\\data\\sample_group.xlsx',
-                      branch_list_dir = "D:\\doctor\\wyq\\branch_structures_18_mice uterus.0240401.xlsx",
+                      sample_group_data_dir = 'tests/sample_group.xlsx',
+                      branch_list_dir = "tests/branch_structures_18_mice uterus.0240401.xlsx",
                       data_manager=data_manager)
     module1.data_cleaning(data_type='tmt')
     module1.fdr(feature_type='no')
@@ -88,11 +88,11 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
     
     # Upstream and downstream interactions in glycosylation networks
     module6 = StrucGAP_GlycoNetwork(module4, data_manager=data_manager)
-    module6.proteomic(protein_data_dir="D:\\doctor\\wyq\\WYQ_Mus_uterus_global.xlsx",
+    module6.proteomic(protein_data_dir="tests/WYQ_Mus_uterus_global.xlsx",
                       data_sheet_name = '1 Proteins')
-    module6.glycosyltransferases(glycosyltransferases_data_dir="D:\\doctor\\analysisys\\GAP\\enzyme.xlsx", 
+    module6.glycosyltransferases(glycosyltransferases_data_dir="tests/enzyme.xlsx", 
                                  data_sheet_name="glycosyltransferases")
-    module6.glycosidases(glycosidases_data_dir="D:\\doctor\\analysisys\\GAP\\enzyme.xlsx", 
+    module6.glycosidases(glycosidases_data_dir="tests/enzyme.xlsx", 
                          data_sheet_name='glycosidases')
     module6.sialyltransferases()
     module6.fucosyltransferase()

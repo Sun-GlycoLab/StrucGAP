@@ -36,7 +36,7 @@ Instantiate and use the module as follows:
 Analytical report generation
 --------------------------------------------------------------
 
-By default, we generate a four‑page analysis report here, containing basic glycan substructure feature analysis, functional analysis, quantitative analysis, and upstream/downstream analysis. Essentially, this invokes the plotting functions and analysis results of the StrucGAP_DataVisualization module, so users can further adjust it to meet their advanced requirements:
+By default, we generate a four‑page analysis report here, containing basic glycan substructure feature analysis, functional analysis, quantitative analysis, and upstream/downstream analysis. Moreover, For an analysis report containing all the analysis results, see the analysis report.py file on GitHub. Essentially, this invokes the plotting functions and analysis results of the StrucGAP_DataVisualization module, so users can further adjust it to meet their advanced requirements:
 
 .. code-block:: python
 

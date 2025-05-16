@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_FunctionAnnotation Module &mdash; StrucGAP 1.0.0 documentation</title>
+  <title>StrucGAP_FunctionAnnotation Module &mdash; StrucGAP 1.0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -153,7 +153,7 @@
 <span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.functionannotation" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.functionannotation.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_FunctionAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.functionannotation.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_FunctionAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein_no_glyco_up'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.compute_weighted_fc">
@@ -172,7 +172,7 @@
 <li><p><strong>up_down_fc_threshold</strong> – FC threshold used to differentiate up and down regulated features.</p></li>
 <li><p><strong>background_input</strong> – use both proteins as background or not.</p></li>
 <li><p><strong>pvalue_type</strong> – ‘pvalue_ttest’, ‘pvalue_mannwhitneyu’ or ‘pvalue_ttest_mannwhitneyu’.</p></li>
-<li><p><strong>selected_terms</strong> – enrichment database.</p></li>
+<li><p><strong>selected_terms</strong> – enrichment database from [“<a class="reference external" href="GO:MF">GO:MF</a>”,”<a class="reference external" href="GO:CC">GO:CC</a>”,”<a class="reference external" href="GO:BP">GO:BP</a>”,”KEGG”,”REAC”,”WP”,”TF”,”MIRNA”,”HPA”,”CORUM”,”HP”], such as [‘<a class="reference external" href="GO:MF">GO:MF</a>’, ‘<a class="reference external" href="GO:CC">GO:CC</a>’, ‘<a class="reference external" href="GO:BP">GO:BP</a>’].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

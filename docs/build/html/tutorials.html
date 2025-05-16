@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorials &mdash; StrucGAP 1.0.0 documentation</title>
+  <title>Tutorials &mdash; StrucGAP 1.0.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -106,15 +106,15 @@
 <span class="c1"># Initialization</span>
 <span class="n">data_manager</span> <span class="o">=</span> <span class="n">StrucGAP_InsightTracker</span><span class="p">()</span>
 <span class="c1"># Setting the result storage path (folder)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">doctor</span><span class="se">\\</span><span class="s1">analysisys</span><span class="se">\\</span><span class="s1">StrucGAP&#39;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s1">&#39;tests/&#39;</span><span class="p">)</span>
 <span class="c1"># Read it if you&#39;ve already done the analysis</span>
 <span class="n">data_manager</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">()</span>
 
 <span class="c1"># Robust data quality control</span>
-<span class="n">module1</span> <span class="o">=</span> <span class="n">StrucGAP_Preprocess</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">data</span><span class="se">\\</span><span class="s2">mouse uterus.xlsx&quot;</span><span class="p">,</span>
+<span class="n">module1</span> <span class="o">=</span> <span class="n">StrucGAP_Preprocess</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;tests/mouse uterus.xlsx&quot;</span><span class="p">,</span>
                   <span class="n">data_sheet_name</span> <span class="o">=</span> <span class="s1">&#39;1 PSM&#39;</span><span class="p">,</span>
-                  <span class="n">sample_group_data_dir</span> <span class="o">=</span> <span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">doctor</span><span class="se">\\</span><span class="s1">analysisys</span><span class="se">\\</span><span class="s1">data</span><span class="se">\\</span><span class="s1">sample_group.xlsx&#39;</span><span class="p">,</span>
-                  <span class="n">branch_list_dir</span> <span class="o">=</span> <span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">wyq</span><span class="se">\\</span><span class="s2">branch_structures_18_mice uterus.0240401.xlsx&quot;</span><span class="p">,</span>
+                  <span class="n">sample_group_data_dir</span> <span class="o">=</span> <span class="s1">&#39;tests/sample_group.xlsx&#39;</span><span class="p">,</span>
+                  <span class="n">branch_list_dir</span> <span class="o">=</span> <span class="s2">&quot;tests/branch_structures_18_mice uterus.0240401.xlsx&quot;</span><span class="p">,</span>
                   <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">data_cleaning</span><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;tmt&#39;</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">fdr</span><span class="p">(</span><span class="n">feature_type</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
@@ -177,11 +177,11 @@
 
 <span class="c1"># Upstream and downstream interactions in glycosylation networks</span>
 <span class="n">module6</span> <span class="o">=</span> <span class="n">StrucGAP_GlycoNetwork</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
-<span class="n">module6</span><span class="o">.</span><span class="n">proteomic</span><span class="p">(</span><span class="n">protein_data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">wyq</span><span class="se">\\</span><span class="s2">WYQ_Mus_uterus_global.xlsx&quot;</span><span class="p">,</span>
+<span class="n">module6</span><span class="o">.</span><span class="n">proteomic</span><span class="p">(</span><span class="n">protein_data_dir</span><span class="o">=</span><span class="s2">&quot;tests/WYQ_Mus_uterus_global.xlsx&quot;</span><span class="p">,</span>
                   <span class="n">data_sheet_name</span> <span class="o">=</span> <span class="s1">&#39;1 Proteins&#39;</span><span class="p">)</span>
-<span class="n">module6</span><span class="o">.</span><span class="n">glycosyltransferases</span><span class="p">(</span><span class="n">glycosyltransferases_data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">GAP</span><span class="se">\\</span><span class="s2">enzyme.xlsx&quot;</span><span class="p">,</span>
+<span class="n">module6</span><span class="o">.</span><span class="n">glycosyltransferases</span><span class="p">(</span><span class="n">glycosyltransferases_data_dir</span><span class="o">=</span><span class="s2">&quot;tests/enzyme.xlsx&quot;</span><span class="p">,</span>
                              <span class="n">data_sheet_name</span><span class="o">=</span><span class="s2">&quot;glycosyltransferases&quot;</span><span class="p">)</span>
-<span class="n">module6</span><span class="o">.</span><span class="n">glycosidases</span><span class="p">(</span><span class="n">glycosidases_data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">analysisys</span><span class="se">\\</span><span class="s2">GAP</span><span class="se">\\</span><span class="s2">enzyme.xlsx&quot;</span><span class="p">,</span>
+<span class="n">module6</span><span class="o">.</span><span class="n">glycosidases</span><span class="p">(</span><span class="n">glycosidases_data_dir</span><span class="o">=</span><span class="s2">&quot;tests/enzyme.xlsx&quot;</span><span class="p">,</span>
                      <span class="n">data_sheet_name</span><span class="o">=</span><span class="s1">&#39;glycosidases&#39;</span><span class="p">)</span>
 <span class="n">module6</span><span class="o">.</span><span class="n">sialyltransferases</span><span class="p">()</span>
 <span class="n">module6</span><span class="o">.</span><span class="n">fucosyltransferase</span><span class="p">()</span>

@@ -102,11 +102,11 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 功能注释与关联性分析模块--81
 class StrucGAP_FunctionAnnotation:
-    def __init__(self, gs_data, data_manager):
+    def __init__(self, gs_data, data_manager, data_type = 'protein_no_glyco_up'):
         if hasattr(gs_data, 'sample_group'):
             self.sample_group = gs_data.sample_group
         else:
-            self.sample_group = module4.sample_group
+            raise AttributeError("gs_data must have 'sample_group' attribute.")
         
         if isinstance(gs_data, pd.DataFrame):
             self.gs_data = gs_data
@@ -125,7 +125,8 @@ class StrucGAP_FunctionAnnotation:
                 self.fc_data = self.gs_data
             self.data_type = ''
         elif gs_data.__class__.__name__ == 'StrucGAP_GlycoNetwork':
-            data_type = input("Please enter your expected data in the current module (such as: 'protein_no_glyco_up'): ")
+            if data_type is None:
+                data_type = input("Please enter your expected data in the current module (such as: 'protein_no_glyco_up'): ")
             expected_options = ['protein_up_glyco_up', 'protein_up_glyco_no', 'protein_up_glyco_down', 
                                 'protein_no_glyco_up', 'protein_no_glyco_no', 'protein_no_glyco_down',
                                 'protein_down_glyco_up', 'protein_down_glyco_no', 'protein_down_glyco_down',]
@@ -292,7 +293,7 @@ class StrucGAP_FunctionAnnotation:
             up_down_fc_threshold: FC threshold used to differentiate up and down regulated features.
             background_input: use both proteins as background or not.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
-            selected_terms: enrichment database.
+            selected_terms: enrichment database from ["GO:MF","GO:CC","GO:BP","KEGG","REAC","WP","TF","MIRNA","HPA","CORUM","HP"], such as ['GO:MF', 'GO:CC', 'GO:BP'].
         
         Returns:
             self.final_protein_fc
@@ -327,23 +328,24 @@ class StrucGAP_FunctionAnnotation:
             if organism not in ['mmusculus','hsapiens', 'rnorvegicus']:
                 raise ValueError("Please enter the correct database name")
         # enrichr
-        terms = ["GO:MF","GO:CC","GO:BP","KEGG","REAC","WP","TF","MIRNA","HPA","CORUM","HP"]
-        print("Please select a term by entering a number, and separate multiple terms with a comma: ")
-        for i, term in enumerate(terms, start=1):
-            print(f"{i}. {term}")
-        selected_indices = input("Please enter the term number you want to select (e.g. 1,3,5): ")
-        indices = selected_indices.split(',')
-        selected_terms = []
-        for idx in indices:
-            idx = idx.strip()  
-            if idx.isdigit():
-                idx_int = int(idx)
-                if 1 <= idx_int <= len(terms):
-                    selected_terms.append(terms[idx_int - 1])  
+        if selected_terms is None:
+            terms = ["GO:MF","GO:CC","GO:BP","KEGG","REAC","WP","TF","MIRNA","HPA","CORUM","HP"]
+            print("Please select a term by entering a number, and separate multiple terms with a comma: ")
+            for i, term in enumerate(terms, start=1):
+                print(f"{i}. {term}")
+            selected_indices = input("Please enter the term number you want to select (e.g. 1,3,5): ")
+            indices = selected_indices.split(',')
+            selected_terms = []
+            for idx in indices:
+                idx = idx.strip()  
+                if idx.isdigit():
+                    idx_int = int(idx)
+                    if 1 <= idx_int <= len(terms):
+                        selected_terms.append(terms[idx_int - 1])  
+                    else:
+                        print(f"number {idx_int} out of range. ")
                 else:
-                    print(f"number {idx_int} out of range. ")
-            else:
-                print(f"input number '{idx}' not a valid number. ")
+                    print(f"input number '{idx}' not a valid number. ")
         # gene_list
         self.final_protein_fc = None  
         self.upregulated_proteins = None 
@@ -1364,7 +1366,7 @@ class StrucGAP_FunctionAnnotation:
                 genes_extended = genes + [pd.NA] * (max_length - len(genes))
                 gene_list[column] = genes_extended
             # structure_statistics
-            structure_data = copy.deepcopy(module5.fc_data)
+            structure_data = copy.deepcopy(self.fc_data)
             structure_data['GeneName'] = structure_data['GeneName'].str.upper()
             structure_data = structure_data.drop(columns='PeptideSequence+structure_coding+ProteinID')
             structure_data['GeneName'] = structure_data['GeneName'].str.split(';')
