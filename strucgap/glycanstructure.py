@@ -109,6 +109,7 @@ class StrucGAP_GlycanStructure:
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered',
                  pvalue = 0.05, fc = 1.5, pvalue_type='pvalue_ttest', differential_data_type='both'):
         self.gs_data = gs_data
+        self.search_engine = self.gs_data.search_engine
         self.sample_group = self.gs_data.sample_group
         #
         if isinstance(gs_data, StrucGAP_Preprocess):
@@ -160,10 +161,14 @@ class StrucGAP_GlycanStructure:
             self.data = self.data[self.data['Glycan_type'] != 'Oligo mannose']
             print("Your input is invalid, the parameter 'remove_oligo_mannose' is set to True! ")
    
-        self.GlycanComposition_rank = self.identify_glycan_composition() # .iloc[:self.rank]  
-        #
-        self.structure_coding_rank = pd.DataFrame(self.data['structure_coding'].value_counts().reset_index()) # .iloc[:rank]  
-        self.structure_coding_rank.columns = ['Structure_coding', 'Structure_coding_count']
+        if self.search_engine in ['MSFragger-Glyco','Glyco-Decipher']:
+            self.GlycanComposition_rank = pd.DataFrame(self.data['GlycanComposition'].value_counts().reset_index())
+            self.structure_coding_rank = pd.DataFrame()
+        else:
+            self.GlycanComposition_rank = self.identify_glycan_composition() # .iloc[:self.rank]  
+            #
+            self.structure_coding_rank = pd.DataFrame(self.data['structure_coding'].value_counts().reset_index()) # .iloc[:rank]  
+            self.structure_coding_rank.columns = ['Structure_coding', 'Structure_coding_count']
         
         self.data_manager.log_params('StrucGAP_GlycanStructure', 'statistics', {'remove_oligo_mannose': remove_oligo_mannose})
         self.data_manager.log_output('StrucGAP_GlycanStructure', 'GlycanComposition_rank', self.GlycanComposition_rank)

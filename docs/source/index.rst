@@ -24,7 +24,7 @@ StrucGAP, a pioneering Structural Glycoproteomics Analysis Platform for scalable
 Manuscript source
 ----------------------
 
-Please see our manuscript Palla, Spitzer et al. (2022) in Nature Methods to learn more.
+Please see our manuscript to learn more.
 
 .. toctree::
    :maxdepth: 1

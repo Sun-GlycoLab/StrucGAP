@@ -293,7 +293,7 @@ class StrucGAP_FunctionAnnotation:
             up_down_fc_threshold: FC threshold used to differentiate up and down regulated features.
             background_input: use both proteins as background or not.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
-            selected_terms: enrichment database.
+            selected_terms: enrichment database from ["GO:MF","GO:CC","GO:BP","KEGG","REAC","WP","TF","MIRNA","HPA","CORUM","HP"], such as ['GO:MF', 'GO:CC', 'GO:BP'].
         
         Returns:
             self.final_protein_fc

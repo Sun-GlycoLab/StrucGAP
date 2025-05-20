@@ -1,7 +1,7 @@
 Get Started
 ===========
 
-Here is a basic example of how to use StrucGAP:
+Here is a basic example of how to use StrucGAP. We strongly recommend using the output results from StrucGP as the input for StrucGAP. Although we also provide data processing pipelines for search results from MSFragger-Glyco, pGlyco3, and Glyco-Decipher, the information contained in the outputs of these three search engines is very limited. As a result, only the StrucGAP_GlycanStructure or StrucGAP_GlycoSite modules can be used for subsequent analyses.
 
 .. code-block:: python
 

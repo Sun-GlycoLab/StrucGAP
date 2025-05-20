@@ -192,19 +192,22 @@ class StrucGAP_GlycoSite:
         self.glycoprotein_glycan_count.columns = ['glycoprotein', 'glycan_count']
         self.map_protein_to_gene(self.glycoprotein_glycan_count, 'glycoprotein')
         #
-        result = {}
-        temp_data = pd.DataFrame(self.data[['ProteinID', 'structure_coding']])
-        temp_data = temp_data[~temp_data['structure_coding'].isnull()]
-        temp_data['ProteinID'] = temp_data['ProteinID'].str.split(';')
-        temp_data = temp_data.explode('ProteinID')
-        type_counts = pd.DataFrame(temp_data['ProteinID'].value_counts())
-        for i in type_counts.index:
-            filtered_data = temp_data[temp_data['ProteinID'] == i]['structure_coding']
-            item = filtered_data.unique()
-            result[i] = len(item)
-        self.glycoprotein_glycan_type = pd.DataFrame(list(result.items()), columns=['glycoprotein', 'glycan_type'])
-        self.glycoprotein_glycan_type = self.glycoprotein_glycan_type.sort_values(by='glycan_type', ascending=False)
-        self.map_protein_to_gene(self.glycoprotein_glycan_type, 'glycoprotein')
+        if 'structure_coding' in self.data.columns:
+            result = {}
+            temp_data = pd.DataFrame(self.data[['ProteinID', 'structure_coding']])
+            temp_data = temp_data[~temp_data['structure_coding'].isnull()]
+            temp_data['ProteinID'] = temp_data['ProteinID'].str.split(';')
+            temp_data = temp_data.explode('ProteinID')
+            type_counts = pd.DataFrame(temp_data['ProteinID'].value_counts())
+            for i in type_counts.index:
+                filtered_data = temp_data[temp_data['ProteinID'] == i]['structure_coding']
+                item = filtered_data.unique()
+                result[i] = len(item)
+            self.glycoprotein_glycan_type = pd.DataFrame(list(result.items()), columns=['glycoprotein', 'glycan_type'])
+            self.glycoprotein_glycan_type = self.glycoprotein_glycan_type.sort_values(by='glycan_type', ascending=False)
+            self.map_protein_to_gene(self.glycoprotein_glycan_type, 'glycoprotein')
+        else:
+            self.glycoprotein_glycan_type = pd.DataFrame()
         #
         temp_data = pd.DataFrame(self.data[['ProteinID', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
@@ -258,18 +261,21 @@ class StrucGAP_GlycoSite:
         self.glycopeptide_glycan_count = pd.DataFrame(self.data['PeptideSequence'].value_counts().reset_index())
         self.glycopeptide_glycan_count.columns = ['glycopeptide', 'glycan_count']
         #
-        result = {}
-        temp_data = pd.DataFrame(self.data[['PeptideSequence', 'structure_coding']])
-        temp_data = temp_data[~temp_data['structure_coding'].isnull()]
-        temp_data['PeptideSequence'] = temp_data['PeptideSequence'].str.split(';')
-        temp_data = temp_data.explode('PeptideSequence')
-        type_counts = pd.DataFrame(temp_data['PeptideSequence'].value_counts())
-        for i in type_counts.index:
-            filtered_data = temp_data[temp_data['PeptideSequence'] == i]['structure_coding']
-            item = filtered_data.unique()
-            result[i] = len(item)
-        self.glycopeptide_glycan_type = pd.DataFrame(list(result.items()), columns=['glycopeptide', 'glycan_type'])
-        self.glycopeptide_glycan_type = self.glycopeptide_glycan_type.sort_values(by='glycan_type', ascending=False)
+        if 'structure_coding' in self.data.columns:
+            result = {}
+            temp_data = pd.DataFrame(self.data[['PeptideSequence', 'structure_coding']])
+            temp_data = temp_data[~temp_data['structure_coding'].isnull()]
+            temp_data['PeptideSequence'] = temp_data['PeptideSequence'].str.split(';')
+            temp_data = temp_data.explode('PeptideSequence')
+            type_counts = pd.DataFrame(temp_data['PeptideSequence'].value_counts())
+            for i in type_counts.index:
+                filtered_data = temp_data[temp_data['PeptideSequence'] == i]['structure_coding']
+                item = filtered_data.unique()
+                result[i] = len(item)
+            self.glycopeptide_glycan_type = pd.DataFrame(list(result.items()), columns=['glycopeptide', 'glycan_type'])
+            self.glycopeptide_glycan_type = self.glycopeptide_glycan_type.sort_values(by='glycan_type', ascending=False)
+        else:
+            self.glycopeptide_glycan_type = pd.DataFrame()
         #
         temp_data = pd.DataFrame(self.data[['PeptideSequence', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
@@ -476,15 +482,16 @@ class StrucGAP_GlycoSite:
             self.glycopeptide_glycan_type.to_excel(writer, sheet_name='glycopeptide_glycan_type'[:31])
             self.glycopeptide_glycosite.to_excel(writer, sheet_name='glycopeptide_glycosite'[:31])
             
-            self.protein_glycosite_glycan_count.to_excel(writer, sheet_name='protein_glycosite_glycan_count'[:31])
-            self.protein_glycosite_glycan_type.to_excel(writer, sheet_name='protein_glycosite_glycan_type'[:31])
-            self.protein_glycosite_glycan_composition_count.to_excel(writer, sheet_name='protein_glycosite_glycan_composition_count'[:31])
-            self.protein_glycosite_isoforms_count.to_excel(writer, sheet_name='protein_glycosite_isoforms_count'[:31])
-            
-            self.peptide_glycosite_glycan_count.to_excel(writer, sheet_name='peptide_glycosite_glycan_count'[:31])
-            self.peptide_glycosite_glycan_type.to_excel(writer, sheet_name='peptide_glycosite_glycan_type'[:31])
-            self.peptide_glycosite_glycan_composition_count.to_excel(writer, sheet_name='peptide_glycosite_glycan_composition_count'[:31])
-            self.peptide_glycosite_isoforms_count.to_excel(writer, sheet_name='peptide_glycosite_isoforms_count'[:31])
+            if 'structure_coding' in self.data.columns:
+                self.protein_glycosite_glycan_count.to_excel(writer, sheet_name='protein_glycosite_glycan_count'[:31])
+                self.protein_glycosite_glycan_type.to_excel(writer, sheet_name='protein_glycosite_glycan_type'[:31])
+                self.protein_glycosite_glycan_composition_count.to_excel(writer, sheet_name='protein_glycosite_glycan_composition_count'[:31])
+                self.protein_glycosite_isoforms_count.to_excel(writer, sheet_name='protein_glycosite_isoforms_count'[:31])
+                
+                self.peptide_glycosite_glycan_count.to_excel(writer, sheet_name='peptide_glycosite_glycan_count'[:31])
+                self.peptide_glycosite_glycan_type.to_excel(writer, sheet_name='peptide_glycosite_glycan_type'[:31])
+                self.peptide_glycosite_glycan_composition_count.to_excel(writer, sheet_name='peptide_glycosite_glycan_composition_count'[:31])
+                self.peptide_glycosite_isoforms_count.to_excel(writer, sheet_name='peptide_glycosite_isoforms_count'[:31])
 
 
 
