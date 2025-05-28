@@ -12,7 +12,7 @@ StrucGAP, a pioneering Structural Glycoproteomics Analysis Platform for scalable
 
    <div style="margin-top: 60px;"></div>
 
-.. image:: _static/figure1.png
+.. image:: _static/figure1_105.png
    :width: 600px
    :align: center
    :alt: StrucGAP overview
