@@ -2652,7 +2652,7 @@ class StrucGAP_DataVisualization:
         c = Bar(init_opts=opts.InitOpts(
                 renderer=RenderType.SVG,bg_color='#fff'
             ))
-        c.add_xaxis(list(set(data[x_column])))  
+        c.add_xaxis(list(data[x_column]))  
         up_down = [up_column, down_column]
         
         if legend is not None:
@@ -2684,7 +2684,7 @@ class StrucGAP_DataVisualization:
             )
         )
         
-        c.extend_axis(list(set(data[x_column])), 
+        c.extend_axis(list(data[x_column]), 
             xaxis=opts.AxisOpts(
                 type_="category",
                 position='top',
@@ -2702,7 +2702,7 @@ class StrucGAP_DataVisualization:
             )
         )
         
-        c.extend_axis(list(set(data[x_column])), 
+        c.extend_axis(list(data[x_column]), 
             xaxis=opts.AxisOpts(
                 type_="category",
                 position='bottom',
@@ -2888,16 +2888,16 @@ class StrucGAP_DataVisualization:
         if feature == 'core_structure':
             data_up = data_up.replace('A2B2C1D1dD1','Core-I') \
                      .replace('A2B2C1D1dD1dcbB5','Core-II') \
-                     .replace('A2B2C1D1dD2dD1dcbB5','Core-III') \
-                     .replace('A2B2C1D1dD2dD1','Core-IV')
+                     .replace('A2B2C1D1dD2dD1','Core-III') \
+                     .replace('A2B2C1D1dD2dD1dcbB5','Core-IV')
             data_down = data_down.replace('A2B2C1D1dD1','Core-I') \
                      .replace('A2B2C1D1dD1dcbB5','Core-II') \
-                     .replace('A2B2C1D1dD2dD1dcbB5','Core-III') \
-                     .replace('A2B2C1D1dD2dD1','Core-IV')
+                     .replace('A2B2C1D1dD2dD1','Core-III') \
+                     .replace('A2B2C1D1dD2dD1dcbB5','Core-IV')
             data_ratio = data_ratio.replace('A2B2C1D1dD1','Core-I') \
                      .replace('A2B2C1D1dD1dcbB5','Core-II') \
-                     .replace('A2B2C1D1dD2dD1dcbB5','Core-III') \
-                     .replace('A2B2C1D1dD2dD1','Core-IV')
+                     .replace('A2B2C1D1dD2dD1','Core-III') \
+                     .replace('A2B2C1D1dD2dD1dcbB5','Core-IV')
         
         # 阈值列表，顺序与 DataFrame 列一致
         thresholds = [1.2, 1.5, 2, 2.5, 3]
@@ -2965,7 +2965,7 @@ class StrucGAP_DataVisualization:
         ax1.set_xticks(x_positions)
         ax1.set_xticklabels([str(t) for t in thresholds],fontproperties = 'Arial', size = xaxis_font_size)
         ax1.set_xlabel('Threshold',fontproperties = 'Arial', size = xaxis_font_size)
-        ax1.set_ylabel('Proportion',fontproperties = 'Arial', size = yaxis_font_size)
+        ax1.set_ylabel('Proportion of regulated IGPs\n(per glycan type at each FC)',fontproperties = 'Arial', size = yaxis_font_size)
         ax2.set_ylabel('Up / Down Ratio',fontproperties = 'Arial', size = yaxis_font_size)
         ax1.tick_params(axis='both', labelsize = xaxis_font_size)
         ax2.tick_params(axis='both', labelsize = xaxis_font_size)

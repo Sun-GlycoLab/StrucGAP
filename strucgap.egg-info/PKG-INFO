@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: strucgap
-Version: 1.0.4
+Version: 1.0.5
 Summary: Structural and site-specific Glycoproteomics Analysis Platform
 Home-page: https://github.com/your-username/StrucGAP
 Author: Muyao Yang
@@ -14,7 +14,9 @@ Description-Content-Type: text/markdown
 
 **Structural and site-specific Glycoproteomics Analysis Platform**
 
-StrucGAP is a modular toolkit for downstream analysis of glycoproteomics data. It includes support for preprocessing, glycan structure analysis, quantification, network visualization, functional annotation, and more.
+**StrucGAP** is a modular toolkit for downstream analysis of glycoproteomics data. It includes support for preprocessing, glycan structure analysis, quantification, network visualization, functional annotation, and more.
+
+View the [**documentation**](https://strucgap.readthedocs.io/en/latest/index.html) for more information.
 
 ## Installation
 
