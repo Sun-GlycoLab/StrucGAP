@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.glycanstructure &mdash; StrucGAP 1.0.5 documentation</title>
+  <title>strucgap.glycanstructure &mdash; StrucGAP 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -192,6 +192,7 @@
 <span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 
@@ -452,6 +453,7 @@
 <span class="sd">            self.glycan_type_fucosylated_type</span>
 <span class="sd">            self.glycan_type_acgc</span>
 <span class="sd">            self.branches_structure_core_structure</span>
+<span class="sd">            self.branches_structure_branches_structure</span>
 <span class="sd">            self.branches_structure_glycan_type</span>
 <span class="sd">            self.branches_structure_fucosylated_type</span>
 <span class="sd">            self.branches_structure_acgc</span>
@@ -1229,6 +1231,27 @@
             <span class="n">temp_df</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">core_structure</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">temp_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">branches_structure_fucose_count</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="c1">#</span>
+        <span class="n">co_occurrence_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">unique_branches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">branches_column</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Branches&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">eval</span><span class="p">)</span>
+        <span class="n">unique_branches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">branches</span> <span class="ow">in</span> <span class="n">branches_column</span><span class="p">:</span>
+            <span class="n">unique_branches</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">branches</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">branches</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">branches</span><span class="p">)):</span>  
+                    <span class="n">pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">branches</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">branches</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>  
+                    <span class="k">if</span> <span class="n">pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">co_occurrence_count</span><span class="p">:</span>
+                        <span class="n">co_occurrence_count</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">co_occurrence_count</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">co_occurrence_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">unique_branches</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">unique_branches</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">branch1</span><span class="p">,</span> <span class="n">branch2</span><span class="p">),</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">co_occurrence_count</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">co_occurrence_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">branch1</span><span class="p">,</span> <span class="n">branch2</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+            <span class="n">co_occurrence_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">branch2</span><span class="p">,</span> <span class="n">branch1</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="n">long_format</span> <span class="o">=</span> <span class="n">co_occurrence_matrix</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">long_format</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Branch1&#39;</span><span class="p">,</span> <span class="s1">&#39;Branch2&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">branches_structure_branches_structure</span> <span class="o">=</span> <span class="n">long_format</span>
         
         <span class="c1">#</span>
         <span class="n">type_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;BranchNumber&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
@@ -1841,6 +1864,9 @@
             <span class="n">export_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">branches_structure_fucose_count</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">export_data</span><span class="p">[</span><span class="s1">&#39;Ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">export_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Branches&#39;</span><span class="p">)[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
             <span class="n">export_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;branches_structure_fucose_count&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
+            <span class="n">export_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">branches_structure_branches_structure</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">export_data</span><span class="p">[</span><span class="s1">&#39;Ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">export_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Branch1&#39;</span><span class="p">)[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+            <span class="n">export_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;branches_structure_branches_structure&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
                         
             <span class="n">export_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">branches_count_sialicacid_count</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">export_data</span><span class="p">[</span><span class="s1">&#39;Ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">export_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;BranchNumber&#39;</span><span class="p">)[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>

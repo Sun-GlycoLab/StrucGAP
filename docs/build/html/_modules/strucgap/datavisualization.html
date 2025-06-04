@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.datavisualization &mdash; StrucGAP 1.0.5 documentation</title>
+  <title>strucgap.datavisualization &mdash; StrucGAP 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -192,6 +192,7 @@
 <span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 数据可视化和报告生成模块</span>
@@ -3978,6 +3979,7 @@
                  <span class="n">xaxis_label_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> 
                  <span class="n">xaxis_label_font_weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> 
                  <span class="n">xaxis_label_font_size</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> 
+                 <span class="n">xaxis_label_rotate</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
                  <span class="n">yaxis_label_show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                  <span class="n">yaxis_label_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
                  <span class="n">yaxis_label_font_weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> 
@@ -4019,10 +4021,17 @@
             <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">filter_data</span><span class="p">[</span><span class="n">condition</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="n">text_annotation</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="n">text_annotation</span> <span class="o">=</span> <span class="kc">None</span>
-            
-        <span class="n">annot</span> <span class="o">=</span> <span class="n">text_annotation</span>
-        <span class="n">annot_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">text_size</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">text_color</span><span class="p">,</span> <span class="s1">&#39;fontfamily&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span> <span class="k">if</span> <span class="n">text_annotation</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="c1"># text_annotation = None</span>
+            <span class="n">annot</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">annot_kws</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">text_annotation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">format_value</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()):</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">annot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">format_value</span><span class="p">)(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">annot_kws</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">text_size</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">text_color</span><span class="p">,</span> <span class="s1">&#39;fontfamily&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span> <span class="k">if</span> <span class="n">text_annotation</span> <span class="k">else</span> <span class="kc">None</span>
         
         <span class="c1"># 如果颜色未设置，提供默认颜色</span>
         <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -4044,7 +4053,7 @@
                                <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">minvalue</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxvalue</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">centervalue</span><span class="p">,</span>
                            <span class="n">xticklabels</span><span class="o">=</span><span class="n">xaxis_label_show</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">yaxis_label_show</span><span class="p">,</span>
                            <span class="n">linewidths</span><span class="o">=</span><span class="n">splitline_width</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">splitline_color</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="n">z_score</span><span class="p">,</span>
-                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">)</span>
+                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cluster</span> <span class="o">==</span> <span class="s1">&#39;col&#39;</span><span class="p">:</span>
             <span class="c1"># 仅对列进行层次聚类</span>
             <span class="n">col_linkage</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">cluster_method</span><span class="p">)</span>
@@ -4053,7 +4062,7 @@
                                <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">minvalue</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxvalue</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">centervalue</span><span class="p">,</span>
                            <span class="n">xticklabels</span><span class="o">=</span><span class="n">xaxis_label_show</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">yaxis_label_show</span><span class="p">,</span>
                            <span class="n">linewidths</span><span class="o">=</span><span class="n">splitline_width</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">splitline_color</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="n">z_score</span><span class="p">,</span>
-                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">)</span>
+                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">cluster</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
             <span class="c1"># 对行和列都进行层次聚类</span>
             <span class="n">row_linkage</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">cluster_method</span><span class="p">)</span>
@@ -4063,14 +4072,14 @@
                            <span class="n">vmin</span><span class="o">=</span><span class="n">minvalue</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxvalue</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">xaxis_label_show</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">centervalue</span><span class="p">,</span>
                            <span class="n">yticklabels</span><span class="o">=</span><span class="n">yaxis_label_show</span><span class="p">,</span>
                            <span class="n">linewidths</span><span class="o">=</span><span class="n">splitline_width</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">splitline_color</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="n">z_score</span><span class="p">,</span>
-                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">)</span>
+                           <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># 不进行聚类</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>  <span class="c1"># 设置图形尺寸</span>
             <span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">clustermap</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">row_cluster</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">col_cluster</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">minvalue</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxvalue</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">centervalue</span><span class="p">,</span>
                         <span class="n">xticklabels</span><span class="o">=</span><span class="n">xaxis_label_show</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">yaxis_label_show</span><span class="p">,</span>
                         <span class="n">linewidths</span><span class="o">=</span><span class="n">splitline_width</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">splitline_color</span><span class="p">,</span>
-                        <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">)</span>
+                        <span class="n">annot</span><span class="o">=</span><span class="n">annot</span><span class="p">,</span> <span class="n">annot_kws</span><span class="o">=</span><span class="n">annot_kws</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             
         <span class="n">g</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="p">,</span>
@@ -4088,7 +4097,7 @@
         <span class="c1"># 2) 设置刻度（tick）标签的字体大小、颜色、旋转</span>
         <span class="n">g</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span>
             <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
-            <span class="n">labelrotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+            <span class="n">labelrotation</span><span class="o">=</span><span class="n">xaxis_label_rotate</span><span class="p">,</span>
             <span class="n">labelsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">,</span>
             <span class="n">labelcolor</span><span class="o">=</span><span class="n">xaxis_label_color</span>
         <span class="p">)</span>
@@ -4101,7 +4110,7 @@
         <span class="c1"># （可选）如果你还想单独微调每个 tick 对象：</span>
         <span class="n">g</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span>
             <span class="n">g</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span>
-            <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="n">xaxis_label_rotate</span><span class="p">,</span>
             <span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">xaxis_label_color</span><span class="p">,</span>
             <span class="n">fontweight</span><span class="o">=</span><span class="n">xaxis_label_font_weight</span>

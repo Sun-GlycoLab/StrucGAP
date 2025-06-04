@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .functionannotation import StrucGAP_FunctionAnnotation
+    from strucgap.functionannotation import StrucGAP_FunctionAnnotation
 
     # both glycoproteins
     module5 = StrucGAP_FunctionAnnotation(module1, data_manager=data_manager)  

@@ -98,6 +98,7 @@ from typing import Dict, List
 from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
+from reportlab.lib.colors import HexColor
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 糖肽定量分析模块--86

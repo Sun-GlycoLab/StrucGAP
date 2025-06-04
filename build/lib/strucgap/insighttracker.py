@@ -98,6 +98,7 @@ from typing import Dict, List
 from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
+from reportlab.lib.colors import HexColor
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 数据分析管理模块
@@ -252,15 +253,15 @@ class StrucGAP_InsightTracker:
                 down_ratio_sheetname = f"result_{i}_down_ratio"
                 #
                 data_ratio = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], ratio_sheetname)
-                data_ratio = data_ratio.replace(0, np.nan)
+                data_ratio.iloc[:,1:] = data_ratio.iloc[:,1:].replace(0, np.nan)
                 data_up = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], up_sheetname)
-                data_up = data_up.replace(0, np.nan)
+                data_up.iloc[:,1:] = data_up.iloc[:,1:].replace(0, np.nan)
                 data_up_ratio = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], up_ratio_sheetname)
-                data_up_ratio = data_up_ratio.replace(0, np.nan)
+                data_up_ratio.iloc[:,1:] = data_up_ratio.iloc[:,1:].replace(0, np.nan)
                 data_down = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], down_sheetname)
-                data_down = data_down.replace(0, np.nan)
+                data_down.iloc[:,1:] = data_down.iloc[:,1:].replace(0, np.nan)
                 data_down_ratio = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], down_ratio_sheetname)
-                data_down_ratio = data_down_ratio.replace(0, np.nan)
+                data_down_ratio.iloc[:,1:] = data_down_ratio.iloc[:,1:].replace(0, np.nan)
                 
                 def is_monotonic(row):
                     values = row[1:].astype(float)  
@@ -330,7 +331,7 @@ class StrucGAP_InsightTracker:
                 if i != 'glycan_composition':
                     ratio_sheetname = f"differential_analysis_{i}"
                     data_da = getattr(self.module_records['StrucGAP_GlycoPeptideQuant']['instance'], ratio_sheetname)
-                    data_da = data_da.replace(0, np.nan)
+                    data_da.iloc[:,1:] = data_da.iloc[:,1:].replace(0, np.nan)
                     max_up_index = data_da.loc[
                         (data_da.iloc[:, 1] == data_da.iloc[:, 1].max()) & 
                         (data_da.iloc[:, 3] == data_da.iloc[:, 3].max())].index
@@ -405,9 +406,9 @@ class StrucGAP_InsightTracker:
                 ratio_sheetname = f"{i}"
                 
                 data_count = getattr(self.module_records['StrucGAP_FunctionAnnotation']['instance'], count_sheetname)
-                data_count = data_count.replace(0, np.nan)
+                data_count.iloc[:,1:] = data_count.iloc[:,1:].replace(0, np.nan)
                 data_ratio = getattr(self.module_records['StrucGAP_FunctionAnnotation']['instance'], ratio_sheetname)
-                data_ratio = data_ratio.replace(0, np.nan)
+                data_ratio.iloc[:,1:] = data_ratio.iloc[:,1:].replace(0, np.nan)
                 
                 def extract_columns_with_dynamic_threshold(df, target_percentage=0.05):
                     num_columns = len(df.columns)-1

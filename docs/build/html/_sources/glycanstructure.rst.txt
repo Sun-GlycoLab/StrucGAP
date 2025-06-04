@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .glycanstructure import StrucGAP_GlycanStructure
+    from strucgap.glycanstructure import StrucGAP_GlycanStructure
 
     module2 = StrucGAP_GlycanStructure(gs_data=module1, data_manager=data_manager,  data_type='psm_filtered')
     module2.statistics(remove_oligo_mannose = False) 

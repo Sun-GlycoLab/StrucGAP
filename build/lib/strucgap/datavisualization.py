@@ -98,6 +98,7 @@ from typing import Dict, List
 from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
+from reportlab.lib.colors import HexColor
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 数据可视化和报告生成模块
@@ -3884,6 +3885,7 @@ class StrucGAP_DataVisualization:
                  xaxis_label_color='black', 
                  xaxis_label_font_weight='normal', 
                  xaxis_label_font_size=14, 
+                 xaxis_label_rotate = 90,
                  yaxis_label_show=False, 
                  yaxis_label_color='black',
                  yaxis_label_font_weight='normal', 
@@ -3925,10 +3927,17 @@ class StrucGAP_DataVisualization:
             df = df.loc[df.index.isin(filter_data[condition].index)]
 
         if text_annotation == False:
-            text_annotation = None
-            
-        annot = text_annotation
-        annot_kws = {'size': text_size, 'weight': 'normal', 'color': text_color, 'fontfamily': None} if text_annotation else None
+            # text_annotation = None
+            annot = None
+            annot_kws = None
+        if text_annotation == True:
+            def format_value(val):
+                if isinstance(val, (int, np.integer)) or (isinstance(val, float) and val.is_integer()):
+                    return f"{int(val)}"
+                else:
+                    return f"{val:.2f}"
+            annot = np.vectorize(format_value)(data)
+            annot_kws = {'size': text_size, 'weight': 'normal', 'color': text_color, 'fontfamily': None} if text_annotation else None
         
         # 如果颜色未设置，提供默认颜色
         if colors is None:
@@ -3950,7 +3959,7 @@ class StrucGAP_DataVisualization:
                                cmap=colors, vmin=minvalue, vmax=maxvalue, center=centervalue,
                            xticklabels=xaxis_label_show, yticklabels=yaxis_label_show,
                            linewidths=splitline_width, linecolor=splitline_color, z_score=z_score,
-                           annot=annot, annot_kws=annot_kws)
+                           annot=annot, annot_kws=annot_kws, fmt='')
         elif cluster == 'col':
             # 仅对列进行层次聚类
             col_linkage = linkage(df.T, method=cluster_method)
@@ -3959,7 +3968,7 @@ class StrucGAP_DataVisualization:
                                cmap=colors, vmin=minvalue, vmax=maxvalue, center=centervalue,
                            xticklabels=xaxis_label_show, yticklabels=yaxis_label_show,
                            linewidths=splitline_width, linecolor=splitline_color, z_score=z_score,
-                           annot=annot, annot_kws=annot_kws)
+                           annot=annot, annot_kws=annot_kws, fmt='')
         elif cluster == 'both':
             # 对行和列都进行层次聚类
             row_linkage = linkage(df, method=cluster_method)
@@ -3969,14 +3978,14 @@ class StrucGAP_DataVisualization:
                            vmin=minvalue, vmax=maxvalue, xticklabels=xaxis_label_show, center=centervalue,
                            yticklabels=yaxis_label_show,
                            linewidths=splitline_width, linecolor=splitline_color, z_score=z_score,
-                           annot=annot, annot_kws=annot_kws)
+                           annot=annot, annot_kws=annot_kws, fmt='')
         else:
             # 不进行聚类
             plt.figure(figsize=figsize)  # 设置图形尺寸
             g = sns.clustermap(df,row_cluster=False,col_cluster=False,cmap=colors, vmin=minvalue, vmax=maxvalue, center=centervalue,
                         xticklabels=xaxis_label_show, yticklabels=yaxis_label_show,
                         linewidths=splitline_width, linecolor=splitline_color,
-                        annot=annot, annot_kws=annot_kws)
+                        annot=annot, annot_kws=annot_kws, fmt='')
             
         g.ax_heatmap.set_xlabel(
             xaxis_title,
@@ -3994,7 +4003,7 @@ class StrucGAP_DataVisualization:
         # 2) 设置刻度（tick）标签的字体大小、颜色、旋转
         g.ax_heatmap.tick_params(
             axis='x',
-            labelrotation=90,
+            labelrotation=xaxis_label_rotate,
             labelsize=xaxis_label_font_size,
             labelcolor=xaxis_label_color
         )
@@ -4007,7 +4016,7 @@ class StrucGAP_DataVisualization:
         # （可选）如果你还想单独微调每个 tick 对象：
         g.ax_heatmap.set_xticklabels(
             g.ax_heatmap.get_xticklabels(),
-            rotation=90,
+            rotation=xaxis_label_rotate,
             fontsize=xaxis_label_font_size,
             color=xaxis_label_color,
             fontweight=xaxis_label_font_weight

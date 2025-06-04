@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_GlycanStructure Module &mdash; StrucGAP 1.0.5 documentation</title>
+  <title>StrucGAP_GlycanStructure Module &mdash; StrucGAP 1.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -119,7 +119,7 @@
 <div class="section" id="how-to-use">
 <h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
 <p>Instantiate and use the module as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.glycanstructure</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycanStructure</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.glycanstructure</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycanStructure</span>
 
 <span class="n">module2</span> <span class="o">=</span> <span class="n">StrucGAP_GlycanStructure</span><span class="p">(</span><span class="n">gs_data</span><span class="o">=</span><span class="n">module1</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span>  <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;psm_filtered&#39;</span><span class="p">)</span>
 <span class="n">module2</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="n">remove_oligo_mannose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -246,6 +246,7 @@ self.glycan_type_fucose_count
 self.glycan_type_fucosylated_type
 self.glycan_type_acgc
 self.branches_structure_core_structure
+self.branches_structure_branches_structure
 self.branches_structure_glycan_type
 self.branches_structure_fucosylated_type
 self.branches_structure_acgc

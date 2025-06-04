@@ -98,6 +98,7 @@ from typing import Dict, List
 from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
+from reportlab.lib.colors import HexColor
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 
@@ -358,6 +359,7 @@ class StrucGAP_GlycanStructure:
             self.glycan_type_fucosylated_type
             self.glycan_type_acgc
             self.branches_structure_core_structure
+            self.branches_structure_branches_structure
             self.branches_structure_glycan_type
             self.branches_structure_fucosylated_type
             self.branches_structure_acgc
@@ -1135,6 +1137,27 @@ class StrucGAP_GlycanStructure:
             temp_df['Branches'] = core_structure
             df = pd.concat([df, temp_df], ignore_index=True)
         self.branches_structure_fucose_count = df
+        #
+        co_occurrence_count = {}
+        unique_branches = set()
+        data = self.data.copy()
+        branches_column = data['Branches'].apply(eval)
+        unique_branches = set()
+        for branches in branches_column:
+            unique_branches.update(branches)
+            for i in range(len(branches)):
+                for j in range(i + 1, len(branches)):  
+                    pair = (branches[i], branches[j])  
+                    if pair not in co_occurrence_count:
+                        co_occurrence_count[pair] = 0
+                    co_occurrence_count[pair] += 1
+        co_occurrence_matrix = pd.DataFrame(0, index=unique_branches, columns=unique_branches)
+        for (branch1, branch2), count in co_occurrence_count.items():
+            co_occurrence_matrix.loc[branch1, branch2] = count
+            co_occurrence_matrix.loc[branch2, branch1] = count
+        long_format = co_occurrence_matrix.stack().reset_index()
+        long_format.columns = ['Branch1', 'Branch2', 'Count']
+        self.branches_structure_branches_structure = long_format
         
         #
         type_counts = pd.DataFrame(self.data['BranchNumber'].value_counts())
@@ -1747,6 +1770,9 @@ class StrucGAP_GlycanStructure:
             export_data = self.branches_structure_fucose_count.copy()
             export_data['Ratio'] = export_data.groupby('Branches')['Count'].transform(lambda x: x / x.sum())
             export_data.to_excel(writer, sheet_name='branches_structure_fucose_count'[:31])
+            export_data = self.branches_structure_branches_structure.copy()
+            export_data['Ratio'] = export_data.groupby('Branch1')['Count'].transform(lambda x: x / x.sum())
+            export_data.to_excel(writer, sheet_name='branches_structure_branches_structure'[:31])
                         
             export_data = self.branches_count_sialicacid_count.copy()
             export_data['Ratio'] = export_data.groupby('BranchNumber')['Count'].transform(lambda x: x / x.sum())

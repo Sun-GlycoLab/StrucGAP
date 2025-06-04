@@ -9,11 +9,12 @@ This module processes outputs from StrucGP alongside sample metadata and a glyca
 How to Use
 --------------
 
-Instantiate and use the module as follows:
+Instantiate and use the module as follows (All data used for StrucGAP can be found in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP)):
 
 .. code-block:: python
 
     from strucgap.preprocess import StrucGAP_Preprocess
+    from strucgap.insighttracker import StrucGAP_InsightTracker
 
     module1 = StrucGAP_Preprocess(data_dir="tests/mouse uterus.xlsx",
                       data_sheet_name = '1 PSM',
@@ -23,7 +24,7 @@ Instantiate and use the module as follows:
     module1.data_cleaning(data_type='tmt')
     module1.fdr(feature_type='no')
     module1.outliers(abundance_ratio=[1.172277596,1.142983373,1,1.46390136,1.466662624,
-    1.449428354,1.109519196,1.387464059,1.291746761,1.487440464])
+    1.449428354,1.109519196,1.387464059,1.291746761,1.487440464]) # Please refer to the file tests/Factor calculation.xlsx in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP) for more details on the abundance ratio calculation.
     module1.cv(threshold = 'no')
     module1.psm()
     module1.output()

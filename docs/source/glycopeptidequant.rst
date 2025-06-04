@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .glycopeptidequant import StrucGAP_GlycoPeptideQuant
+    from strucgap.glycopeptidequant import StrucGAP_GlycoPeptideQuant
 
     module4 = StrucGAP_GlycoPeptideQuant(module1, data_type = 'psm_filtered',   data_manager=data_manager)
     module4.statistics()

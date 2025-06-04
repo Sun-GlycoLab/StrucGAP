@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .insighttracker import StrucGAP_InsightTracker
+    from strucgap.insighttracker import StrucGAP_InsightTracker
     # before the both code
     data_manager = StrucGAP_InsightTracker()
     # output both results in pkl file

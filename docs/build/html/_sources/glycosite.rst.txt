@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .glycosite import StrucGAP_GlycoSite
+    from strucgap.glycosite import StrucGAP_GlycoSite
 
     module3 = StrucGAP_GlycoSite(module1, data_manager=data_manager)
     module3.glycoprotein_site()

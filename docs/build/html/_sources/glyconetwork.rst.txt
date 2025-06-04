@@ -13,7 +13,7 @@ Instantiate and use the module as follows:
 
 .. code-block:: python
 
-    from .glyconetwork import StrucGAP_GlycoNetwork
+    from strucgap.glyconetwork import StrucGAP_GlycoNetwork
 
     module6 = StrucGAP_GlycoNetwork(module4, data_manager=data_manager)
     module6.proteomic(protein_data_dir="tests/WYQ_Mus_uterus_global.xlsx",
