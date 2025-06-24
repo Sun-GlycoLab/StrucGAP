@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_Preprocess Module &mdash; StrucGAP 1.0.6 documentation</title>
+  <title>StrucGAP_Preprocess Module &mdash; StrucGAP 1.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -118,7 +118,9 @@
 <div class="section" id="how-to-use">
 <h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
 <p>Instantiate and use the module as follows (All data used for StrucGAP can be found in our GitHub repository(<a class="reference external" href="https://github.com/Sun-GlycoLab/StrucGAP">https://github.com/Sun-GlycoLab/StrucGAP</a>)):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.preprocess</span> <span class="kn">import</span> <span class="n">StrucGAP_Preprocess</span>
+<p>The abundance ratio used for the outliers calibration was calculated as follows:</p>
+<div style="margin-top: 60px;"></div><a class="reference internal image-reference" href="_images/factor.png"><img alt="abundance ratio" class="align-center" src="_images/factor.png" style="width: 600px;" /></a>
+<div style="margin-top: 60px;"></div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.preprocess</span> <span class="kn">import</span> <span class="n">StrucGAP_Preprocess</span>
 <span class="kn">from</span> <span class="nn">strucgap.insighttracker</span> <span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
 
 <span class="n">module1</span> <span class="o">=</span> <span class="n">StrucGAP_Preprocess</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;tests/mouse uterus.xlsx&quot;</span><span class="p">,</span>
@@ -131,7 +133,7 @@
 <span class="n">module1</span><span class="o">.</span><span class="n">outliers</span><span class="p">(</span><span class="n">abundance_ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">1.172277596</span><span class="p">,</span><span class="mf">1.142983373</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.46390136</span><span class="p">,</span><span class="mf">1.466662624</span><span class="p">,</span>
 <span class="mf">1.449428354</span><span class="p">,</span><span class="mf">1.109519196</span><span class="p">,</span><span class="mf">1.387464059</span><span class="p">,</span><span class="mf">1.291746761</span><span class="p">,</span><span class="mf">1.487440464</span><span class="p">])</span> <span class="c1"># Please refer to the file tests/Factor calculation.xlsx in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP) for more details on the abundance ratio calculation.</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">threshold</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
-<span class="n">module1</span><span class="o">.</span><span class="n">psm</span><span class="p">()</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">psm</span><span class="p">(</span><span class="n">psm_number</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -224,11 +226,11 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.psm">
-<span class="sig-name descname"><span class="pre">psm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.psm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.psm" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">psm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psm_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.psm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.psm" title="Permalink to this definition"></a></dt>
 <dd><p>Filters IGPs by the minimum number of supporting PSMs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dd class="field-odd"><p><strong>psm_filter</strong> – psm filter threshold (e.g. 3).</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>self.data_psm_filtered (psm filtered data).</p>

@@ -19,7 +19,7 @@ Instantiate and use the module as follows:
     module4.statistics()
     module4.statistics_index()
     module4.differential_analysis(pvalue_type='pvalue_ttest')
-    module4.threshold_variation_analysis(pvalue_type='pvalue_ttest')
+    module4.threshold_variation_analysis(pvalue_type='pvalue_ttest', statistic_index='fc')
     module4.glycopeptide_glycosite_glycan_variation()
     module4.glycoprotein_glycosite_glycan_variation()
     module4.output()

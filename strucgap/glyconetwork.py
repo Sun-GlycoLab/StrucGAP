@@ -577,7 +577,10 @@ class StrucGAP_GlycoNetwork:
     def transcriptomic(self):
         pass
     
-    def proteomic(self, protein_data_dir, fc=1.5, pvalue=0.05, data_sheet_name=None, pvalue_type='pvalue_ttest_mannwhitneyu'):
+    def proteomic(self, protein_data_dir, fc=1.5, pvalue=0.05, data_sheet_name=None, pvalue_type='pvalue_ttest_mannwhitneyu',
+                  fdr = 'Medium', psm = 3, cv = 0.3, 
+                  normalization_samplewise_method = 'robust normalization',
+                  normalization_featurewise_method = 'robust normalization'):
         """
         Implements a comprehensive preprocessing pipeline for global proteomic datasets.
         
@@ -587,6 +590,11 @@ class StrucGAP_GlycoNetwork:
             fc: FC threshold used for differential analysis.
             pvalue: P value used for differential analysis.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
+            fdr: Proteomics data fdr filtering threshold (select from: Low, Medium, or no).
+            psm: Proteomics data psm filtering threshold (e.g. 3).
+            cv: Proteomics data cv filtering threshold (e.g. 0.3).
+            normalization_samplewise_method: Samplewise normalization methods.
+            normalization_featurewise_method: Featurewise normalization methods.
         
         Returns:
             self.protein_raw_data.
@@ -648,7 +656,8 @@ class StrucGAP_GlycoNetwork:
         #
         # fdr
         if 'Protein FDR Confidence: Combined' in list(protein_data.columns):
-            fdr = input('Please enter a level of fdr (select from: Low, Medium, or no) that is unacceptable to you: ')
+            if fdr is None:
+                fdr = input('Please enter a level of fdr (select from: Low, Medium, or no) that is unacceptable to you: ')
             expected_options = ['Low', 'Medium', 'no']
             matches = get_close_matches(fdr, expected_options, n=1, cutoff=0.5)
             if matches:
@@ -666,7 +675,8 @@ class StrucGAP_GlycoNetwork:
         
         # psm
         if '# PSMs' in list(protein_data.columns):
-            psm = input('Please enter a level of psm (such as: 1, 2, 3...): ')
+            if psm is None:
+                psm = input('Please enter a level of psm (such as: 1, 2, 3...): ')
             protein_data = protein_data[protein_data['# PSMs'] >= int(psm)]
         
         # missing values
@@ -697,13 +707,13 @@ class StrucGAP_GlycoNetwork:
         self.no_missing_value_data = self.missing_values_imputation(self.no_outliers_data)
         
         # cv
-        self.cv_filter_data = self.cv_filter(self.no_missing_value_data)
+        self.cv_filter_data = self.cv_filter(self.no_missing_value_data, threshold = cv)
         
         # normalization
         # samplewise
-        self.samplewise_normalized_data = self.normalization_samplewise(self.cv_filter_data)
+        self.samplewise_normalized_data = self.normalization_samplewise(self.cv_filter_data, method = normalization_samplewise_method)
         # featurewise
-        self.samplewise_featurewise_normalized_data = self.normalization_featurewise(self.samplewise_normalized_data)
+        self.samplewise_featurewise_normalized_data = self.normalization_featurewise(self.samplewise_normalized_data, method = normalization_featurewise_method)
         #
         ## analysis
         # glycosylation

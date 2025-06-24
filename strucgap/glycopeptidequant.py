@@ -367,7 +367,8 @@ class StrucGAP_GlycoPeptideQuant:
     
         return core_structure
     
-    def differential_analysis(self, index = 'fc', pvalue = 0.05, fc = 1.5, pvalue_type='pvalue_ttest'):
+    def differential_analysis(self, index = 'fc', pvalue = 0.05, fc = 1.5, pvalue_type='pvalue_ttest',
+                              auxiliary_filter_index = 'no'):
         """
         Identifies significantly regulated glycopeptides under user-defined thresholds.
         
@@ -376,6 +377,7 @@ class StrucGAP_GlycoPeptideQuant:
             pvalue: P value used for differential analysis.
             fc: FC used for differential analysis.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu' used for FC-based differential analysis.
+            auxiliary_filter_index: filter index used for differential analysis.
         
         Returns:
             self.differential_analysis_data.
@@ -400,7 +402,8 @@ class StrucGAP_GlycoPeptideQuant:
             dataframe
         
         """
-        index = input("Please enter 1 or more statistic indices used for differential analysis ('fc', 'roc', 'ml', 'pca', 'anova', 'chi2'): ")
+        if index is None:
+            index = input("Please enter 1 or more statistic indices used for differential analysis ('fc', 'roc', 'ml', 'pca', 'anova', 'chi2'): ")
         index = [x.strip() for x in index.split(',')]
         print(f"Using '{index}' as the input.")
         index_list = {
@@ -414,8 +417,8 @@ class StrucGAP_GlycoPeptideQuant:
         for i in index:
             if i not in index_list:
                 raise ValueError(f"Invalid index '{i}'. Available options are {list(index_list.keys())}")
-        
-        auxiliary_filter_index = input("Please enter other auxiliary filtering index ( 'roc', 'ml', 'pca', 'anova', 'chi2') for further filtering after fc filtering, the primary filter index has been set to 'fc' by default: ")
+        if auxiliary_filter_index is None:
+            auxiliary_filter_index = input("Please enter other auxiliary filtering index ( 'roc', 'ml', 'pca', 'anova', 'chi2') for further filtering after fc filtering, the primary filter index has been set to 'fc' by default: ")
         auxiliary_filter_index = [x.strip() for x in auxiliary_filter_index.split(',')]
         print(f"Using '{auxiliary_filter_index}' as the input.")
         auxiliary_filter_index_list = {
@@ -432,17 +435,19 @@ class StrucGAP_GlycoPeptideQuant:
             result = pd.merge(result, index_list[i], left_index=True, right_index=True, how='left')
         self.differential_analysis_data = result
         #
-        user_pvalue = input(f"Please enter the pvalue used for differential analysis (default pvalue was {pvalue}): ")
-        if user_pvalue:
+        if pvalue is None:
+            pvalue = input(f"Please enter the pvalue used for differential analysis: ")
+        if pvalue:
             try:
-                pvalue = float(user_pvalue)
+                pvalue = float(pvalue)
             except ValueError:
                 print("Invaild input, the pvalue was set to 0.05")
                 pvalue = 0.05
-        user_fc = input(f"Please enter the fc used for differential analysis (default fc was {fc}): ")
-        if user_fc:
+        if fc is None:
+            fc = input(f"Please enter the fc used for differential analysis: ")
+        if fc:
             try:
-                fc = float(user_fc)
+                fc = float(fc)
             except ValueError:
                 print("Invaild input, the fc was set to 1.5")
                 fc = 1.5

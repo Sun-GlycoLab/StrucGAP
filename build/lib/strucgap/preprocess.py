@@ -858,41 +858,41 @@ class StrucGAP_Preprocess:
                         continue
                 ions.append(tmp2)
             #
-            result = [['PeptideSequence+structure_coding+ProteinID',*map(str, self.sample_group.index),'psm']]
-            result1 = [['PeptideSequence+structure_coding+ProteinID',*map(str, self.sample_group.index),'psm']]
-            unique = list(set(glycopep))
-            #
-            for i in unique: 
-                tmp2 = [i] + [[] for _ in range(len(self.sample_group.index))]  # len(tmp2) module1.data_c
-                tmp3 = [i]
-                for j in ions:
-                    if i == j[0]:
-                        for k in range(1,len(j)):
-                            tmp2[k].append(j[k]) 
-                        data_c = pd.DataFrame(tmp2[1:int((1+len(tmp2))/2)])  
-                        data_s = pd.DataFrame(tmp2[int((1+len(tmp2))/2):int(1+len(tmp2))])
-                        data_c['Zero_Count'] = (data_c == 0).sum(axis=1)
-                        data_s['Zero_Count'] = (data_s == 0).sum(axis=1)
-                        data_c = data_c.replace(0,np.nan)
-                        data_s = data_s.replace(0,np.nan)
-                        self.data_c = data_c
-                        for c in range(data_c.shape[1]-1):
-                            
-                            ######### outliers identification and imputation
-                            
-                            list1 = data_c[c]
-                            median1 = self.median_cheng(list(list1))
-                            data_c.loc[:, c] = data_c.loc[:, c]/median1
-                            data_s.loc[:, c] = data_s.loc[:, c]/median1
-                        data_c.drop(columns=['Zero_Count'],inplace=True) 
-                        data_s.drop(columns=['Zero_Count'],inplace=True) 
-                        
-                for l in range(data_c.shape[0]): 
-                    tmp3.append(self.median_cheng(list(data_c.loc[l])))
-                for l in range(data_s.shape[0]): 
-                    tmp3.append(self.median_cheng(list(data_s.loc[l])))
-                #
-                tmp3.append(data_s.shape[1])
+            header = ['PeptideSequence+structure_coding+ProteinID', *map(str, self.sample_group.index), 'psm']
+            result = [header]
+            result1 = [header]
+            # 转 ions 为 DataFrame 便于分组处理
+            ion_df = pd.DataFrame(ions)
+            ion_df.rename(columns={0: 'peptide'}, inplace=True)
+            # Melt所有的定量值（后续使用groupby）
+            value_cols = ion_df.columns[1:]
+            ion_melted = ion_df.melt(id_vars='peptide', value_vars=value_cols, var_name='channel', value_name='abundance')
+            # Group by peptide → 列表化每个 channel 对应的 abundance 值
+            grouped = ion_melted.groupby(['peptide', 'channel'])['abundance'].apply(list).unstack(fill_value=[]).reset_index()
+            # 开始逐个处理 unique 的 glycopeptides
+            for _, row in grouped.iterrows():
+                pep_id = row['peptide']
+                values_per_channel = row[1:].tolist()
+                # 拆分前/后半部分（即：control/sample）
+                half = len(values_per_channel) // 2
+                data_c = pd.DataFrame(values_per_channel[:half]).replace(0, np.nan)
+                data_s = pd.DataFrame(values_per_channel[half:]).replace(0, np.nan)
+                # 归一化（使用 module1.median_cheng）
+                for col in data_c.columns:
+                    median_val = self.median_cheng(data_c[col].tolist())
+                    if not np.isnan(median_val) and median_val != 0:
+                        data_c[col] = data_c[col] / median_val
+                        data_s[col] = data_s[col] / median_val
+                # 汇总统计 → 中位数输出行
+                tmp3 = [pep_id]
+                # 对每一行（通道）进行归一化并取中位数
+                for l in range(data_c.shape[0]):
+                    row_values = data_c.loc[l].tolist()
+                    tmp3.append(self.median_cheng(row_values))
+                for l in range(data_s.shape[0]):
+                    row_values = data_s.loc[l].tolist()
+                    tmp3.append(self.median_cheng(row_values))
+                tmp3.append(data_s.shape[1])  # psm count
                 result1.append(tmp3)
             #
             self.data_outliers_filtered = pd.DataFrame(result1)
@@ -964,12 +964,12 @@ class StrucGAP_Preprocess:
         
         return self
     
-    def psm(self):
+    def psm(self, psm_number = None):
         """
         Filters IGPs by the minimum number of supporting PSMs.
         
         Parameters:
-            None.
+            psm_filter: psm filter threshold (e.g. 3).
         
         Returns:
             self.data_psm_filtered (psm filtered data). 
@@ -979,7 +979,8 @@ class StrucGAP_Preprocess:
         
         """
         if self.search_engine == 'StrucGP':
-            psm_number = input("Please enter a PSM number for filtering (e.g., 3), or 'no' to skip: ")
+            if psm_number is None:
+                psm_number = input("Please enter a PSM number for filtering (e.g., 3), or 'no' to skip: ")
             if psm_number.lower() != 'no':
                 try:
                     psm_number = int(psm_number)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.glyconetwork &mdash; StrucGAP 1.0.6 documentation</title>
+  <title>strucgap.glyconetwork &mdash; StrucGAP 1.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -671,7 +671,10 @@
 <div class="viewcode-block" id="StrucGAP_GlycoNetwork.transcriptomic"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic">[docs]</a>    <span class="k">def</span> <span class="nf">transcriptomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
     
-<div class="viewcode-block" id="StrucGAP_GlycoNetwork.proteomic"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic">[docs]</a>    <span class="k">def</span> <span class="nf">proteomic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protein_data_dir</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">data_sheet_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest_mannwhitneyu&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoNetwork.proteomic"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic">[docs]</a>    <span class="k">def</span> <span class="nf">proteomic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protein_data_dir</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">data_sheet_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest_mannwhitneyu&#39;</span><span class="p">,</span>
+                  <span class="n">fdr</span> <span class="o">=</span> <span class="s1">&#39;Medium&#39;</span><span class="p">,</span> <span class="n">psm</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> 
+                  <span class="n">normalization_samplewise_method</span> <span class="o">=</span> <span class="s1">&#39;robust normalization&#39;</span><span class="p">,</span>
+                  <span class="n">normalization_featurewise_method</span> <span class="o">=</span> <span class="s1">&#39;robust normalization&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements a comprehensive preprocessing pipeline for global proteomic datasets.</span>
 <span class="sd">        </span>
@@ -681,6 +684,11 @@
 <span class="sd">            fc: FC threshold used for differential analysis.</span>
 <span class="sd">            pvalue: P value used for differential analysis.</span>
 <span class="sd">            pvalue_type: &#39;pvalue_ttest&#39;, &#39;pvalue_mannwhitneyu&#39; or &#39;pvalue_ttest_mannwhitneyu&#39;.</span>
+<span class="sd">            fdr: Proteomics data fdr filtering threshold (select from: Low, Medium, or no).</span>
+<span class="sd">            psm: Proteomics data psm filtering threshold (e.g. 3).</span>
+<span class="sd">            cv: Proteomics data cv filtering threshold (e.g. 0.3).</span>
+<span class="sd">            normalization_samplewise_method: Samplewise normalization methods.</span>
+<span class="sd">            normalization_featurewise_method: Featurewise normalization methods.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            self.protein_raw_data.</span>
@@ -742,7 +750,8 @@
         <span class="c1">#</span>
         <span class="c1"># fdr</span>
         <span class="k">if</span> <span class="s1">&#39;Protein FDR Confidence: Combined&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">protein_data</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-            <span class="n">fdr</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Please enter a level of fdr (select from: Low, Medium, or no) that is unacceptable to you: &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fdr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fdr</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Please enter a level of fdr (select from: Low, Medium, or no) that is unacceptable to you: &#39;</span><span class="p">)</span>
             <span class="n">expected_options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Low&#39;</span><span class="p">,</span> <span class="s1">&#39;Medium&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">]</span>
             <span class="n">matches</span> <span class="o">=</span> <span class="n">get_close_matches</span><span class="p">(</span><span class="n">fdr</span><span class="p">,</span> <span class="n">expected_options</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
@@ -760,7 +769,8 @@
         
         <span class="c1"># psm</span>
         <span class="k">if</span> <span class="s1">&#39;# PSMs&#39;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">protein_data</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
-            <span class="n">psm</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Please enter a level of psm (such as: 1, 2, 3...): &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">psm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">psm</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Please enter a level of psm (such as: 1, 2, 3...): &#39;</span><span class="p">)</span>
             <span class="n">protein_data</span> <span class="o">=</span> <span class="n">protein_data</span><span class="p">[</span><span class="n">protein_data</span><span class="p">[</span><span class="s1">&#39;# PSMs&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">psm</span><span class="p">)]</span>
         
         <span class="c1"># missing values</span>
@@ -791,13 +801,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">no_missing_value_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_values_imputation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_outliers_data</span><span class="p">)</span>
         
         <span class="c1"># cv</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_missing_value_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">no_missing_value_data</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">cv</span><span class="p">)</span>
         
         <span class="c1"># normalization</span>
         <span class="c1"># samplewise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_samplewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_samplewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">normalization_samplewise_method</span><span class="p">)</span>
         <span class="c1"># featurewise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_featurewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_featurewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_featurewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_featurewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">normalization_featurewise_method</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1">## analysis</span>
         <span class="c1"># glycosylation</span>
