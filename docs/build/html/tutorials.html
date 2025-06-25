@@ -203,16 +203,17 @@
 <span class="c1"># Plotting</span>
 <span class="n">module7</span> <span class="o">=</span> <span class="n">StrucGAP_DataVisualization</span><span class="p">(</span><span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
 <span class="c1"># Example</span>
-<span class="n">module7</span><span class="o">.</span><span class="n">heatmap_multi_data</span><span class="p">(</span><span class="s1">&#39;module1.data&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;module1.data_psm_filtered&#39;</span><span class="p">,</span>
-              <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;MS2Scan&#39;</span><span class="p">,</span> <span class="s1">&#39;ProteinID&#39;</span><span class="p">,</span> <span class="s1">&#39;PeptideSequence&#39;</span><span class="p">,</span> <span class="s1">&#39;structure_coding&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;GlycanComposition&#39;</span><span class="p">,</span> <span class="s1">&#39;ProteinID+Glycosite_Position&#39;</span><span class="p">],</span>
-              <span class="n">statistical_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="s1">&#39;unique&#39;</span><span class="p">,</span>
-                                     <span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="s1">&#39;unique&#39;</span><span class="p">],</span>
-              <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;overview&#39;</span><span class="p">,</span>
-              <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;Spectral&#39;</span><span class="p">,</span>
-              <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;cleaned and psm filtered data&#39;</span>
-              <span class="p">)</span>
+<span class="n">up_data</span> <span class="o">=</span> <span class="n">module4</span><span class="o">.</span><span class="n">up_data</span><span class="p">[</span><span class="n">module4</span><span class="o">.</span><span class="n">up_data</span><span class="p">[</span><span class="s1">&#39;Glycan_type&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;Oligo mannose&#39;</span><span class="p">]</span>
+<span class="n">down_data</span> <span class="o">=</span> <span class="n">module4</span><span class="o">.</span><span class="n">down_data</span><span class="p">[</span><span class="n">module4</span><span class="o">.</span><span class="n">down_data</span><span class="p">[</span><span class="s1">&#39;Glycan_type&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;Oligo mannose&#39;</span><span class="p">]</span>
+<span class="n">fig4</span> <span class="o">=</span> <span class="n">module7</span><span class="o">.</span><span class="n">heatmap_multi_data</span><span class="p">(</span><span class="n">up_data</span><span class="p">,</span>
+          <span class="n">down_data</span><span class="p">,</span>
+          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">],</span>
+          <span class="n">statistical_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">],</span>
+          <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant_1&#39;</span><span class="p">,</span>
+          <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span>
+          <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;top 10 differential glycan&#39;</span><span class="p">,</span>
+          <span class="n">figure_description</span> <span class="o">=</span> <span class="s1">&#39;Top 10 most frequently observed upregulated and downregulated glycan structures, excluding oligo-mannose types, highlighting distinct compositional shifts.&#39;</span><span class="p">,</span>
+          <span class="p">)</span>
 <span class="c1"># Example</span>
 <span class="n">plot_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">module3</span><span class="o">.</span><span class="n">glycoprotein_glycosite_count</span><span class="p">[</span><span class="s1">&#39;glycosite_count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
 <span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;glycosite_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">index</span>

@@ -114,16 +114,17 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
     # Plotting
     module7 = StrucGAP_DataVisualization(data_manager=data_manager)
     # Example
-    module7.heatmap_multi_data('module1.data',  
-                  'module1.data_psm_filtered',   
-                  columns=['MS2Scan', 'ProteinID', 'PeptideSequence', 'structure_coding', 
-                           'GlycanComposition', 'ProteinID+Glycosite_Position'],
-                  statistical_methods = ['both', 'unique', 'unique', 'unique', 
-                                         'unique', 'unique'],
-                  subfolder='overview',
-                  colors = 'Spectral',
-                  filename='cleaned and psm filtered data'
-                  )
+    up_data = module4.up_data[module4.up_data['Glycan_type']!='Oligo mannose']
+    down_data = module4.down_data[module4.down_data['Glycan_type']!='Oligo mannose']
+    fig4 = module7.heatmap_multi_data(up_data,  
+              down_data,   
+              columns=['structure_coding'],
+              statistical_methods = ['count'],
+              subfolder='StrucGAP_GlycoPeptideQuant_1',
+              colors = 'coolwarm',
+              filename = 'top 10 differential glycan',
+              figure_description = 'Top 10 most frequently observed upregulated and downregulated glycan structures, excluding oligo-mannose types, highlighting distinct compositional shifts.',
+              )
     # Example
     plot_data = pd.DataFrame(module3.glycoprotein_glycosite_count['glycosite_count'].value_counts())
     plot_data['glycosite_type'] = plot_data.index
