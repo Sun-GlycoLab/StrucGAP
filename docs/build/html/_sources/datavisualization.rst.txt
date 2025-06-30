@@ -36,7 +36,7 @@ Instantiate and use the module as follows:
 Analytical report generation
 --------------------------------------------------------------
 
-We generate two types of analysis reports by default based on the research content. The first type includes results from all analysis modules, while the second type provides a quick overview of key insights. Below, we provide an example of generating such a report. The complete script for report generation can be found in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP) under tests/analysis_report.py:
+We generate two types of analysis reports by default based on the research content. The first type includes results from all analysis modules, while the second type provides a quick overview of key insights. Below, we provide an example of generating such a report. The complete script for report generation can be found in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP) under tests/analysis_report.py.
 
 
 API Reference

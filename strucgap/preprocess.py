@@ -880,9 +880,9 @@ class StrucGAP_Preprocess:
                 # 归一化（使用 module1.median_cheng）
                 for col in data_c.columns:
                     median_val = self.median_cheng(data_c[col].tolist())
-                    if not np.isnan(median_val) and median_val != 0:
-                        data_c[col] = data_c[col] / median_val
-                        data_s[col] = data_s[col] / median_val
+                    # if not np.isnan(median_val) and median_val != 0:
+                    data_c[col] = data_c[col] / median_val
+                    data_s[col] = data_s[col] / median_val
                 # 汇总统计 → 中位数输出行
                 tmp3 = [pep_id]
                 # 对每一行（通道）进行归一化并取中位数
