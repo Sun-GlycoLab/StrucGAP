@@ -9,6 +9,7 @@ strucgap/glycopeptidequant.py
 strucgap/glycosite.py
 strucgap/insighttracker.py
 strucgap/preprocess.py
+strucgap/test.py
 strucgap.egg-info/PKG-INFO
 strucgap.egg-info/SOURCES.txt
 strucgap.egg-info/dependency_links.txt

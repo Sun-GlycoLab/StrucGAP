@@ -13,8 +13,8 @@ Dependencies
 StrucGAP requires:
 
 - Python >= 3.7
-- pandas == 1.3.5
-- numpy == 1.18.1
+- **pandas == 1.3.5**
+- **numpy == 1.18.1**
 - matplotlib == 3.5.3
 - networkx == 2.4
 - PIL == 9.5.0

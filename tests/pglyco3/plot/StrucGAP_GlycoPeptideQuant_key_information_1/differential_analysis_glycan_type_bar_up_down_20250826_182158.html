@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+                <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
+
+</head>
+<body >
+    <div id="40b1d9c1f6134105b4b0e1c15dd1381d" class="chart-container" style="width:900px; height:500px; "></div>
+    <script>
+        var chart_40b1d9c1f6134105b4b0e1c15dd1381d = echarts.init(
+            document.getElementById('40b1d9c1f6134105b4b0e1c15dd1381d'), 'white', {renderer: 'svg'});
+        var option_40b1d9c1f6134105b4b0e1c15dd1381d = {
+    "backgroundColor": "#fff",
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "aria": {
+        "enabled": false
+    },
+    "color": [
+        "#0F6360",
+        "#F1C233"
+    ],
+    "series": [
+        {
+            "type": "bar",
+            "name": "Up_data_Glycan_type_count",
+            "legendHoverLink": true,
+            "data": [
+                {
+                    "value": 71
+                },
+                {
+                    "value": 21
+                },
+                {
+                    "value": 17
+                }
+            ],
+            "realtimeSort": false,
+            "showBackground": false,
+            "stack": false,
+            "stackStrategy": "samesign",
+            "cursor": "pointer",
+            "barWidth": "40%",
+            "barMinHeight": 0,
+            "barCategoryGap": "40%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "right",
+                "color": "black",
+                "margin": 8,
+                "fontSize": 12,
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "formatter": function(x){return Number(x.data.percent * 100).toFixed(2) + '%';}
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        },
+        {
+            "type": "bar",
+            "name": "Down_data_Glycan_type_count",
+            "legendHoverLink": true,
+            "data": [
+                {
+                    "value": -96
+                },
+                {
+                    "value": -43
+                },
+                {
+                    "value": -35
+                }
+            ],
+            "realtimeSort": false,
+            "showBackground": false,
+            "stack": false,
+            "stackStrategy": "samesign",
+            "cursor": "pointer",
+            "barWidth": "40%",
+            "barMinHeight": 0,
+            "barCategoryGap": "40%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": false,
+                "position": "right",
+                "color": "black",
+                "margin": 8,
+                "fontSize": 12,
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "formatter": function(x){return Number(x.data.percent * 100).toFixed(2) + '%';}
+            },
+            "rippleEffect": {
+                "show": true,
+                "brushType": "stroke",
+                "scale": 2.5,
+                "period": 4
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "Up_data_Glycan_type_count",
+                "Down_data_Glycan_type_count"
+            ],
+            "selected": {},
+            "show": true,
+            "right": "center",
+            "top": "top",
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14,
+            "textStyle": {
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "fontSize": 20
+            },
+            "backgroundColor": "transparent",
+            "borderColor": "#ccc",
+            "borderRadius": 0,
+            "pageButtonItemGap": 5,
+            "pageButtonPosition": "end",
+            "pageFormatter": "{current}/{total}",
+            "pageIconColor": "#2f4554",
+            "pageIconInactiveColor": "#aaa",
+            "pageIconSize": 15,
+            "animationDurationUpdate": 800,
+            "selector": false,
+            "selectorPosition": "auto",
+            "selectorItemGap": 7,
+            "selectorButtonGap": 10
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "enterable": false,
+        "confine": false,
+        "appendToBody": false,
+        "transitionDuration": 0.4,
+        "textStyle": {
+            "fontSize": 14
+        },
+        "borderWidth": 0,
+        "padding": 5,
+        "order": "seriesAsc"
+    },
+    "xAxis": [
+        {
+            "name": "IGPs containing different types of glycan types",
+            "show": true,
+            "scale": false,
+            "nameLocation": "center",
+            "nameGap": 40,
+            "nameTextStyle": {
+                "color": "black",
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "fontSize": 20
+            },
+            "gridIndex": 0,
+            "axisLine": {
+                "show": true,
+                "onZero": true,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisTick": {
+                "show": true,
+                "alignWithLabel": false,
+                "inside": false,
+                "length": 8,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisLabel": {
+                "show": true,
+                "color": "black",
+                "rotate": 0,
+                "margin": 15,
+                "fontSize": 20,
+                "fontWeight": "normal",
+                "fontFamily": "Arial"
+            },
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": true,
+                    "width": 0.5,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "grey"
+                }
+            },
+            "data": [
+                "Oligo mannose",
+                "Complex",
+                "Hybrid"
+            ]
+        },
+        {
+            "type": "category",
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "axisLine": {
+                "show": true,
+                "onZero": false,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisTick": {
+                "show": false,
+                "alignWithLabel": false,
+                "inside": false
+            },
+            "axisLabel": {
+                "show": false,
+                "margin": 8
+            },
+            "inverse": false,
+            "position": "top",
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            },
+            "data": [
+                "Oligo mannose",
+                "Complex",
+                "Hybrid"
+            ]
+        },
+        {
+            "type": "category",
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "axisLine": {
+                "show": true,
+                "onZero": false,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisTick": {
+                "show": false,
+                "alignWithLabel": false,
+                "inside": false
+            },
+            "axisLabel": {
+                "show": false,
+                "margin": 8
+            },
+            "inverse": false,
+            "position": "bottom",
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            },
+            "data": [
+                "Oligo mannose",
+                "Complex",
+                "Hybrid"
+            ]
+        }
+    ],
+    "yAxis": [
+        {
+            "name": "Up and downregulated(-) IGPs counts",
+            "show": true,
+            "scale": false,
+            "nameLocation": "center",
+            "nameGap": 50,
+            "nameTextStyle": {
+                "color": "black",
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "fontSize": 20
+            },
+            "gridIndex": 0,
+            "axisLine": {
+                "show": true,
+                "onZero": true,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisTick": {
+                "show": true,
+                "alignWithLabel": false,
+                "inside": false,
+                "length": 8,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisLabel": {
+                "show": true,
+                "color": "black",
+                "margin": 15,
+                "fontSize": 20,
+                "fontWeight": "normal",
+                "fontFamily": "Arial"
+            },
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": true,
+                    "width": 0.5,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "grey"
+                }
+            }
+        },
+        {
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "axisLine": {
+                "show": true,
+                "onZero": true,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "black"
+                }
+            },
+            "axisLabel": {
+                "show": false,
+                "margin": 8
+            },
+            "inverse": false,
+            "position": "right",
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            }
+        }
+    ],
+    "title": [
+        {
+            "show": true,
+            "target": "blank",
+            "subtarget": "blank",
+            "left": "center",
+            "top": "0%",
+            "padding": 5,
+            "itemGap": 10,
+            "textAlign": "auto",
+            "textVerticalAlign": "auto",
+            "triggerEvent": false
+        }
+    ]
+};
+        chart_40b1d9c1f6134105b4b0e1c15dd1381d.setOption(option_40b1d9c1f6134105b4b0e1c15dd1381d);
+    </script>
+</body>
+</html>

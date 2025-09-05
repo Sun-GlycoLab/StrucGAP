@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_GlycoSite Module &mdash; StrucGAP 1.0.8 documentation</title>
+  <title>StrucGAP_GlycoSite Module &mdash; StrucGAP 1.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -52,6 +52,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting%20guide.html">Troubleshooting guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
 <ul class="current">
@@ -100,6 +101,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">StrucGAP_GlycoSite Module</li>
       <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Sun-GlycoLab/StrucGAP/blob/glycosite.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -132,6 +134,21 @@
 <dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glycosite.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycoSite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'psm_filtered'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gs_data</strong> – Input data, usually derived from the output of the previous module (StrucGAP_Preprocess), to be further processed by StrucGAP_GlycoSite.</p></li>
+<li><p><strong>data_manager</strong> – Data manager instance, such as ‘data_manager’ if data_manager = StrucGAP_InsightTracker().</p></li>
+<li><p><strong>data_type</strong> – Specifies which preprocessing stage data
+to use from <cite>gs_data</cite>. Options are:
+- “psm_filtered”
+- “cv_filtered”
+- “outliers_filtered”
+- “data”
+Default is “psm_filtered”.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycosite.StrucGAP_GlycoSite.map_protein_to_gene">
 <span class="sig-name descname"><span class="pre">map_protein_to_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycosite.html#StrucGAP_GlycoSite.map_protein_to_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycosite.StrucGAP_GlycoSite.map_protein_to_gene" title="Permalink to this definition"></a></dt>

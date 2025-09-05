@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+                <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
+
+</head>
+<body >
+    <div id="d778496af45d42998c67ede9b23e3998" class="chart-container" style="width:900px; height:500px; "></div>
+    <script>
+        var chart_d778496af45d42998c67ede9b23e3998 = echarts.init(
+            document.getElementById('d778496af45d42998c67ede9b23e3998'), 'white', {renderer: 'svg'});
+        var option_d778496af45d42998c67ede9b23e3998 = {
+    "backgroundColor": "#fff",
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "aria": {
+        "enabled": false
+    },
+    "color": [
+        "#5470c6",
+        "#91cc75",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+    ],
+    "series": [
+        {
+            "type": "radar",
+            "name": "0",
+            "data": [
+                [
+                    0.9805825242718447,
+                    0.9636363636363636,
+                    0.9666666666666667,
+                    0.9772727272727273,
+                    0.9767441860465116,
+                    0.9565217391304348,
+                    0.9230769230769231,
+                    0.9814814814814815
+                ]
+            ],
+            "colorBy": "series",
+            "symbol": "none",
+            "label": {
+                "show": true,
+                "margin": 8
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#bd221f"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 3,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid",
+                "color": "#bd221f"
+            },
+            "areaStyle": {
+                "opacity": 0.5
+            }
+        },
+        {
+            "type": "radar",
+            "name": "1",
+            "data": [
+                [
+                    0.01941747572815534,
+                    0.03636363636363636,
+                    0.03333333333333333,
+                    0.02272727272727273,
+                    0.02325581395348837,
+                    0.04347826086956522,
+                    0.07692307692307693,
+                    0.01851851851851852
+                ]
+            ],
+            "colorBy": "series",
+            "symbol": "none",
+            "label": {
+                "show": true,
+                "margin": 8
+            },
+            "selectedMode": false,
+            "zlevel": 0,
+            "z": 2,
+            "itemStyle": {
+                "normal": {
+                    "color": "#099eda"
+                }
+            },
+            "lineStyle": {
+                "show": true,
+                "width": 3,
+                "opacity": 1,
+                "curveness": 0,
+                "type": "solid",
+                "color": "#099eda"
+            },
+            "areaStyle": {
+                "opacity": 0.5
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "0",
+                "1"
+            ],
+            "selected": {},
+            "show": true,
+            "right": "center",
+            "top": "top",
+            "padding": 5,
+            "itemGap": 10,
+            "itemWidth": 25,
+            "itemHeight": 14,
+            "textStyle": {
+                "fontWeight": "normal",
+                "fontFamily": "Arial",
+                "fontSize": 12
+            },
+            "backgroundColor": "transparent",
+            "borderColor": "#ccc",
+            "borderRadius": 0,
+            "pageButtonItemGap": 5,
+            "pageButtonPosition": "end",
+            "pageFormatter": "{current}/{total}",
+            "pageIconColor": "#2f4554",
+            "pageIconInactiveColor": "#aaa",
+            "pageIconSize": 15,
+            "animationDurationUpdate": 800,
+            "selector": false,
+            "selectorPosition": "auto",
+            "selectorItemGap": 7,
+            "selectorButtonGap": 10
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "enterable": false,
+        "confine": false,
+        "appendToBody": false,
+        "transitionDuration": 0.4,
+        "textStyle": {
+            "fontSize": 14
+        },
+        "borderWidth": 0,
+        "padding": 5,
+        "order": "seriesAsc"
+    },
+    "radar": [
+        {
+            "indicator": [
+                {
+                    "name": "Membrane",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Synapse",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Cell junction",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Cell periphery",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Plasma membrane",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Plasma membrane\n region",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Presynapse",
+                    "max": 1.0796296296296297
+                },
+                {
+                    "name": "Cellular anatom\nical structure",
+                    "max": 1.0796296296296297
+                }
+            ],
+            "shape": "circle",
+            "radius": "60%",
+            "startAngle": 90,
+            "name": {
+                "textStyle": {
+                    "color": "black",
+                    "fontWeight": "bold",
+                    "fontFamily": "Arial",
+                    "fontSize": 15
+                }
+            },
+            "splitLine": {
+                "show": true,
+                "lineStyle": {
+                    "show": true,
+                    "width": 3,
+                    "opacity": 0.5,
+                    "curveness": 1,
+                    "type": "dashed",
+                    "color": "#001F78"
+                }
+            },
+            "splitArea": {
+                "show": true,
+                "areaStyle": {
+                    "opacity": 0.2,
+                    "color": {
+                        "type": "radial",
+                        "x": 0.5,
+                        "y": 0.5,
+                        "r": 0.5,
+                        "colorStops": [
+                            {
+                                "offset": 0,
+                                "color": "white"
+                            },
+                            {
+                                "offset": 1,
+                                "color": "white"
+                            }
+                        ],
+                        "global": false
+                    }
+                }
+            },
+            "axisLine": {
+                "show": true,
+                "onZero": true,
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "show": true,
+                    "width": 2,
+                    "opacity": 0.3,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "grey"
+                }
+            },
+            "axisTick": {
+                "show": false,
+                "alignWithLabel": false,
+                "inside": false
+            },
+            "axisLabel": {
+                "show": false,
+                "margin": 8
+            }
+        }
+    ],
+    "title": [
+        {
+            "show": true,
+            "target": "blank",
+            "subtarget": "blank",
+            "left": "center",
+            "top": "0%",
+            "padding": 5,
+            "itemGap": 10,
+            "textAlign": "auto",
+            "textVerticalAlign": "auto",
+            "triggerEvent": false
+        }
+    ]
+};
+        chart_d778496af45d42998c67ede9b23e3998.setOption(option_d778496af45d42998c67ede9b23e3998);
+    </script>
+</body>
+</html>

@@ -12,7 +12,7 @@ StrucGAP, a pioneering Structural Glycoproteomics Analysis Platform for scalable
 
    <div style="margin-top: 60px;"></div>
 
-.. image:: _static/figure1_105.png
+.. image:: _static/figure1_109.png
    :width: 600px
    :align: center
    :alt: StrucGAP overview
@@ -33,6 +33,7 @@ Please see our manuscript to learn more.
 
    installation
    get_started
+   troubleshooting guide
 
 .. toctree::
    :maxdepth: 1
@@ -53,5 +54,11 @@ Please see our manuscript to learn more.
    :caption: USAGE
    :hidden:
 
-   tutorials
+   tutorials(StrucGP)
+   tutorials(MSFragger-Glyco)
+   tutorials(pGlyco3)
+   tutorials(Glyco-Decipher)
+   tutorials(Byonic)
+   tutorials(GlycanFinder)
+
 

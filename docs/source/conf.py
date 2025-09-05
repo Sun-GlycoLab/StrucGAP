@@ -22,7 +22,7 @@ copyright = '2025, Sun-GlycoLab'
 author = 'Muyao Yang'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.8'
+release = '1.0.9'
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,7 +61,13 @@ html_theme = 'renku'
 
 html_theme_options = {
     'logo_only': True,  # 只显示 logo 不显示项目名
-    'display_version': False  # 不显示版本号（可选）
+    'display_version': False,  # 不显示版本号（可选）  
+}
+
+html_context = {
+    "display_github": True,
+    "github_user": "Sun-GlycoLab",
+    "github_repo": "StrucGAP",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

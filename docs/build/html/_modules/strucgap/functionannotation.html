@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.functionannotation &mdash; StrucGAP 1.0.8 documentation</title>
+  <title>strucgap.functionannotation &mdash; StrucGAP 1.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -50,6 +50,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting%20guide.html">Troubleshooting guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
 <ul>
@@ -197,12 +198,21 @@
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 功能注释与关联性分析模块--81</span>
 <div class="viewcode-block" id="StrucGAP_FunctionAnnotation"><a class="viewcode-back" href="../../functionannotation.html#strucgap.functionannotation.StrucGAP_FunctionAnnotation">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_FunctionAnnotation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess, StrucGAP_GlycoPeptideQuant or StrucGAP_GlycoNetwork), to be further processed by StrucGAP_FunctionAnnotation.</span>
+<span class="sd">        data_manager: Data manager instance, such as &#39;data_manager&#39; if data_manager = StrucGAP_InsightTracker().</span>
+<span class="sd">        data_type: If gs_data was set as StrucGAP_GlycoNetwork, you can select data_type in </span>
+<span class="sd">            [&#39;protein_up_glyco_up&#39;, &#39;protein_up_glyco_no&#39;, &#39;protein_up_glyco_down&#39;, &#39;protein_no_glyco_up&#39;, &#39;protein_no_glyco_no&#39;, &#39;protein_no_glyco_down&#39;, &#39;protein_down_glyco_up&#39;, &#39;protein_down_glyco_no&#39;, &#39;protein_down_glyco_down&#39;].</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gs_data</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">,</span> <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;protein_no_glyco_up&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">gs_data</span><span class="p">,</span> <span class="s1">&#39;sample_group&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span> <span class="o">=</span> <span class="n">gs_data</span><span class="o">.</span><span class="n">sample_group</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;gs_data must have &#39;sample_group&#39; attribute.&quot;</span><span class="p">)</span>
-        
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">data_manager</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;sample_group&#39;</span><span class="p">)</span>
+            <span class="c1"># raise AttributeError(&quot;gs_data must have &#39;sample_group&#39; attribute.&quot;)</span>
+    
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gs_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span> <span class="o">=</span> <span class="n">gs_data</span>
             <span class="c1"># self.gs_data = self.gs_data[~self.gs_data[&#39;PeptideSequence+structure_coding+ProteinID&#39;].duplicated()]</span>
@@ -379,7 +389,7 @@
         <span class="k">return</span> <span class="n">final_protein_fc</span><span class="p">,</span> <span class="n">upregulated_proteins</span><span class="p">,</span> <span class="n">downregulated_proteins</span></div>
         
 <div class="viewcode-block" id="StrucGAP_FunctionAnnotation.ora"><a class="viewcode-back" href="../../functionannotation.html#strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora">[docs]</a>    <span class="k">def</span> <span class="nf">ora</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">up_down_fc_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">background_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest_mannwhitneyu&#39;</span><span class="p">,</span>
-            <span class="n">selected_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GO:MF&#39;</span><span class="p">,</span> <span class="s1">&#39;GO:CC&#39;</span><span class="p">,</span> <span class="s1">&#39;GO:BP&#39;</span><span class="p">]):</span>
+            <span class="n">selected_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GO:MF&#39;</span><span class="p">,</span> <span class="s1">&#39;GO:CC&#39;</span><span class="p">,</span> <span class="s1">&#39;GO:BP&#39;</span><span class="p">],</span> <span class="n">enrich_feature</span> <span class="o">=</span> <span class="s1">&#39;protein&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs over-representation analysis using the g:Profiler API.</span>
 <span class="sd">        </span>
@@ -389,6 +399,7 @@
 <span class="sd">            background_input: use both proteins as background or not.</span>
 <span class="sd">            pvalue_type: &#39;pvalue_ttest&#39;, &#39;pvalue_mannwhitneyu&#39; or &#39;pvalue_ttest_mannwhitneyu&#39;.</span>
 <span class="sd">            selected_terms: enrichment database from [&quot;GO:MF&quot;,&quot;GO:CC&quot;,&quot;GO:BP&quot;,&quot;KEGG&quot;,&quot;REAC&quot;,&quot;WP&quot;,&quot;TF&quot;,&quot;MIRNA&quot;,&quot;HPA&quot;,&quot;CORUM&quot;,&quot;HP&quot;], such as [&#39;GO:MF&#39;, &#39;GO:CC&#39;, &#39;GO:BP&#39;].</span>
+<span class="sd">            enrich_feature: select feature in [&#39;protein&#39;, &#39;glycopeptide&#39;].</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            self.final_protein_fc</span>
@@ -408,6 +419,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">up_down_fc_threshold</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">up_down_fc_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter the fc threshold (such as 1.5) to differentiate up and down regulated features: &quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_down_fc_threshold</span> <span class="o">=</span> <span class="n">up_down_fc_threshold</span>
  
         <span class="k">if</span> <span class="n">organism</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">organism</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Please enter database from [&#39;mmusculus&#39;,&#39;hsapiens&#39;, &#39;rnorvegicus&#39;]: &quot;</span><span class="p">)</span>
@@ -448,11 +460,36 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">both_proteins</span> <span class="o">=</span> <span class="kc">None</span> 
         <span class="k">if</span> <span class="n">pvalue_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>       
             <span class="n">fc_data_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="p">[</span><span class="n">pvalue_type</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">final_protein_fc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upregulated_proteins</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downregulated_proteins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_weighted_fc</span><span class="p">(</span><span class="n">fc_data_p</span><span class="p">,</span> <span class="n">up_down_fc_threshold</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">enrich_feature</span> <span class="o">==</span> <span class="s1">&#39;protein&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_protein_fc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upregulated_proteins</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downregulated_proteins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_weighted_fc</span><span class="p">(</span><span class="n">fc_data_p</span><span class="p">,</span> <span class="n">up_down_fc_threshold</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">enrich_feature</span> <span class="o">==</span> <span class="s1">&#39;glycopeptide&#39;</span><span class="p">:</span>
+                <span class="n">up_genes</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">fc_data_p</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fc_data_p</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">up_down_fc_threshold</span><span class="p">,</span> <span class="s1">&#39;GeneName&#39;</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>                           <span class="c1"># 去掉缺失值（如果有的话）</span>
+                    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>                        <span class="c1"># 确保是字符串</span>
+                    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>                     <span class="c1"># 如果有多个基因用 ; 分隔</span>
+                    <span class="o">.</span><span class="n">explode</span><span class="p">()</span>                          <span class="c1"># 拆开到多行</span>
+                    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>                        <span class="c1"># 去掉空格</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">upregulated_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">up_genes</span><span class="p">)</span> <span class="k">if</span> <span class="n">g</span> <span class="o">!=</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">]</span>
+                <span class="n">down_genes</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">fc_data_p</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fc_data_p</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">/</span><span class="n">up_down_fc_threshold</span><span class="p">,</span> <span class="s1">&#39;GeneName&#39;</span><span class="p">]</span>
+                    <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>                           <span class="c1"># 去掉缺失值（如果有的话）</span>
+                    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>                        <span class="c1"># 确保是字符串</span>
+                    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>                     <span class="c1"># 如果有多个基因用 ; 分隔</span>
+                    <span class="o">.</span><span class="n">explode</span><span class="p">()</span>                          <span class="c1"># 拆开到多行</span>
+                    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>                        <span class="c1"># 去掉空格</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">downregulated_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">down_genes</span><span class="p">)</span> <span class="k">if</span> <span class="n">g</span> <span class="o">!=</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">pvalue_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">fc_data_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">both_proteins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">fc_data_p</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]))</span>
-        
+            <span class="n">genes</span> <span class="o">=</span> <span class="n">fc_data_p</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span>
+            <span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span><span class="p">[</span><span class="n">genes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;nan&#39;</span><span class="p">]</span>
+            <span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span><span class="p">[</span><span class="n">genes</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">both_proteins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">genes</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pvalue_type</span> <span class="o">=</span> <span class="n">pvalue_type</span>
         <span class="n">background</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span><span class="p">[</span><span class="o">~</span><span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()][</span><span class="s1">&#39;GeneName&#39;</span><span class="p">])</span>
         <span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;GeneName&#39;</span><span class="p">)</span>
         <span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="p">[</span><span class="n">background</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;Unknown&#39;</span><span class="p">]</span>
@@ -874,8 +911,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">function_data_name</span> <span class="o">=</span> <span class="n">function_data</span>
         
         <span class="c1">#</span>
-        <span class="k">if</span> <span class="n">function_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;gsea_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_both_proteins_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_both_proteins_result&#39;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">function_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_both_proteins_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_both_proteins_result&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">function_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;gsea_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_both_proteins_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_both_proteins_result&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">function_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_both_proteins_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_both_proteins_result&#39;</span><span class="p">]:</span>
                 <span class="n">function_data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_data</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="c1"># function_data[&#39;GO_name&#39;] = function_data[&#39;Term&#39;].str.split(&#39; \(&#39;, n=1, expand=True)[0].str.upper()</span>
                 <span class="n">function_data</span> <span class="o">=</span> <span class="n">function_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;GO_name&#39;</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -921,128 +958,12 @@
             <span class="c1">#</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;biological_process&#39;</span><span class="p">,</span> <span class="s1">&#39;molecular_function&#39;</span><span class="p">,</span> <span class="s1">&#39;cellular_component&#39;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s1">&#39;biological_process&#39;</span><span class="p">:</span>
-                    <span class="c1"># bp_data = GO_data[GO_data[&#39;type&#39;]==i][[&#39;GO_name1&#39;, &#39;relationship&#39;, &#39;GO_name2&#39;]]</span>
-                    <span class="c1"># bp_both_data = {}  # function_data[function_data[&#39;Gene_set&#39;]==&#39;GO_Biological_Process_2023&#39;][&#39;GO_name&#39;].unique()     </span>
-                    <span class="c1"># for j in tqdm(list(function_data[function_data[&#39;Gene_set&#39;]==&#39;GO_Biological_Process_2023&#39;][&#39;GO_name&#39;].unique())):</span>
-                    <span class="c1">#     bp_son_data = bp_data[bp_data[&#39;GO_name1&#39;]==j]</span>
-                    <span class="c1">#     bp_son_data[&#39;chain&#39;] = bp_son_data[&#39;relationship&#39;] + &#39;+&#39; + bp_son_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#     bp_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     bp_son_data = bp_son_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#     bp_merge_data = bp_data[bp_data[&#39;GO_name1&#39;].isin(list(bp_son_data.index))]</span>
-                    <span class="c1">#     bp_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     num = 0</span>
-                    <span class="c1">#     while bp_data[bp_data[&#39;GO_name1&#39;].isin(list(bp_merge_data.index))].shape[0] != 0:</span>
-                    <span class="c1">#         bp_merge_data = bp_data[bp_data[&#39;GO_name1&#39;].isin(list(bp_merge_data.index))]</span>
-                    <span class="c1">#         bp_merge_data[&#39;chain&#39;] = bp_merge_data[&#39;relationship&#39;] + &#39;+&#39; + bp_merge_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#         bp_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         num = num + 1</span>
-                    <span class="c1">#         bp_merge_data = bp_merge_data.rename(columns={&#39;chain&#39;:num})</span>
-                    <span class="c1">#         bp_merge_data = bp_merge_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#         bp_son_data = pd.merge(bp_son_data, bp_merge_data, left_index=True, right_index=True, how=&#39;left&#39;)</span>
-                    <span class="c1">#         bp_merge_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         bp_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         bp_son_data_1 = bp_son_data.reset_index() </span>
-                    <span class="c1">#         parent = []</span>
-                    <span class="c1">#         for k in list(bp_son_data_1.index):</span>
-                    <span class="c1">#             lst = list(bp_son_data_1.loc[k])</span>
-                    <span class="c1">#             lst = [x for x in lst if pd.notnull(x)]</span>
-                    <span class="c1">#             last_value = lst[-1]</span>
-                    <span class="c1">#             target_value = None  </span>
-                    <span class="c1">#             if last_value == &#39;is a+BIOLOGICAL_PROCESS&#39;:</span>
-                    <span class="c1">#                 for item in reversed(lst[:-1]):</span>
-                    <span class="c1">#                     if &#39;is a+&#39; in item:</span>
-                    <span class="c1">#                         target_value = item.split(&#39;+&#39;)[1]</span>
-                    <span class="c1">#                         break</span>
-                    <span class="c1">#             parent.append(target_value)</span>
-                    <span class="c1">#         parent = [x for x in parent if x is not None]</span>
-                    <span class="c1">#         parent = list(set(parent))</span>
-                    <span class="c1">#     bp_both_data[j] = parent</span>
-                    <span class="c1"># bp_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in bp_both_data.items() ]))</span>
-                    <span class="c1"># bp_both_data_df = bp_both_data_df.T</span>
                     <span class="n">bp_both_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">function_data</span><span class="p">[</span><span class="n">function_data</span><span class="p">[</span><span class="s1">&#39;Gene_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;GO:BP&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)][</span><span class="s1">&#39;GO_name&#39;</span><span class="p">])</span>
                     
                 <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="s1">&#39;molecular_function&#39;</span><span class="p">:</span>
-                    <span class="c1"># mf_data = GO_data[GO_data[&#39;type&#39;]==i][[&#39;GO_name1&#39;, &#39;relationship&#39;, &#39;GO_name2&#39;]]</span>
-                    <span class="c1"># mf_both_data = {}</span>
-                    <span class="c1"># for j in tqdm(list(function_data[function_data[&#39;Gene_set&#39;]==&#39;GO_Molecular_Function_2023&#39;][&#39;GO_name&#39;].unique())):</span>
-                    <span class="c1">#     mf_son_data = mf_data[mf_data[&#39;GO_name1&#39;]==j]</span>
-                    <span class="c1">#     mf_son_data[&#39;chain&#39;] = mf_son_data[&#39;relationship&#39;] + &#39;+&#39; + mf_son_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#     mf_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     mf_son_data = mf_son_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#     mf_merge_data = mf_data[mf_data[&#39;GO_name1&#39;].isin(list(mf_son_data.index))]</span>
-                    <span class="c1">#     mf_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     num = 0</span>
-                    <span class="c1">#     while mf_data[mf_data[&#39;GO_name1&#39;].isin(list(mf_merge_data.index))].shape[0] != 0:</span>
-                    <span class="c1">#         mf_merge_data = mf_data[mf_data[&#39;GO_name1&#39;].isin(list(mf_merge_data.index))]</span>
-                    <span class="c1">#         mf_merge_data[&#39;chain&#39;] = mf_merge_data[&#39;relationship&#39;] + &#39;+&#39; + mf_merge_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#         mf_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         num = num + 1</span>
-                    <span class="c1">#         mf_merge_data = mf_merge_data.rename(columns={&#39;chain&#39;:num})</span>
-                    <span class="c1">#         mf_merge_data = mf_merge_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#         mf_son_data = pd.merge(mf_son_data, mf_merge_data, left_index=True, right_index=True, how=&#39;left&#39;)</span>
-                    <span class="c1">#         mf_merge_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         mf_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         mf_son_data_1 = mf_son_data.reset_index() </span>
-                    <span class="c1">#         parent = []</span>
-                    <span class="c1">#         for k in list(mf_son_data_1.index): </span>
-                    <span class="c1">#             lst = list(mf_son_data_1.loc[k])</span>
-                    <span class="c1">#             lst = [x for x in lst if pd.notnull(x)]</span>
-                    <span class="c1">#             last_value = lst[-1]</span>
-                    <span class="c1">#             target_value = [] </span>
-                    <span class="c1">#             if last_value == &#39;is a+MOLECULAR_FUNCTION&#39;:</span>
-                    <span class="c1">#                 for item in reversed(lst[:-1]):</span>
-                    <span class="c1">#                     if &#39;is a+&#39; in item:</span>
-                    <span class="c1">#                         term = item.split(&#39;+&#39;)[1]</span>
-                    <span class="c1">#                         target_value.append(term)</span>
-                    <span class="c1">#                         if len(target_value) == 3:</span>
-                    <span class="c1">#                             break</span>
-                    <span class="c1">#             parent.extend(target_value)</span>
-                    <span class="c1">#         parent = [x for x in parent if x is not None]</span>
-                    <span class="c1">#         parent = list(set(parent))</span>
-                    <span class="c1">#     mf_both_data[j] = parent</span>
-                    <span class="c1"># mf_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in mf_both_data.items() ]))</span>
-                    <span class="c1"># mf_both_data_df = mf_both_data_df.T</span>
                     <span class="n">mf_both_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">function_data</span><span class="p">[</span><span class="n">function_data</span><span class="p">[</span><span class="s1">&#39;Gene_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;GO:MF&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)][</span><span class="s1">&#39;GO_name&#39;</span><span class="p">])</span>
                     
                 <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="s1">&#39;cellular_component&#39;</span><span class="p">:</span>
-                    <span class="c1"># cc_data = GO_data[GO_data[&#39;type&#39;]==i][[&#39;GO_name1&#39;, &#39;relationship&#39;, &#39;GO_name2&#39;]]</span>
-                    <span class="c1"># cc_both_data = {}</span>
-                    <span class="c1"># for j in tqdm(list(function_data[function_data[&#39;Gene_set&#39;]==&#39;GO_Cellular_Component_2023&#39;][&#39;GO_name&#39;].unique())):</span>
-                    <span class="c1">#     cc_son_data = cc_data[cc_data[&#39;GO_name1&#39;]==j]</span>
-                    <span class="c1">#     cc_son_data[&#39;chain&#39;] = cc_son_data[&#39;relationship&#39;] + &#39;+&#39; + cc_son_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#     cc_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     cc_son_data = cc_son_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#     cc_merge_data = cc_data[cc_data[&#39;GO_name1&#39;].isin(list(cc_son_data.index))]</span>
-                    <span class="c1">#     cc_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#     num = 0</span>
-                    <span class="c1">#     while cc_data[cc_data[&#39;GO_name1&#39;].isin(list(cc_merge_data.index))].shape[0] != 0:</span>
-                    <span class="c1">#         cc_merge_data = cc_data[cc_data[&#39;GO_name1&#39;].isin(list(cc_merge_data.index))]</span>
-                    <span class="c1">#         cc_merge_data[&#39;chain&#39;] = cc_merge_data[&#39;relationship&#39;] + &#39;+&#39; + cc_merge_data[&#39;GO_name2&#39;]</span>
-                    <span class="c1">#         cc_merge_data.set_index(&#39;GO_name1&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         num = num + 1</span>
-                    <span class="c1">#         cc_merge_data = cc_merge_data.rename(columns={&#39;chain&#39;:num})</span>
-                    <span class="c1">#         cc_merge_data = cc_merge_data.drop(columns=&#39;relationship&#39;)</span>
-                    <span class="c1">#         cc_son_data = pd.merge(cc_son_data, cc_merge_data, left_index=True, right_index=True, how=&#39;left&#39;)</span>
-                    <span class="c1">#         cc_merge_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         cc_son_data.set_index(&#39;GO_name2&#39;, inplace=True, drop=True)</span>
-                    <span class="c1">#         cc_son_data_1 = cc_son_data.reset_index() </span>
-                    <span class="c1">#         parent = []</span>
-                    <span class="c1">#         for k in list(cc_son_data_1.index): #k=1</span>
-                    <span class="c1">#             lst = list(cc_son_data_1.loc[k])</span>
-                    <span class="c1">#             lst = [x for x in lst if pd.notnull(x)]</span>
-                    <span class="c1">#             last_value = lst[-1]</span>
-                    <span class="c1">#             target_value = [] </span>
-                    <span class="c1">#             if last_value == &#39;is a+CELLULAR_COMPONENT&#39;:</span>
-                    <span class="c1">#                 for item in lst:</span>
-                    <span class="c1">#                     if &#39;part_of+&#39; in item:</span>
-                    <span class="c1">#                         term = item.split(&#39;+&#39;)[1]</span>
-                    <span class="c1">#                         target_value.append(term)</span>
-                    <span class="c1">#             parent.extend(target_value)</span>
-                    <span class="c1">#         parent = [x for x in parent if x is not None]</span>
-                    <span class="c1">#         parent = list(set(parent))</span>
-                    <span class="c1">#     cc_both_data[j] = parent</span>
-                    <span class="c1"># cc_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in cc_both_data.items() ]))</span>
-                    <span class="c1"># cc_both_data_df = cc_both_data_df.T</span>
                     <span class="n">cc_both_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">function_data</span><span class="p">[</span><span class="n">function_data</span><span class="p">[</span><span class="s1">&#39;Gene_set&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;GO:CC&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)][</span><span class="s1">&#39;GO_name&#39;</span><span class="p">])</span>
                     
             <span class="c1"># data processing</span>
@@ -1053,23 +974,6 @@
                 <span class="k">if</span> <span class="n">both_data_df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">both_data_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_both_data_df is empty, skipping...&quot;</span><span class="p">)</span>
                     <span class="k">continue</span>
-                <span class="c1">#</span>
-                <span class="c1"># both_data_df = both_data_df[~both_data_df[0].isnull()]</span>
-                <span class="c1"># all_values = both_data_df.stack().unique()</span>
-                <span class="c1"># both_data = pd.DataFrame(columns=all_values)</span>
-                <span class="c1"># df_long = both_data_df.stack().reset_index()</span>
-                <span class="c1"># df_long.columns = [&#39;pathway&#39;, &#39;attribute_num&#39;, &#39;attribute&#39;]</span>
-                <span class="c1"># attribute_to_pathways = df_long.groupby(&#39;attribute&#39;)[&#39;pathway&#39;].apply(list)</span>
-                <span class="c1"># attribute_to_pathways_df = attribute_to_pathways.reset_index()</span>
-                <span class="c1"># attribute_to_pathways_df.columns = [&#39;attribute&#39;, &#39;pathways&#39;]</span>
-                <span class="c1"># max_len = attribute_to_pathways_df[&#39;pathways&#39;].apply(len).max()</span>
-                <span class="c1"># function_structure = pd.DataFrame(index=range(max_len))</span>
-                <span class="c1"># for index, row in attribute_to_pathways_df.iterrows():</span>
-                <span class="c1">#     attribute = row[&#39;attribute&#39;]</span>
-                <span class="c1">#     pathways = row[&#39;pathways&#39;]</span>
-                <span class="c1">#     pathways += [pd.NA] * (max_len - len(pathways))</span>
-                <span class="c1">#     function_structure[attribute] = pathways</span>
-                <span class="c1"># function_structure = function_structure.fillna(np.nan)</span>
                 <span class="n">function_structure</span> <span class="o">=</span> <span class="n">both_data_df</span><span class="o">.</span><span class="n">T</span>
                 
                 <span class="n">gene_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1095,7 +999,15 @@
                     <span class="n">genes_extended</span> <span class="o">=</span> <span class="n">genes</span> <span class="o">+</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">genes</span><span class="p">))</span>
                     <span class="n">gene_list</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">genes_extended</span>
                 <span class="c1"># structure_statistics  </span>
-                <span class="n">structure_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_data_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_down_result&#39;</span><span class="p">]:</span>
+                    <span class="n">structure_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="p">)</span>
+                    <span class="n">structure_data</span> <span class="o">=</span> <span class="n">structure_data</span><span class="p">[</span><span class="n">structure_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pvalue_type</span><span class="p">]</span><span class="o">&lt;</span><span class="n">cutoff</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_data_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_up_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_up_result&#39;</span><span class="p">]:</span>
+                        <span class="n">structure_data</span> <span class="o">=</span> <span class="n">structure_data</span><span class="p">[</span><span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">up_down_fc_threshold</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_data_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ora_no_background_down_result&#39;</span><span class="p">,</span> <span class="s1">&#39;ora_background_down_result&#39;</span><span class="p">]:</span>
+                        <span class="n">structure_data</span> <span class="o">=</span> <span class="n">structure_data</span><span class="p">[</span><span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">up_down_fc_threshold</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">structure_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc_data</span><span class="p">)</span>
                 <span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
                 <span class="n">structure_data</span> <span class="o">=</span> <span class="n">structure_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">)</span>
                 <span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">structure_data</span><span class="p">[</span><span class="s1">&#39;GeneName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>

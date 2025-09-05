@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_InsightTracker Module &mdash; StrucGAP 1.0.8 documentation</title>
+  <title>StrucGAP_InsightTracker Module &mdash; StrucGAP 1.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -52,6 +52,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting%20guide.html">Troubleshooting guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
 <ul class="current">
@@ -105,6 +106,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">StrucGAP_InsightTracker Module</li>
       <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Sun-GlycoLab/StrucGAP/blob/insighttracker.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -268,11 +270,15 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">
-<span class="sig-name descname"><span class="pre">key_information_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.key_information_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction" title="Permalink to this definition"></a></dt>
-<dd><p>Mines outputs from both StrucGAP_GlycoPeptideQuant and StrucGAP_FunctionAnnotation to identify structurally and functionally relevant glycan substructural features.</p>
+<span class="sig-name descname"><span class="pre">key_information_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.key_information_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction" title="Permalink to this definition"></a></dt>
+<dd><p>Mines outputs from both StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation and StrucGAP_GlycoNetwork to identify structurally and functionally relevant glycan substructural features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>module</strong> – StrucGAP_GlycoPeptideQuant or StrucGAP_FunctionAnnotation.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation or StrucGAP_GlycoNetwork.</p></li>
+<li><p><strong>target_percentage</strong> – when extract key information from StrucGAP_FunctionAnnotation, target_percentage means the key information ratio from both analysis results.</p></li>
+<li><p><strong>min_value</strong> – when extract key information from StrucGAP_FunctionAnnotation, target_percentage represents the minimum number of substructural features contained in a term.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None (output key information directly as a table).</p>

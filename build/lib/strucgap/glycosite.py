@@ -103,6 +103,19 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 位点特征分析模块--16
 class StrucGAP_GlycoSite:
+    """
+    Parameters:
+        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess), to be further processed by StrucGAP_GlycoSite.
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
+        data_type: Specifies which preprocessing stage data 
+            to use from `gs_data`. Options are:
+            - "psm_filtered"
+            - "cv_filtered"
+            - "outliers_filtered"
+            - "data"
+            Default is "psm_filtered".
+    
+    """
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered'):
         self.gs_data = gs_data
         self.sample_group = self.gs_data.sample_group
@@ -138,23 +151,37 @@ class StrucGAP_GlycoSite:
         
         """
         # 将 ProteinID 和 GeneName 列拆分并映射为字典
+        # protein_to_gene = {}
+        # for idx, row in self.gs_data.data.iterrows():
+        #     protein_ids = row['ProteinID'].split(';')
+        #     gene_names = row['GeneName'].split(';')
+        #     # 构建 ProteinID 到 GeneName 的映射
+        #     for protein_id, gene_name in zip(protein_ids, gene_names):
+        #         protein_to_gene[protein_id] = gene_name
+        # # 定义映射函数，将 protein_column 中的 ProteinID 替换为相应的 GeneName
+        # def map_genes(protein_ids):
+        #     proteins = protein_ids.split(';')
+        #     genes = [protein_to_gene.get(protein, "") for protein in proteins]
+        #     return ';'.join(gene for gene in genes if gene)  # 忽略映射不到的 ProteinID
+        # # 将映射的 GeneName 添加到新的一列中，命名为 `gene_name`
+        # data['gene_name'] = data[protein_column].apply(map_genes)
         protein_to_gene = {}
         for idx, row in self.gs_data.data.iterrows():
-            protein_ids = row['ProteinID'].split(';')
-            gene_names = row['GeneName'].split(';')
-            
-            # 构建 ProteinID 到 GeneName 的映射
-            for protein_id, gene_name in zip(protein_ids, gene_names):
-                protein_to_gene[protein_id] = gene_name
-        
-        # 定义映射函数，将 protein_column 中的 ProteinID 替换为相应的 GeneName
+            protein_str = row['ProteinID']
+            gene_str = row['GeneName']
+            if isinstance(protein_str, str) and isinstance(gene_str, str):
+                protein_ids = protein_str.split(';')
+                gene_names = gene_str.split(';')
+                for protein_id, gene_name in zip(protein_ids, gene_names):
+                    protein_to_gene[protein_id] = gene_name
         def map_genes(protein_ids):
+            if not isinstance(protein_ids, str):  # 不是字符串（NaN 等）
+                return ""
             proteins = protein_ids.split(';')
             genes = [protein_to_gene.get(protein, "") for protein in proteins]
-            return ';'.join(gene for gene in genes if gene)  # 忽略映射不到的 ProteinID
-    
-        # 将映射的 GeneName 添加到新的一列中，命名为 `gene_name`
+            return ';'.join(gene for gene in genes if gene)
         data['gene_name'] = data[protein_column].apply(map_genes)
+        return data
         
     def glycoprotein_site(self):
         """
@@ -177,8 +204,18 @@ class StrucGAP_GlycoSite:
         result = {}
         temp_data = pd.DataFrame(self.data[['ProteinID', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
+        temp_data = temp_data.dropna(subset=['ProteinID', 'Glycosite_Position'])
+        temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].astype(str)
+        temp_data = temp_data[(temp_data['ProteinID'].str.len() > 0) & (temp_data['Glycosite_Position'].str.len() > 0)]
         temp_data['ProteinID'] = temp_data['ProteinID'].str.split(';')
         temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].str.split(';')
+        def handle_mismatch(row):
+            protein_len = len(row['ProteinID'])
+            glycosite_len = len(row['Glycosite_Position'])
+            if protein_len != glycosite_len:
+                return row['Glycosite_Position'] * protein_len
+            return row['Glycosite_Position']
+        temp_data['Glycosite_Position'] = temp_data.apply(handle_mismatch, axis=1)
         temp_data = temp_data.explode(['ProteinID', 'Glycosite_Position'])
         type_counts = pd.DataFrame(temp_data['ProteinID'].value_counts())
         for i in type_counts.index:
@@ -212,8 +249,18 @@ class StrucGAP_GlycoSite:
         #
         temp_data = pd.DataFrame(self.data[['ProteinID', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
+        temp_data = temp_data.dropna(subset=['ProteinID', 'Glycosite_Position'])
+        temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].astype(str)
+        temp_data = temp_data[(temp_data['ProteinID'].str.len() > 0) & (temp_data['Glycosite_Position'].str.len() > 0)]
         temp_data['ProteinID'] = temp_data['ProteinID'].str.split(';')
         temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].str.split(';')
+        def handle_mismatch(row):
+            protein_len = len(row['ProteinID'])
+            glycosite_len = len(row['Glycosite_Position'])
+            if protein_len != glycosite_len:
+                return row['Glycosite_Position'] * protein_len
+            return row['Glycosite_Position']
+        temp_data['Glycosite_Position'] = temp_data.apply(handle_mismatch, axis=1)
         temp_data = temp_data.explode(['ProteinID', 'Glycosite_Position'])
         temp_data = temp_data.drop_duplicates()
         temp_data.columns = ['glycoprotein', 'glycosite']
@@ -249,6 +296,7 @@ class StrucGAP_GlycoSite:
         result = {}
         temp_data = pd.DataFrame(self.data[['PeptideSequence', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
+        temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].astype(str)
         temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].str.split(';')
         temp_data = temp_data.explode('Glycosite_Position')
         type_counts = pd.DataFrame(temp_data['PeptideSequence'].value_counts())
@@ -280,6 +328,7 @@ class StrucGAP_GlycoSite:
         #
         temp_data = pd.DataFrame(self.data[['PeptideSequence', 'Glycosite_Position']])
         temp_data = temp_data[~temp_data['Glycosite_Position'].isnull()]
+        temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].astype(str)
         # temp_data['PeptideSequence'] = temp_data['PeptideSequence'].str.split(';')
         temp_data['Glycosite_Position'] = temp_data['Glycosite_Position'].str.split(';')
         temp_data = temp_data.explode(['Glycosite_Position'])

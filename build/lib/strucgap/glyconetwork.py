@@ -103,6 +103,12 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 多组学联合分析模块--39
 class StrucGAP_GlycoNetwork:
+    """
+    Parameters:
+        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_GlycoPeptideQuant), to be further processed by StrucGAP_GlycoNetwork.
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
+    
+    """
     def __init__(self, gs_data, data_manager):
         self.abundance_ratio = gs_data.abundance_ratio
         self.glycopeptide_data = gs_data.data 
@@ -114,14 +120,26 @@ class StrucGAP_GlycoNetwork:
         self.data_manager = data_manager    
         self.data_manager.register_module('StrucGAP_GlycoNetwork', self, {})
         self.data_manager.log_params('StrucGAP_GlycoNetwork', '', {})
+
+    def median_cheng(self, data):
+        """An auxiliary function called by other functions to calculates the median."""
+        filtered_data = [x for x in data if not np.isnan(x)]
+        filtered_data.sort()
+        half = len(filtered_data) // 2
+        if not filtered_data:
+            return np.nan 
+        if len(filtered_data) % 2 == 0:
+            return (filtered_data[half - 1] * filtered_data[half]) ** 0.5
+        else:
+            return filtered_data[half]
         
-    def normal_distribution_detect(self, data, sample_size):
+    def normal_distribution_detect(self, data, sample_columns):
         """
         An auxiliary function called by other functions to perform normal distribution detection.
         
         Parameters:
             data: the data to be tested.
-            sample_size: sample size in each group (e.g. 5).
+            sample_columns: columns of sample list.
         
         Returns:
             self.normal_list
@@ -131,22 +149,30 @@ class StrucGAP_GlycoNetwork:
             dataframe
         
         """
-        if sample_size == None:
-            sample_size = input("Please enter the sample size (such as: 5 controls vs 5 samples, just enter 5): ")
-            self.sample_size = int(sample_size) 
-        self.sample_size = int(sample_size)
+        # if sample_size == None:
+        #     sample_size = input("Please enter the sample size (such as: 5 controls vs 5 samples, just enter 5): ")
+        #     self.sample_size = int(sample_size) 
+        # self.sample_size = int(sample_size)
         # data = data1
         normal_list = {}
         lognormal_list = {}
+        half = len(sample_columns) // 2
+        data = data.reset_index(drop=True)
         for i in list(data.index):
-            list1 = data.loc[i][:self.sample_size]
-            list2 = data.loc[i][self.sample_size:]
+            list1 = data.loc[i][sample_columns[:half]]
+            list2 = data.loc[i][sample_columns[half:]]
+            list1 = list(list1)
+            list2 = list(list2)
             if (kstest(list1, cdf = 'norm')[1] > 0.05) & (kstest(list2, cdf = 'norm')[1] > 0.05):
                 normal_list[i] = 'Normal distribution'
             else:
                 normal_list[i] = 'No normal distribution'
+            list1 = list1.copy()
             list1 = np.log2(list1)
+            list1[np.isneginf(list1)] = np.nan
+            list2 = list2.copy()
             list2 = np.log2(list2)
+            list2[np.isneginf(list2)] = np.nan
             if (kstest(list1, cdf = 'norm')[1] > 0.05) & (kstest(list2, cdf = 'norm')[1] > 0.05):
                 lognormal_list[i] = 'Lognormal distribution'
             else:
@@ -155,12 +181,13 @@ class StrucGAP_GlycoNetwork:
         self.lognormal_list = pd.DataFrame(list(lognormal_list.items()), columns=['Protein', 'Status'])
         return self
     
-    def outliers_detect(self, data):
+    def outliers_detect(self, data, sample_columns):
         """
         An auxiliary function called by other functions to perform outliers detection.
         
         Parameters:
             data: the data to be tested.
+            sample_columns: columns of sample list.
         
         Returns:
             no_outliers_data
@@ -169,10 +196,11 @@ class StrucGAP_GlycoNetwork:
             dataframe
         
         """
+        half = len(sample_columns) // 2
         # Tukey's method
         for i in list(data.index):
-            list1 = data.loc[i][:self.sample_size]
-            list2 = data.loc[i][self.sample_size:]
+            list1 = data.loc[i][sample_columns[:half]]
+            list2 = data.loc[i][sample_columns[half:]]
             #
             Q1 = list1.quantile(0.25)
             Q3 = list1.quantile(0.75)
@@ -190,18 +218,19 @@ class StrucGAP_GlycoNetwork:
             # outliers = data_series[(data_series < lower_bound) | (data_series > upper_bound)]
             list2[(list2 < lower_bound) | (list2 > upper_bound)] = np.nan
             #
-            data.loc[i][:self.sample_size] = list1
-            data.loc[i][self.sample_size:] = list2
+            data.loc[i][sample_columns[:half]] = list1
+            data.loc[i][sample_columns[half:]] = list2
             
         no_outliers_data = data
         return no_outliers_data
     
-    def missing_values_imputation(self, data):
+    def missing_values_imputation(self, data, sample_columns):
         """
         An auxiliary function called by other functions to perform missing values imputation.
         
         Parameters:
             data: the data to be tested.
+            sample_columns: columns of sample list.
         
         Returns:
             no_missing_value_data
@@ -211,11 +240,12 @@ class StrucGAP_GlycoNetwork:
         
         """
         protein_ids = data.index
+        half = len(sample_columns) // 2
         #
-        control_data = data.iloc[:, :self.sample_size]  
-        experiment_data = data.iloc[:, self.sample_size:]  # self.sample_size*2
+        control_data = data[sample_columns[:half]]
+        experiment_data = data[sample_columns[half:]]  # self.sample_size*2
         #
-        knn_imputer = KNNImputer(n_neighbors=self.sample_size)
+        knn_imputer = KNNImputer(n_neighbors=half)
         control_filled = knn_imputer.fit_transform(control_data)
         experiment_filled = knn_imputer.fit_transform(experiment_data)
         #
@@ -225,12 +255,13 @@ class StrucGAP_GlycoNetwork:
         #
         return no_missing_value_data
     
-    def cv_filter(self, data, threshold = None):
+    def cv_filter(self, data, sample_columns, threshold = None):
         """
         An auxiliary function called by other functions to perform cv filtering.
         
         Parameters:
             data: the data to be tested.
+            sample_columns: columns of sample list.
         
         Returns:
             cv_filter_data
@@ -244,9 +275,10 @@ class StrucGAP_GlycoNetwork:
         threshold = float(threshold)
         self.threshold = threshold
         data_samplewise_normalized = copy.deepcopy(data)
+        half = len(sample_columns) // 2
         #
-        control_data = data_samplewise_normalized.iloc[:, :self.sample_size]  
-        experiment_data = data_samplewise_normalized.iloc[:, self.sample_size:self.sample_size*2]
+        control_data = data_samplewise_normalized[sample_columns[:half]]
+        experiment_data = data_samplewise_normalized[sample_columns[half:]]
         control_cv = control_data.std(axis=1) / control_data.mean(axis=1)
         experiment_cv = experiment_data.std(axis=1) / experiment_data.mean(axis=1) 
         data_samplewise_normalized['Control_CV'] = control_cv
@@ -415,12 +447,13 @@ class StrucGAP_GlycoNetwork:
         geom_mean = product ** (1 / n)
         return geom_mean
     
-    def glycosylation_rate(self, data):
+    def glycosylation_rate(self, data, sample_columns):
         """
         An auxiliary function called by other functions to calculates glycosylation rate.
         
         Parameters:
             data: the data to be used.
+            sample_columns: columns of sample list.
         
         Returns:
             fc_result
@@ -430,17 +463,18 @@ class StrucGAP_GlycoNetwork:
         
         """
         # fc
-        data_c = self.cv_filter_data.iloc[:, :self.sample_size]  
-        data_s = self.cv_filter_data.iloc[:, self.sample_size:self.sample_size*2] 
+        half = len(sample_columns) // 2
+        data_c = data[sample_columns[:half]] 
+        data_s = data[sample_columns[half:]] 
         #
-        fc_result = pd.DataFrame(index=self.cv_filter_data.index, columns=['fc','pvalue_mannwhitneyu','pvalue_ttest', 'ttest_applicable', 'pvalue_ttest_mannwhitneyu'])
+        fc_result = pd.DataFrame(index=data.index, columns=['fc','pvalue_mannwhitneyu','pvalue_ttest', 'ttest_applicable', 'pvalue_ttest_mannwhitneyu'])
         fc = []
         pvalue_mannwhitneyu = []
         pvalue_ttest = []
         ttest_applicable = []
         pvalue_ttest_mannwhitneyu = []
         #
-        for i in self.cv_filter_data.index:
+        for i in data.index:
             list1 = list(data_c.loc[i])
             list2 = list(data_s.loc[i]) 
             fc.append(statistics.mean(list2)/statistics.mean(list1)) 
@@ -699,15 +733,19 @@ class StrucGAP_GlycoNetwork:
         
         self.protein_raw_data = protein_data.reset_index()
         # outlier
-        self.normal_distribution_result = self.normal_distribution_detect(protein_data, sample_size = int((len(filtered_labels)-1)/2))
+        self.normal_distribution_result = self.normal_distribution_detect(protein_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
         print('This is normal distribution detection result, please check it and use outliers detect carefully: ', self.normal_distribution_result)
-        self.no_outliers_data = self.outliers_detect(protein_data)
+        self.no_outliers_data = self.outliers_detect(protein_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
         
         # imputation
-        self.no_missing_value_data = self.missing_values_imputation(self.no_outliers_data)
+        self.no_missing_value_data = self.missing_values_imputation(self.no_outliers_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
         
         # cv
-        self.cv_filter_data = self.cv_filter(self.no_missing_value_data, threshold = cv)
+        if cv is not 'no':
+            self.cv_filter_data = self.cv_filter(self.no_missing_value_data, threshold = cv, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        else:
+            self.cv_filter_data = self.no_missing_value_data.copy()
+            self.threshold = 'no'
         
         # normalization
         # samplewise
@@ -717,7 +755,7 @@ class StrucGAP_GlycoNetwork:
         #
         ## analysis
         # glycosylation
-        self.proteomic_fc = self.glycosylation_rate(self.samplewise_featurewise_normalized_data)
+        self.proteomic_fc = self.glycosylation_rate(self.cv_filter_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
         # protein-glyco-fc
         if fc == None:
             fc = input('Please enter the fc value: ')
@@ -1053,8 +1091,150 @@ class StrucGAP_GlycoNetwork:
                                                      'Q9D136', 'Q8CG71', 'P97467', 'O35386', 'Q60715', 'Q64237']
         self.glycan_binding_protein = self.proteomic_fc[self.proteomic_fc.index.isin(glycan_binding_protein_list['Entry'])]
     
-    def phosphorylation(self):
-        pass
+    def phosphorylation(self, phospho_data_dir, data_sheet_name=None, cv = 0.3,
+                        samplewise_normalization = True, fc = 1.5, pvalue = 0.05):
+        """
+        Implements a comprehensive preprocessing pipeline for phosphorylation datasets.
+        
+        Parameters:
+            phospho_data_dir: phosphorylation data file directory.
+            data_sheet_name: data sheet name in phosphorylation data file.
+            fc: FC threshold used for differential analysis.
+            pvalue: P value used for differential analysis.
+            cv: Proteomics data cv filtering threshold (e.g. 0.3).
+            samplewise_normalization: Whether to execute samplewise normalization.
+        
+        Returns:
+            self.phospho_raw_data.
+            self.normal_list.
+            self.lognormal_list.
+            self.ph_no_outliers_data.
+            self.ph_no_missing_value_data.
+            self.ph_cv_filter_data.
+            self.ph_samplewise_normalized_data.
+            self.ph_samplewise_featurewise_normalized_data.
+            self.phospho_fc.
+            self.differential_phospho.
+            self.glycosylation_vs_phosphorylation.
+            
+        Return type:
+            float
+        
+        """
+        phospho_data = pd.read_excel(phospho_data_dir, sheet_name=data_sheet_name or 0)
+        phospho_data = phospho_data[~phospho_data['Modifications in Master Proteins (all Sites)'].isnull()]
+        # 定义分割函数
+        def extract_info(cell):
+            # 取蛋白ID（空格前部分）
+            protein_id = cell.split()[0]
+            # 用正则提取括号里的内容
+            import re
+            match = re.search(r'\[(.*?)\]', cell)
+            sites = match.group(1) if match else ''
+            return pd.Series([protein_id, sites])
+        phospho_data[['ProteinID', 'Phosphorylation site']] = phospho_data['Modifications in Master Proteins (all Sites)'].apply(extract_info)
+        phospho_data['Phosphorylation site'] = phospho_data['Phosphorylation site'].str.split('; ')
+        phospho_data = phospho_data.explode('Phosphorylation site')
+        self.phospho_raw_data = phospho_data
+
+        labels = ['Abundances (Normalized): F1: 126, Control',
+                            'Abundances (Normalized): F1: 127N, Control',
+                            'Abundances (Normalized): F1: 127C, Control',
+                            'Abundances (Normalized): F1: 128N, Control',
+                            'Abundances (Normalized): F1: 128C, Control',
+                            'Abundances (Normalized): F1: 129N, Sample',
+                            'Abundances (Normalized): F1: 129C, Sample',
+                            'Abundances (Normalized): F1: 130N, Sample',
+                            'Abundances (Normalized): F1: 130C, Sample',
+                            'Abundances (Normalized): F1: 131, Sample']
+        filtered_labels = [label for ratio, label in zip(self.abundance_ratio, labels) if ratio != 0]
+        # outlier
+        self.ph_normal_distribution_result = self.normal_distribution_detect(phospho_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        self.ph_no_outliers_data = self.outliers_detect(phospho_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        self.ph_no_outliers_data = self.ph_no_outliers_data.dropna(subset=filtered_labels, how='all')
+        # imputation
+        self.ph_no_outliers_data = self.ph_no_outliers_data.replace(0, np.nan)
+        self.ph_no_missing_value_data = self.missing_values_imputation(self.ph_no_outliers_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        sample_columns = [x for x in filtered_labels if x != 'Accession']
+        other_columns = [col for col in self.ph_no_outliers_data.columns if col not in sample_columns]
+        other_info = self.ph_no_outliers_data[other_columns]
+        self.ph_no_missing_value_data = pd.concat([other_info.reset_index(drop=True), self.ph_no_missing_value_data.reset_index(drop=True)], axis=1)
+        self.ph_no_missing_value_data = self.ph_no_missing_value_data.loc[:, self.ph_no_outliers_data.columns]  
+        # cv
+        if cv is not 'no':
+            self.ph_cv_filter_data = self.cv_filter(self.ph_no_missing_value_data, threshold = cv, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        else:
+            self.ph_cv_filter_data = self.ph_no_missing_value_data.copy()
+        # samplewise normalization
+        self.ph_samplewise_normalized_data = self.ph_cv_filter_data.dropna(subset=filtered_labels)
+        to_drop= [col for col in labels if col not in filtered_labels]
+        self.ph_samplewise_normalized_data = self.ph_samplewise_normalized_data.drop(columns=to_drop)
+        if samplewise_normalization is True:
+            medians = self.ph_samplewise_normalized_data[filtered_labels].median()
+            self.ph_samplewise_normalized_data.loc[:, filtered_labels] = self.ph_samplewise_normalized_data[filtered_labels] / medians
+        # featurewise normalization
+        result = []
+        for (protein_id, site), group in self.ph_samplewise_normalized_data.groupby(['ProteinID', 'Phosphorylation site']):
+            # 只选定量列  protein_id='B3DMA0' site='S14' 
+            # group=phospho_data[(phospho_data['ProteinID']==protein_id)&(phospho_data['Phosphorylation site']==site)]
+            values_per_psm = group[filtered_labels].values  # shape: (n_psm, n_channel)
+            n_psm, n_channel = values_per_psm.shape
+            half = n_channel // 2
+            normalized_psm = []
+            # 1. 针对每个PSM进行归一化
+            for i in range(n_psm):
+                psm_values = values_per_psm[i, :]
+                # 先分control/sample
+                control_values = psm_values[:half]
+                sample_values = psm_values[half:]
+                # 替换0为nan
+                control_values = np.where(control_values == 0, np.nan, control_values)
+                sample_values = np.where(sample_values == 0, np.nan, sample_values)
+                median_val = self.median_cheng(control_values.tolist())
+                norm_control = control_values / median_val
+                norm_sample = sample_values / median_val
+                normalized_psm.append(np.concatenate([norm_control, norm_sample]))
+            normalized_psm = np.array(normalized_psm)  
+            # 2. 针对每个通道，对所有PSM的归一化后值取中位数
+            per_channel_median = [
+                self.median_cheng(normalized_psm[:, j][~np.isnan(normalized_psm[:, j])].tolist())
+                for j in range(n_channel)
+            ]
+            # 3. 汇总输出
+            result.append([protein_id, site] + per_channel_median + [n_psm])
+        # 结果转换为DataFrame
+        columns = ['ProteinID', 'Phosphorylation site'] + filtered_labels + ['PSM_count']
+        self.ph_samplewise_featurewise_normalized_data = pd.DataFrame(result, columns=columns)
+
+        # analysis
+        self.phospho_fc = self.glycosylation_rate(self.ph_samplewise_featurewise_normalized_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
+        if fc == None:
+            fc = input('Please enter the fc value: ')
+        if pvalue == None:
+            pvalue = input('Please enter the pvalue: ')
+        self.differential_phospho = self.phospho_fc.copy()
+        self.differential_phospho = self.differential_phospho[self.differential_phospho['pvalue_ttest']<pvalue]
+        self.differential_phospho = self.differential_phospho[(self.differential_phospho['fc']>fc)|(self.differential_phospho['fc']<1/fc)]
+
+        # glycosylation vs phospho
+        protein = self.pg_fc[['ProteinID', 'Glycosite_Position']].copy()
+        pho = self.ph_no_outliers_data[['ProteinID', 'Phosphorylation site']].copy()
+        pho['Phos_Position_Num'] = pho['Phosphorylation site'].str.extract('(\d+)').astype(int)
+        protein['Glycosite_Position'] = protein['Glycosite_Position'].astype(int)
+        protein_unique = protein[['ProteinID', 'Glycosite_Position']].drop_duplicates()
+        pho_unique = pho[['ProteinID', 'Phos_Position_Num']].drop_duplicates()
+        all_proteins = pd.DataFrame(
+            pd.concat([protein_unique['ProteinID'], pho_unique['ProteinID']]).unique(),
+            columns=['ProteinID']
+        )
+        all_glyco = pd.merge(all_proteins, protein_unique, on='ProteinID', how='left')
+        all_phos = pd.merge(all_proteins, pho_unique, on='ProteinID', how='left')
+        merged = pd.merge(all_glyco, all_phos, on='ProteinID', how='outer')
+        merged = merged[['ProteinID', 'Glycosite_Position', 'Phos_Position_Num']]
+        merged['Distance'] = (merged['Glycosite_Position'] - merged['Phos_Position_Num']).abs()
+        self.glycosylation_vs_phosphorylation = merged
+
+        return self
     
     def convert_accession_to_gene(self, df, protein_col, species=10090):
         """
@@ -1150,6 +1330,18 @@ class StrucGAP_GlycoNetwork:
             self.protein_down_glyco_no_tree_structure.to_excel(writer, sheet_name='protein_down_glyco_no_tree_structure'[:31])
             self.protein_down_glyco_down_tree_structure.to_excel(writer, sheet_name='protein_down_glyco_down_tree_structure'[:31])
             
+            self.phospho_raw_data.to_excel(writer, sheet_name='phospho_raw_data'[:31])
+            self.normal_list.to_excel(writer, sheet_name='phospho_normal_list')
+            self.lognormal_list.to_excel(writer, sheet_name='phospho_lognormal_list')
+            self.ph_no_outliers_data.to_excel(writer, sheet_name='ph_no_outliers_data')
+            self.ph_no_missing_value_data.to_excel(writer, sheet_name='ph_no_missing_value_data'[:31])
+            self.ph_cv_filter_data.to_excel(writer, sheet_name='ph_cv_filter_data')
+            self.ph_samplewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_normalized_data'[:31])
+            self.ph_samplewise_featurewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_featurewise_normalized_data'[:31])
+            self.phospho_fc.to_excel(writer, sheet_name='phospho_fc')
+            self.differential_phospho.to_excel(writer, sheet_name='differential_phospho')
+            self.glycosylation_vs_phosphorylation.to_excel(writer, sheet_name='glycosylation_phosphorylation'[:31])
+
             self.glycosyltransferases.to_excel(writer, sheet_name='glycosyltransferases')
             self.glycosidases.to_excel(writer, sheet_name='glycosidases')
             self.sialyltransferases.to_excel(writer, sheet_name='sialyltransferases')

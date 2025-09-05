@@ -107,6 +107,37 @@ from strucgap.glycopeptidequant import StrucGAP_GlycoPeptideQuant
 
 ## 糖链结构分析模块--68
 class StrucGAP_GlycanStructure:
+    """
+    Parameters:
+        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess or StrucGAP_GlycoPeptideQuant), to be further processed by StrucGAP_GlycanStructure.
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
+        data_type: Specifies which preprocessing stage data 
+            to use from `gs_data`. Options are:
+            - "psm_filtered"
+            - "cv_filtered"
+            - "outliers_filtered"
+            - "data"
+            Default is "psm_filtered".
+        pvalue: Significance threshold used when 
+            `gs_data` is from `StrucGAP_GlycoPeptideQuant`. Together with `fc`, 
+            it controls the differential glycopeptide analysis in 
+            `StrucGAP_GlycanStructure`. Default is 0.05.
+        fc: Fold change threshold for differential 
+            glycopeptide analysis (used together with `pvalue`). Default is 1.5.
+        pvalue_type: Method used for p-value calculation. 
+            Options are:
+            - "pvalue_ttest"
+            - "pvalue_mannwhitneyu"
+            - "pvalue_ttest_mannwhitneyu"
+            Default is "pvalue_ttest".
+        differential_data_type: Specifies which differential 
+            glycopeptides to include. Options are:
+            - "both": all differential glycopeptides
+            - "up": up-regulated only
+            - "down": down-regulated only
+            Default is "both".
+    
+    """
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered',
                  pvalue = 0.05, fc = 1.5, pvalue_type='pvalue_ttest', differential_data_type='both'):
         self.gs_data = gs_data
@@ -161,9 +192,21 @@ class StrucGAP_GlycanStructure:
         elif remove_oligo_mannose not in [True, False]:
             self.data = self.data[self.data['Glycan_type'] != 'Oligo mannose']
             print("Your input is invalid, the parameter 'remove_oligo_mannose' is set to True! ")
-   
-        if self.search_engine in ['MSFragger-Glyco','Glyco-Decipher']:
-            self.GlycanComposition_rank = pd.DataFrame(self.data['GlycanComposition'].value_counts().reset_index())
+        if self.search_engine in ['MSFragger-Glyco','Glyco-Decipher','Byonic','GlycanFinder']:
+            self.GlycanComposition_rank = (
+                self.data['GlycanComposition']
+                .value_counts()
+                .reset_index()
+            )
+            self.GlycanComposition_rank.columns = ['GlycanComposition', 'GlycanComposition_count']
+            extra_cols = [col for col in ['Glytoucan id', 'in_biosynthetic_pathways'] if col in self.data.columns]
+            if extra_cols:
+                extra_info = self.data[['GlycanComposition'] + extra_cols].drop_duplicates()
+                self.GlycanComposition_rank = self.GlycanComposition_rank.merge(
+                    extra_info,
+                    on='GlycanComposition',
+                    how='left'
+                )
             self.structure_coding_rank = pd.DataFrame()
         else:
             self.GlycanComposition_rank = self.identify_glycan_composition() # .iloc[:self.rank]  
@@ -178,15 +221,42 @@ class StrucGAP_GlycanStructure:
         return self
     
     def identify_glycan_composition(self):  
-        """An auxiliary function called by other functions to identify glycan composition."""
-        temp_data = self.data[['GlycanComposition', 'structure_coding']] 
-        temp_data = temp_data.replace(np.nan, '')
-        glycancomposition = {}
-        for i in temp_data['GlycanComposition'].unique(): 
-            glycancomposition[i] = temp_data[temp_data['GlycanComposition'] == i]['structure_coding'].value_counts().max()
-        GlycanComposition_rank = pd.DataFrame(list(glycancomposition.items()), columns=['GlycanComposition', 'GlycanComposition_count'])
-        GlycanComposition_rank = GlycanComposition_rank.sort_values(by='GlycanComposition_count', ascending=False) 
-        GlycanComposition_rank = GlycanComposition_rank[GlycanComposition_rank['GlycanComposition']!='']
+        if 'Glytoucan id' in self.data.columns:
+            """Identify glycan composition with additional metadata."""
+            temp_data = self.data[['GlycanComposition', 'structure_coding', 
+                                   'Glytoucan id', 'in_biosynthetic_pathways', 'RuleFlags']] 
+            temp_data = temp_data.replace(np.nan, '')
+            glycancomposition = {}
+            for i in temp_data['GlycanComposition'].unique(): 
+                glycancomposition[i] = temp_data[temp_data['GlycanComposition'] == i]['structure_coding'].value_counts().max()
+            GlycanComposition_rank = pd.DataFrame(
+                list(glycancomposition.items()), 
+                columns=['GlycanComposition', 'GlycanComposition_count']
+            )
+            # 
+            meta_info = temp_data.groupby('GlycanComposition').agg({
+                'Glytoucan id': 'first',
+                'in_biosynthetic_pathways': 'first',
+                'RuleFlags': 'first'
+            }).reset_index()
+            GlycanComposition_rank = GlycanComposition_rank.merge(
+                meta_info, on='GlycanComposition', how='left'
+            )
+            GlycanComposition_rank = GlycanComposition_rank.sort_values(
+                by='GlycanComposition_count', ascending=False
+            )
+            GlycanComposition_rank = GlycanComposition_rank[
+                GlycanComposition_rank['GlycanComposition'] != ''
+            ]
+        else:
+            temp_data = self.data[['GlycanComposition', 'structure_coding']] 
+            temp_data = temp_data.replace(np.nan, '')
+            glycancomposition = {}
+            for i in temp_data['GlycanComposition'].unique(): 
+                glycancomposition[i] = temp_data[temp_data['GlycanComposition'] == i]['structure_coding'].value_counts().max()
+            GlycanComposition_rank = pd.DataFrame(list(glycancomposition.items()), columns=['GlycanComposition', 'GlycanComposition_count'])
+            GlycanComposition_rank = GlycanComposition_rank.sort_values(by='GlycanComposition_count', ascending=False) 
+            GlycanComposition_rank = GlycanComposition_rank[GlycanComposition_rank['GlycanComposition']!='']
         return GlycanComposition_rank
     
     def identify_core_structure(self):  

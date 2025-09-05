@@ -103,12 +103,21 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 功能注释与关联性分析模块--81
 class StrucGAP_FunctionAnnotation:
+    """
+    Parameters:
+        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess, StrucGAP_GlycoPeptideQuant or StrucGAP_GlycoNetwork), to be further processed by StrucGAP_FunctionAnnotation.
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
+        data_type: If gs_data was set as StrucGAP_GlycoNetwork, you can select data_type in 
+            ['protein_up_glyco_up', 'protein_up_glyco_no', 'protein_up_glyco_down', 'protein_no_glyco_up', 'protein_no_glyco_no', 'protein_no_glyco_down', 'protein_down_glyco_up', 'protein_down_glyco_no', 'protein_down_glyco_down'].
+    
+    """
     def __init__(self, gs_data, data_manager, data_type = 'protein_no_glyco_up'):
         if hasattr(gs_data, 'sample_group'):
             self.sample_group = gs_data.sample_group
         else:
-            raise AttributeError("gs_data must have 'sample_group' attribute.")
-        
+            self.sample_group = getattr(data_manager.module_records['StrucGAP_Preprocess']['instance'], 'sample_group')
+            # raise AttributeError("gs_data must have 'sample_group' attribute.")
+    
         if isinstance(gs_data, pd.DataFrame):
             self.gs_data = gs_data
             # self.gs_data = self.gs_data[~self.gs_data['PeptideSequence+structure_coding+ProteinID'].duplicated()]
@@ -285,7 +294,7 @@ class StrucGAP_FunctionAnnotation:
         return final_protein_fc, upregulated_proteins, downregulated_proteins
         
     def ora(self, organism=None, up_down_fc_threshold=None, background_input=False, pvalue_type='pvalue_ttest_mannwhitneyu',
-            selected_terms=['GO:MF', 'GO:CC', 'GO:BP']):
+            selected_terms=['GO:MF', 'GO:CC', 'GO:BP'], enrich_feature = 'protein'):
         """
         Performs over-representation analysis using the g:Profiler API.
         
@@ -295,6 +304,7 @@ class StrucGAP_FunctionAnnotation:
             background_input: use both proteins as background or not.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
             selected_terms: enrichment database from ["GO:MF","GO:CC","GO:BP","KEGG","REAC","WP","TF","MIRNA","HPA","CORUM","HP"], such as ['GO:MF', 'GO:CC', 'GO:BP'].
+            enrich_feature: select feature in ['protein', 'glycopeptide'].
         
         Returns:
             self.final_protein_fc
@@ -314,6 +324,7 @@ class StrucGAP_FunctionAnnotation:
         """
         if up_down_fc_threshold == None:
             up_down_fc_threshold = float(input("Please enter the fc threshold (such as 1.5) to differentiate up and down regulated features: "))
+        self.up_down_fc_threshold = up_down_fc_threshold
  
         if organism == None:
             organism = input("Please enter database from ['mmusculus','hsapiens', 'rnorvegicus']: ")
@@ -354,11 +365,36 @@ class StrucGAP_FunctionAnnotation:
         self.both_proteins = None 
         if pvalue_type in self.fc_data.columns:       
             fc_data_p = self.fc_data[self.fc_data[pvalue_type]<0.05]
-            self.final_protein_fc, self.upregulated_proteins, self.downregulated_proteins = self.compute_weighted_fc(fc_data_p, up_down_fc_threshold)
+            if enrich_feature == 'protein':
+                self.final_protein_fc, self.upregulated_proteins, self.downregulated_proteins = self.compute_weighted_fc(fc_data_p, up_down_fc_threshold)
+            elif enrich_feature == 'glycopeptide':
+                up_genes = (
+                    fc_data_p.loc[fc_data_p['fc'] > up_down_fc_threshold, 'GeneName']
+                    .dropna()                           # 去掉缺失值（如果有的话）
+                    .astype(str)                        # 确保是字符串
+                    .str.split(';')                     # 如果有多个基因用 ; 分隔
+                    .explode()                          # 拆开到多行
+                    .str.strip()                        # 去掉空格
+                )
+                self.upregulated_proteins = [g for g in set(up_genes) if g != "Unknown"]
+                down_genes = (
+                    fc_data_p.loc[fc_data_p['fc'] < 1/up_down_fc_threshold, 'GeneName']
+                    .dropna()                           # 去掉缺失值（如果有的话）
+                    .astype(str)                        # 确保是字符串
+                    .str.split(';')                     # 如果有多个基因用 ; 分隔
+                    .explode()                          # 拆开到多行
+                    .str.strip()                        # 去掉空格
+                )
+                self.downregulated_proteins = [g for g in set(down_genes) if g != "Unknown"]
         elif pvalue_type not in self.fc_data.columns:
             fc_data_p = self.fc_data
-            self.both_proteins = list(set(fc_data_p['GeneName']))
-        
+            genes = fc_data_p['GeneName']
+            genes = genes.dropna()
+            genes = genes[genes.astype(str) != 'nan']
+            genes = genes.astype(str).str.strip()
+            genes = genes[genes != ""]
+            self.both_proteins = list(set(genes.tolist()))
+        self.pvalue_type = pvalue_type
         background = pd.DataFrame(self.gs_data[~self.gs_data['GeneName'].duplicated()]['GeneName'])
         background = background['GeneName'].str.split(';', expand=True).stack().reset_index(level=1, drop=True).to_frame('GeneName')
         background = background[background['GeneName']!='Unknown']
@@ -780,8 +816,8 @@ class StrucGAP_FunctionAnnotation:
         self.function_data_name = function_data
         
         #
-        if function_data in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_up_result', 'gsea_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result']:
-            if function_data in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_up_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result']:
+        if function_data in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_down_result', 'gsea_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result']:
+            if function_data in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_down_result', 'ora_no_background_both_proteins_result', 'ora_background_both_proteins_result']:
                 function_data = getattr(self, function_data, None)
                 # function_data['GO_name'] = function_data['Term'].str.split(' \(', n=1, expand=True)[0].str.upper()
                 function_data = function_data.set_index('GO_name',drop=False)
@@ -827,128 +863,12 @@ class StrucGAP_FunctionAnnotation:
             #
             for i in ['biological_process', 'molecular_function', 'cellular_component']:
                 if i == 'biological_process':
-                    # bp_data = GO_data[GO_data['type']==i][['GO_name1', 'relationship', 'GO_name2']]
-                    # bp_both_data = {}  # function_data[function_data['Gene_set']=='GO_Biological_Process_2023']['GO_name'].unique()     
-                    # for j in tqdm(list(function_data[function_data['Gene_set']=='GO_Biological_Process_2023']['GO_name'].unique())):
-                    #     bp_son_data = bp_data[bp_data['GO_name1']==j]
-                    #     bp_son_data['chain'] = bp_son_data['relationship'] + '+' + bp_son_data['GO_name2']
-                    #     bp_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #     bp_son_data = bp_son_data.drop(columns='relationship')
-                    #     bp_merge_data = bp_data[bp_data['GO_name1'].isin(list(bp_son_data.index))]
-                    #     bp_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #     num = 0
-                    #     while bp_data[bp_data['GO_name1'].isin(list(bp_merge_data.index))].shape[0] != 0:
-                    #         bp_merge_data = bp_data[bp_data['GO_name1'].isin(list(bp_merge_data.index))]
-                    #         bp_merge_data['chain'] = bp_merge_data['relationship'] + '+' + bp_merge_data['GO_name2']
-                    #         bp_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #         num = num + 1
-                    #         bp_merge_data = bp_merge_data.rename(columns={'chain':num})
-                    #         bp_merge_data = bp_merge_data.drop(columns='relationship')
-                    #         bp_son_data = pd.merge(bp_son_data, bp_merge_data, left_index=True, right_index=True, how='left')
-                    #         bp_merge_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         bp_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         bp_son_data_1 = bp_son_data.reset_index() 
-                    #         parent = []
-                    #         for k in list(bp_son_data_1.index):
-                    #             lst = list(bp_son_data_1.loc[k])
-                    #             lst = [x for x in lst if pd.notnull(x)]
-                    #             last_value = lst[-1]
-                    #             target_value = None  
-                    #             if last_value == 'is a+BIOLOGICAL_PROCESS':
-                    #                 for item in reversed(lst[:-1]):
-                    #                     if 'is a+' in item:
-                    #                         target_value = item.split('+')[1]
-                    #                         break
-                    #             parent.append(target_value)
-                    #         parent = [x for x in parent if x is not None]
-                    #         parent = list(set(parent))
-                    #     bp_both_data[j] = parent
-                    # bp_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in bp_both_data.items() ]))
-                    # bp_both_data_df = bp_both_data_df.T
                     bp_both_data_df = pd.DataFrame(function_data[function_data['Gene_set'].str.contains('GO:BP', na=False)]['GO_name'])
                     
                 elif i == 'molecular_function':
-                    # mf_data = GO_data[GO_data['type']==i][['GO_name1', 'relationship', 'GO_name2']]
-                    # mf_both_data = {}
-                    # for j in tqdm(list(function_data[function_data['Gene_set']=='GO_Molecular_Function_2023']['GO_name'].unique())):
-                    #     mf_son_data = mf_data[mf_data['GO_name1']==j]
-                    #     mf_son_data['chain'] = mf_son_data['relationship'] + '+' + mf_son_data['GO_name2']
-                    #     mf_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #     mf_son_data = mf_son_data.drop(columns='relationship')
-                    #     mf_merge_data = mf_data[mf_data['GO_name1'].isin(list(mf_son_data.index))]
-                    #     mf_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #     num = 0
-                    #     while mf_data[mf_data['GO_name1'].isin(list(mf_merge_data.index))].shape[0] != 0:
-                    #         mf_merge_data = mf_data[mf_data['GO_name1'].isin(list(mf_merge_data.index))]
-                    #         mf_merge_data['chain'] = mf_merge_data['relationship'] + '+' + mf_merge_data['GO_name2']
-                    #         mf_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #         num = num + 1
-                    #         mf_merge_data = mf_merge_data.rename(columns={'chain':num})
-                    #         mf_merge_data = mf_merge_data.drop(columns='relationship')
-                    #         mf_son_data = pd.merge(mf_son_data, mf_merge_data, left_index=True, right_index=True, how='left')
-                    #         mf_merge_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         mf_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         mf_son_data_1 = mf_son_data.reset_index() 
-                    #         parent = []
-                    #         for k in list(mf_son_data_1.index): 
-                    #             lst = list(mf_son_data_1.loc[k])
-                    #             lst = [x for x in lst if pd.notnull(x)]
-                    #             last_value = lst[-1]
-                    #             target_value = [] 
-                    #             if last_value == 'is a+MOLECULAR_FUNCTION':
-                    #                 for item in reversed(lst[:-1]):
-                    #                     if 'is a+' in item:
-                    #                         term = item.split('+')[1]
-                    #                         target_value.append(term)
-                    #                         if len(target_value) == 3:
-                    #                             break
-                    #             parent.extend(target_value)
-                    #         parent = [x for x in parent if x is not None]
-                    #         parent = list(set(parent))
-                    #     mf_both_data[j] = parent
-                    # mf_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in mf_both_data.items() ]))
-                    # mf_both_data_df = mf_both_data_df.T
                     mf_both_data_df = pd.DataFrame(function_data[function_data['Gene_set'].str.contains('GO:MF', na=False)]['GO_name'])
                     
                 elif i == 'cellular_component':
-                    # cc_data = GO_data[GO_data['type']==i][['GO_name1', 'relationship', 'GO_name2']]
-                    # cc_both_data = {}
-                    # for j in tqdm(list(function_data[function_data['Gene_set']=='GO_Cellular_Component_2023']['GO_name'].unique())):
-                    #     cc_son_data = cc_data[cc_data['GO_name1']==j]
-                    #     cc_son_data['chain'] = cc_son_data['relationship'] + '+' + cc_son_data['GO_name2']
-                    #     cc_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #     cc_son_data = cc_son_data.drop(columns='relationship')
-                    #     cc_merge_data = cc_data[cc_data['GO_name1'].isin(list(cc_son_data.index))]
-                    #     cc_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #     num = 0
-                    #     while cc_data[cc_data['GO_name1'].isin(list(cc_merge_data.index))].shape[0] != 0:
-                    #         cc_merge_data = cc_data[cc_data['GO_name1'].isin(list(cc_merge_data.index))]
-                    #         cc_merge_data['chain'] = cc_merge_data['relationship'] + '+' + cc_merge_data['GO_name2']
-                    #         cc_merge_data.set_index('GO_name1', inplace=True, drop=True)
-                    #         num = num + 1
-                    #         cc_merge_data = cc_merge_data.rename(columns={'chain':num})
-                    #         cc_merge_data = cc_merge_data.drop(columns='relationship')
-                    #         cc_son_data = pd.merge(cc_son_data, cc_merge_data, left_index=True, right_index=True, how='left')
-                    #         cc_merge_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         cc_son_data.set_index('GO_name2', inplace=True, drop=True)
-                    #         cc_son_data_1 = cc_son_data.reset_index() 
-                    #         parent = []
-                    #         for k in list(cc_son_data_1.index): #k=1
-                    #             lst = list(cc_son_data_1.loc[k])
-                    #             lst = [x for x in lst if pd.notnull(x)]
-                    #             last_value = lst[-1]
-                    #             target_value = [] 
-                    #             if last_value == 'is a+CELLULAR_COMPONENT':
-                    #                 for item in lst:
-                    #                     if 'part_of+' in item:
-                    #                         term = item.split('+')[1]
-                    #                         target_value.append(term)
-                    #             parent.extend(target_value)
-                    #         parent = [x for x in parent if x is not None]
-                    #         parent = list(set(parent))
-                    #     cc_both_data[j] = parent
-                    # cc_both_data_df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in cc_both_data.items() ]))
-                    # cc_both_data_df = cc_both_data_df.T
                     cc_both_data_df = pd.DataFrame(function_data[function_data['Gene_set'].str.contains('GO:CC', na=False)]['GO_name'])
                     
             # data processing
@@ -959,23 +879,6 @@ class StrucGAP_FunctionAnnotation:
                 if both_data_df is None or both_data_df.empty:
                     print(f"{prefix}_both_data_df is empty, skipping...")
                     continue
-                #
-                # both_data_df = both_data_df[~both_data_df[0].isnull()]
-                # all_values = both_data_df.stack().unique()
-                # both_data = pd.DataFrame(columns=all_values)
-                # df_long = both_data_df.stack().reset_index()
-                # df_long.columns = ['pathway', 'attribute_num', 'attribute']
-                # attribute_to_pathways = df_long.groupby('attribute')['pathway'].apply(list)
-                # attribute_to_pathways_df = attribute_to_pathways.reset_index()
-                # attribute_to_pathways_df.columns = ['attribute', 'pathways']
-                # max_len = attribute_to_pathways_df['pathways'].apply(len).max()
-                # function_structure = pd.DataFrame(index=range(max_len))
-                # for index, row in attribute_to_pathways_df.iterrows():
-                #     attribute = row['attribute']
-                #     pathways = row['pathways']
-                #     pathways += [pd.NA] * (max_len - len(pathways))
-                #     function_structure[attribute] = pathways
-                # function_structure = function_structure.fillna(np.nan)
                 function_structure = both_data_df.T
                 
                 gene_dict = {}
@@ -1001,7 +904,15 @@ class StrucGAP_FunctionAnnotation:
                     genes_extended = genes + [pd.NA] * (max_length - len(genes))
                     gene_list[column] = genes_extended
                 # structure_statistics  
-                structure_data = copy.deepcopy(self.fc_data)
+                if self.function_data_name in ['ora_no_background_up_result', 'ora_no_background_down_result', 'ora_background_up_result', 'ora_background_down_result']:
+                    structure_data = copy.deepcopy(self.fc_data)
+                    structure_data = structure_data[structure_data[self.pvalue_type]<cutoff]
+                    if self.function_data_name in ['ora_no_background_up_result', 'ora_background_up_result']:
+                        structure_data = structure_data[structure_data['fc']>self.up_down_fc_threshold]
+                    if self.function_data_name in ['ora_no_background_down_result', 'ora_background_down_result']:
+                        structure_data = structure_data[structure_data['fc']<1/self.up_down_fc_threshold]
+                else:
+                    structure_data = copy.deepcopy(self.fc_data)
                 structure_data['GeneName'] = structure_data['GeneName'].str.upper()
                 structure_data = structure_data.drop(columns='PeptideSequence+structure_coding+ProteinID')
                 structure_data['GeneName'] = structure_data['GeneName'].str.split(';')

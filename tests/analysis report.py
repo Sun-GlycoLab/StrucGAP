@@ -6928,7 +6928,65 @@ module7.compose_figures("key_StrucGAP_GlycanStructure_1.pdf", figure_name="key_S
                         pdf_description_bg_color = "#89C7CB",
                         custom_sizes=[[1], [2,3], [4], [5], [6], [7], [8], [9], [10], [11], [12]])  # 生成后自动清理figure1数据
 
+# GlycoNetwork key information up
+network = data_manager.StrucGAP_GlycoNetwork_key_information.copy()
 
+keys_to_remove = []
+for key in network['Up']:
+    sub_dict = network['Up'][key]
+    if (isinstance(sub_dict.get('enzymes', []), list) and not sub_dict.get('enzymes', []) and
+        isinstance(sub_dict.get('gbps', []), list) and not sub_dict.get('gbps', []) and
+        isinstance(sub_dict.get('pathway', []), list) and not sub_dict.get('pathway', [])):
+        keys_to_remove.append(key)
+for key in keys_to_remove:
+    network['Up'].pop(key)
+
+for idx, i in enumerate(network['Up'].keys(), 1):
+    globals()[f'fig{idx}'] = module7.glyconetwork(
+        network, 
+        'Up', 
+        i,
+        subfolder='key_StrucGAP_GlycoNetwork_up',
+        figure_description=f'Upstream enzymes, glycan-binding proteins, and downstream pathway networks related to {i} containing glycans'
+    )
+    module7.add_figure(globals()[f'fig{idx}'], figure_name=f"key_StrucGAP_GlycoNetwork_up")
+
+num_figs = len(network['Up'])
+custom_sizes = [[i] for i in range(1, num_figs + 1)]
+module7.compose_figures("key_StrucGAP_GlycoNetwork_up.pdf", figure_name="key_StrucGAP_GlycoNetwork_up",
+                        pdf_description = "Key information: Network of glycopeptide-specific upregulated glycosylation features and related regulators.",
+                        pdf_description_bg_color = "#EA4A6B",
+                        custom_sizes=custom_sizes)  # 生成后自动清理figure1数据
+
+# glyconetwork key information down
+network = data_manager.StrucGAP_GlycoNetwork_key_information.copy()
+
+keys_to_remove = []
+for key in network['Down']:
+    sub_dict = network['Down'][key]
+    if (isinstance(sub_dict.get('enzymes', []), list) and not sub_dict.get('enzymes', []) and
+        isinstance(sub_dict.get('gbps', []), list) and not sub_dict.get('gbps', []) and
+        isinstance(sub_dict.get('pathway', []), list) and not sub_dict.get('pathway', [])):
+        keys_to_remove.append(key)
+for key in keys_to_remove:
+    network['Down'].pop(key)
+
+for idx, i in enumerate(network['Down'].keys(), 1):
+    globals()[f'fig{idx}'] = module7.glyconetwork(
+        network, 
+        'Down', 
+        i,
+        subfolder='key_StrucGAP_GlycoNetwork_down',
+        figure_description=f'Upstream enzymes, glycan-binding proteins, and downstream pathway networks related to {i} containing glycans'
+    )
+    module7.add_figure(globals()[f'fig{idx}'], figure_name=f"key_StrucGAP_GlycoNetwork_down")
+
+num_figs = len(network['Up'])
+custom_sizes = [[i] for i in range(1, num_figs + 1)]
+module7.compose_figures("key_StrucGAP_GlycoNetwork_down.pdf", figure_name="key_StrucGAP_GlycoNetwork_down",
+                        pdf_description = "Key information: Network of glycopeptide-specific downregulated glycosylation features and related regulators.",
+                        pdf_description_bg_color = "#EA4A6B",
+                        custom_sizes=custom_sizes)  # 生成后自动清理figure1数据
 
 # if you want to get the combined pdf categoried by module, you can ...
 from PyPDF2 import PdfMerger
@@ -6988,7 +7046,8 @@ merger.append("tests/StrucGAP_GlycoPeptideQuant_key_information_1.pdf")
 merger.append("tests/StrucGAP_FunctionAnnotation_up_result_key_information_1.pdf")
 merger.append("tests/StrucGAP_FunctionAnnotation_down_result_key_information_1.pdf")
 merger.append("tests/StrucGAP_FunctionAnnotation_down_result_key_information_2.pdf")
-merger.append("tests/StrucGAP_GlycoNetwork_2.pdf")
+merger.append("tests/key_StrucGAP_GlycoNetwork_up.pdf")
+merger.append("tests/key_StrucGAP_GlycoNetwork_down.pdf")
 merger.append("tests/Glycan structures coding rule.pdf")
 merger.write("tests/Key information.pdf")
 merger.close()

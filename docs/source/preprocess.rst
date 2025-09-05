@@ -38,12 +38,14 @@ The abundance ratio used for the outliers calibration was calculated as follows:
                       branch_list_dir = "tests/branch_structures_18_mice uterus.0240401.xlsx",
                       data_manager=data_manager)
     module1.data_cleaning(data_type='tmt')
+    module1.cv_raw(threshold='no')
     module1.fdr(feature_type='no')
-    module1.outliers(abundance_ratio=[1.172277596,1.142983373,1,1.46390136,1.466662624,
-    1.449428354,1.109519196,1.387464059,1.291746761,1.487440464]) # Please refer to the file tests/Factor calculation.xlsx in our GitHub repository(https://github.com/Sun-GlycoLab/StrucGAP) for more details on the abundance ratio calculation.
+    module1.outliers(abundance_ratio=[1.172277596,1.142983373,1,1.46390136,1.466662624,1.449428354,1.109519196,1.387464059,1.291746761,1.487440464],
+                 samplewise_normalization = False)
     module1.cv(threshold = 'no')
     module1.psm(psm_number = 'no')
-    module1.output()
+    module1.annotation(glytoucan = True, biosynthetic_pathways = True, glycobiology_filter = True)
+    module1.output() 
 
 API Reference
 ------------------

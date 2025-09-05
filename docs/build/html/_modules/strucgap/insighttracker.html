@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.insighttracker &mdash; StrucGAP 1.0.8 documentation</title>
+  <title>strucgap.insighttracker &mdash; StrucGAP 1.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -50,6 +50,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../troubleshooting%20guide.html">Troubleshooting guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
 <ul>
@@ -193,6 +194,8 @@
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="kn">from</span> <span class="nn">strucgap.functionannotation</span> <span class="kn">import</span> <span class="n">StrucGAP_FunctionAnnotation</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 数据分析管理模块</span>
@@ -320,19 +323,21 @@
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">])</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
                 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.key_information_extraction"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">key_information_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.key_information_extraction"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">key_information_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">target_percentage</span> <span class="o">=</span> <span class="mf">0.08</span><span class="p">,</span> <span class="n">min_value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Mines outputs from both StrucGAP_GlycoPeptideQuant and StrucGAP_FunctionAnnotation to identify structurally and functionally relevant glycan substructural features.</span>
+<span class="sd">        Mines outputs from both StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation and StrucGAP_GlycoNetwork to identify structurally and functionally relevant glycan substructural features.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
-<span class="sd">            module:  StrucGAP_GlycoPeptideQuant or StrucGAP_FunctionAnnotation.</span>
+<span class="sd">            module:  StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation or StrucGAP_GlycoNetwork.</span>
+<span class="sd">            target_percentage: when extract key information from StrucGAP_FunctionAnnotation, target_percentage means the key information ratio from both analysis results.</span>
+<span class="sd">            min_value: when extract key information from StrucGAP_FunctionAnnotation, target_percentage represents the minimum number of substructural features contained in a term.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            None (output key information directly as a table).</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">module</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please select module in [&#39;StrucGAP_GlycoPeptideQuant&#39; or &#39;StrucGAP_FunctionAnnotation&#39;]!&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">,</span> <span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please select module in [&#39;StrucGAP_GlycoPeptideQuant&#39;, &#39;StrucGAP_FunctionAnnotation&#39; or &#39;StrucGAP_GlycoNetwork&#39;]!&quot;</span><span class="p">)</span>
             <span class="k">return</span>
         
         <span class="k">if</span> <span class="n">module</span> <span class="o">==</span> <span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span> <span class="ow">and</span> <span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -504,7 +509,7 @@
                 <span class="n">data_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="n">ratio_sheetname</span><span class="p">)</span>
                 <span class="n">data_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">data_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
                 
-                <span class="k">def</span> <span class="nf">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+                <span class="k">def</span> <span class="nf">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span><span class="o">=</span><span class="n">target_percentage</span><span class="p">):</span>
                     <span class="n">num_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
                     <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
                         <span class="n">target_percentage</span><span class="o">=</span><span class="mf">0.5</span>
@@ -526,7 +531,7 @@
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using threshold </span><span class="si">{</span><span class="n">best_threshold</span><span class="si">}</span><span class="s2">, selected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns out of </span><span class="si">{</span><span class="n">num_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
                 
-                <span class="k">def</span> <span class="nf">filter_columns_by_min_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+                <span class="k">def</span> <span class="nf">filter_columns_by_min_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
                     <span class="n">first_column</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">first_column</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">min_value</span><span class="p">]</span>
                     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
@@ -550,10 +555,11 @@
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_ratio</span><span class="p">)</span>
                 <span class="n">columns_to_keep</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()]</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns_to_keep</span><span class="p">)]</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span> <span class="o">=</span> <span class="n">target_percentage</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                     <span class="n">result1</span> <span class="o">=</span> <span class="n">data_count</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-                    <span class="n">result1</span> <span class="o">=</span> <span class="n">filter_columns_by_min_value</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">:</span>
+                        <span class="n">result1</span> <span class="o">=</span> <span class="n">filter_columns_by_min_value</span><span class="p">(</span><span class="n">result1</span><span class="p">,</span> <span class="n">min_value</span> <span class="o">=</span> <span class="n">min_value</span><span class="p">)</span>
                     <span class="n">output</span> <span class="o">=</span> <span class="n">stack_with_empty_row</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">result1</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">result1</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">result1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
@@ -565,7 +571,675 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;StrucGAP_FunctionAnnotation_</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">function_data_type</span><span class="si">}</span><span class="s1">_key_information.xlsx&#39;</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;xlsxwriter&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">sheet_name</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">StrucGAP_FunctionAnnotation_key_set</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                        <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+                        <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">module</span> <span class="o">==</span> <span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span> <span class="ow">and</span> <span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">StrucGAP_GlycoNetwork_key_set</span> <span class="o">=</span> <span class="p">{}</span>
+            
+            <span class="n">upregulation_only_in_glycopeptide</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;protein_no_glyco_up&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> 
+            <span class="n">downregulation_only_in_glycopeptide</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;protein_no_glyco_down&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            
+            <span class="k">def</span> <span class="nf">annotate_glyco_feature</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># 1. LacNAc</span>
+                <span class="k">if</span> <span class="s1">&#39;E2F1fe&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;LacNAc&#39;</span><span class="p">)</span>
+                <span class="c1"># 2. GlcNAc</span>
+                <span class="k">if</span> <span class="s1">&#39;E2e&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;GlcNAc&#39;</span><span class="p">)</span>
+                <span class="c1"># 3. Lewis</span>
+                <span class="n">structure</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="s1">&#39;E2F1G5gfF5fe&#39;</span> <span class="ow">in</span> <span class="n">structure</span> <span class="ow">or</span>
+                    <span class="s1">&#39;E2F1fF5fe&#39;</span> <span class="ow">in</span> <span class="n">structure</span> <span class="ow">or</span>
+                    <span class="s1">&#39;E2F1G3gfF5fe&#39;</span> <span class="ow">in</span> <span class="n">structure</span>
+                <span class="p">):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Lewis&#39;</span><span class="p">)</span>
+                <span class="c1"># 4. LacdiNAc (正则)</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(E2F2.*?fe)&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">])):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;LacdiNAc&#39;</span><span class="p">)</span>
+                <span class="c1"># 5. Sialylation</span>
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Ac/Gc&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Ac/Gc&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">:</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Sialylation&#39;</span><span class="p">)</span>
+                <span class="c1"># 6. Neu5Ac sialylation</span>
+                <span class="k">if</span> <span class="s1">&#39;Ac&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Ac/Gc&#39;</span><span class="p">]):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Neu5Ac sialylation&#39;</span><span class="p">)</span>
+                <span class="c1"># 7. Neu5Gc sialylation</span>
+                <span class="k">if</span> <span class="s1">&#39;Gc&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Ac/Gc&#39;</span><span class="p">]):</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Neu5Gc sialylation&#39;</span><span class="p">)</span>
+                <span class="c1"># 8. Fucosylation</span>
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;fucosylated type&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;fucosylated type&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span><span class="p">:</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Fucosylation&#39;</span><span class="p">)</span>
+                <span class="c1"># 9. Core fucosylation</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;fucosylated type&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;core fucosylated&#39;</span><span class="p">:</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Core fucosylation&#39;</span><span class="p">)</span>
+                <span class="c1"># 10. Antenna fucosylation</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;fucosylated type&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;antenna fucosylated&#39;</span><span class="p">:</span>
+                    <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Antenna fucosylation&#39;</span><span class="p">)</span>
+                <span class="c1"># combine</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">features</span><span class="p">))</span>
+                <span class="k">return</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+            
+            <span class="n">upregulation_only_in_glycopeptide</span><span class="p">[</span><span class="s1">&#39;GlycoFeature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">upregulation_only_in_glycopeptide</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">annotate_glyco_feature</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">downregulation_only_in_glycopeptide</span><span class="p">[</span><span class="s1">&#39;GlycoFeature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">downregulation_only_in_glycopeptide</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">annotate_glyco_feature</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            
+            <span class="k">def</span> <span class="nf">judge_lacnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">exclude</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(keratan\s*sulfate|keratan-sulfate|keratan\s*polymer|within\s*(glycan\s*)?chains|keratan$)&quot;</span>
+                <span class="n">strong_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(involved in the synthesis of terminal.*LacNAc|synthesis of terminal.*LacNAc|formation of terminal.*LacNAc|catalyzes.*transfer of Gal.*to the non-reducing terminal N-acetyl[ -]?glucosamine|fucosylates.*LacNAc|modifies.*LacNAc unit)&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">strong_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_glcnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">strong_glcnac_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?i)(</span>
+<span class="s2">                    transfer(s|ed|ing)?\s.*\s(to|on)\s(terminal\s)?(beta-)?N-acetylglucosamine(\s*\(GlcNAc\))? |</span>
+<span class="s2">                    (beta-)?N-acetylglucosamine(\s*\(GlcNAc\))?\s(residue|unit|structure|acceptor) |</span>
+<span class="s2">                    N-acetylglucosaminyltransferase |</span>
+<span class="s2">                    alpha-D-GlcNAc |</span>
+<span class="s2">                    GlcNAc(\(2\))? |</span>
+<span class="s2">                    N-glycosylation |</span>
+<span class="s2">                    lactosaminide\s*\(Gal-beta-1,4-GlcNAc-R\) |</span>
+<span class="s2">                    (GlcNAc|N-acetylglucosamine).*(acceptor|donor|unit|residue)</span>
+<span class="s2">                )&quot;&quot;&quot;</span>
+                <span class="n">exclude_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?i)(</span>
+<span class="s2">                    may\salso\sshow.*activity\stoward.*GlcNAc.*(unsure|in vitro|synthetic\s+substrate|not.*major) |</span>
+<span class="s2">                    O-mannosyl\s*glycosylation |</span>
+<span class="s2">                    O-glycosylation |</span>
+<span class="s2">                    O-linked |</span>
+<span class="s2">                    O-GlcNAc |</span>
+<span class="s2">                    O-Ser/Thr |</span>
+<span class="s2">                    O-fucosylation |</span>
+<span class="s2">                    O-glycosidic |</span>
+<span class="s2">                    in vivo.*unsure |</span>
+<span class="s2">                    synthetic substrate</span>
+<span class="s2">                )&quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">strong_glcnac_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_lewis</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">exclude</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(serve as (scaffold|backbone|epitope) for.*lewis|may be involved in.*lewis|selectively involved in.*lewis|can also.*lewis|required for.*lewis|backbone for.*lewis|scaffold for.*lewis|participating in (the )?biosynthesis of.*lewis|can lead to.*lewis|(forming|may contribute to the generation of|leads to the formation of).{0,40}(lewis\s*[axy]|lex|ley|sialyl[\s-]?lewis\s*[axy]|slex))&quot;</span>
+                <span class="n">lewis_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(catalyzes|fucosylates|biosynthesi[sz]es?|synthesi[sz]es?|generates|forms|transfer[s]?).{0,100}(lewis\s*[xy]|lex|ley|sialyl[\s-]?lewis\s*x|slex)&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">lewis_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_lacdinac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">lacdi_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
+<span class="s2">                    lacdinac</span>
+<span class="s2">                    | n[,&#39;]?n&#39;-?diacetyllactosediamine</span>
+<span class="s2">                    | galnac[-\sβ]*1[-\s,&gt;]*4[-\s]*glcnac</span>
+<span class="s2">                    | n-acetylgalactosamine\s*\(galnac\)[^\.\n]{0,80}?beta-?1,?4-?linkage[^\.\n]{0,40}?glcnac</span>
+<span class="s2">                    | galnac[^\.\n]{0,80}?beta-?1,?4-?linkage[^\.\n]{0,40}?glcnac</span>
+<span class="s2">                    | galnac[^\.\n]{0,80}?beta-?1,?4[^\.\n]{0,40}?glcnac</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">lacdi_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
+<span class="s2">                (</span>
+<span class="s2">                    sialyltransferase |</span>
+<span class="s2">                    CMP-?sial(ic|yl)[ -]?acid |</span>
+<span class="s2">                    catalyzes[^.]{0,50}transfer[^.]{0,20}sial(ic|yl)[ -]?acid |</span>
+<span class="s2">                    transfer[sred]?[^.]{0,60}sial(ic|yl)[ -]?acid |</span>
+<span class="s2">                    catalyzes[^.]{0,50}formation[^.]{0,40}NeuAc</span>
+<span class="s2">                )</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                <span class="n">O_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
+<span class="s2">                (</span>
+<span class="s2">                    core 1 O-glycan |</span>
+<span class="s2">                    O-?glycan(?!c) |</span>
+<span class="s2">                    O-?linked |</span>
+<span class="s2">                    Ser/?Thr |</span>
+<span class="s2">                    Gal(?:beta|β)-(1-&gt;3)-GalNAc |</span>
+<span class="s2">                    Gal(?:beta|β)?[^A-Za-z]{0,4}1[^A-Za-z]{0,4}3[^A-Za-z]{0,4}GalNAc[^A-Za-z]{0,5}O-Ser(?:/Thr)? |</span>
+<span class="s2">                    mucin</span>
+<span class="s2">                )</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
+<span class="s2">                (</span>
+<span class="s2">                    N-?glycan |</span>
+<span class="s2">                    N-?linked |</span>
+<span class="s2">                    N-?oligosaccharide |</span>
+<span class="s2">                    type II glycan |</span>
+<span class="s2">                    neolactoside |</span>
+<span class="s2">                    terminal galactose residue |</span>
+<span class="s2">                    Gal(?:beta|β)-1-4-GlcNAc |</span>
+<span class="s2">                    NeuAc[^.;,()]{0,20}?Gal[^.;,()]{0,20}?GlcNAc</span>
+<span class="s2">                )</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">sialylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">O_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">N_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                            <span class="k">return</span> <span class="kc">True</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">True</span>
+                    
+            <span class="k">def</span> <span class="nf">judge_neu5ac_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(sialyltransferase|CMP-?sial(ic|yl)[ -]?acid|catalyzes[^.]{0,50}transfer[^.]{0,20}sial(ic|yl)[ -]?acid|transfer[sred]?[^.]{0,60}sial(ic|yl)[ -]?acid)&quot;</span>
+                <span class="n">Neu5Ac_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(Neu5Ac|N-acetyl-neuraminic acid|N-acetylneuraminic acid|CMP-?Neu5Ac|CMP-?N-acetyl-neuraminic acid|CMP-?N-acetyl-beta-neuraminate)&quot;</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(N-?glycan|N-?linked|N-?oligosaccharide|type II glycan|Galbeta1-4GlcNAc|terminal galactose residue|type II lactosamine)&quot;</span>
+                <span class="n">glycolipid_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(glycolipid|ganglioside|globo series|ganglio series|GM1a?|GA1|GD1b|SSEA3|SSEA4)&quot;</span>
+                <span class="n">O_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(core 1 O-glycan|O-?glycan(?!c)|O-?linked|Ser/Thr|Gal(beta|β)-(1-&gt;3)-GalNAc|mucin)&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">sialylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">Neu5Ac_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">N_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">glycolipid_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">O_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(fucosyltransferase|catalyzes[^.]{0,50}(transfer|addition)[^.]{0,20}fucos|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;transfer[sred]?[^.]{0,60}fucos|addition of fucose|fucosylates|fucosylation|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;GDP-?fucose|GDP-?β?-?L-?fucose|L-?fucose)&quot;</span><span class="p">,</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">I</span>
+                <span class="p">)</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;N-?\s?linked|N-?\s?glycan|N-?\s?oligosaccharide|N-\s*or\s*O-linked|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;both\s+O-\s*and\s+N-linked|O-\s*and\s*N-linked|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;Asn[^.;,]{0,20}N[^P][ST]|N[^P][ST][^.;,]{0,20}Asn&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;(?:type\s*2\s*(?:lacto)?samine|LacNAc|polylactosamine|Galβ?1-4GlcNAc|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;type\s*II\s*(?:glycan|lactosamine)|neolactoside|terminal galactose residue)&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;(?![^.]{0,120}\b(?:lactose|milk oligosaccharide)\b)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span><span class="p">,</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span>
+                <span class="p">)</span>
+                <span class="n">N_exclusion</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(lactose|milk oligosaccharide)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">fucosylation_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">N_glycan_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">N_exclusion</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_core_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">core_fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)(core fucosylation&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|fucose in (alpha|α)[ -]?1[,-&gt;]*6 linkage&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|fucosylation (at|of|on|to) (the )?(core|first) (GlcNAc|N-acetylglucosamine)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|FUT8&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|catalyzes[^.]{0,50}(addition|transfer)[^.]{0,20}(fucose|fucosyl)[^.]{0,30}(alpha|α)[ -]?1[,-&gt;]*6&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(N-?glycan|N-?linked|N-?oligosaccharide|glycoprotein|N-acetylglucosamine|GlcNAc)&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">core_fucosylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">N_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_antenna_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">antenna_fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;fucosylation (at|of|on|to) (the )?(terminal|distal|outer|non-reducing|antenna|arm|branch) (GlcNAc|N-acetylglucosamine)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|catalyzes[^.]{0,80}(addition|transfer)[^.]{0,30}(fucose|fucosyl)[^.]{0,30}(alpha|α)[ -]?(1[,-&gt;]*3|1[,-&gt;]*4)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|Lewis[ -]?(X|Y|x|y|A|a|B|b)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|sialyl[ -]?Lewis[ -]?(X|x|A|a)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|Lex&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|Ley&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;|selectin ligand&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(N-?glycan|N-?linked|N-?oligosaccharide|glycoprotein|N-acetylglucosamine|GlcNAc)&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">antenna_fucosylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">N_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># 其它特征也类似，可按需定制</span>
+            <span class="n">glyco_feature_judge_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;LacNAc&#39;</span><span class="p">:</span> <span class="n">judge_lacnac</span><span class="p">,</span>
+                <span class="s1">&#39;GlcNAc&#39;</span><span class="p">:</span> <span class="n">judge_glcnac</span><span class="p">,</span>
+                <span class="s1">&#39;Lewis&#39;</span><span class="p">:</span> <span class="n">judge_lewis</span><span class="p">,</span>
+                <span class="s1">&#39;LacdiNAc&#39;</span><span class="p">:</span> <span class="n">judge_lacdinac</span><span class="p">,</span>
+                <span class="s1">&#39;Sialylation&#39;</span><span class="p">:</span> <span class="n">judge_sialylation</span><span class="p">,</span>
+                <span class="s1">&#39;Neu5Ac sialylation&#39;</span><span class="p">:</span> <span class="n">judge_neu5ac_sialylation</span><span class="p">,</span>
+                <span class="s1">&#39;Neu5Gc sialylation&#39;</span><span class="p">:</span> <span class="n">judge_neu5gc_sialylation</span><span class="p">,</span>
+                <span class="s1">&#39;Fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_fucosylation</span><span class="p">,</span> 
+                <span class="s1">&#39;Core fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_core_fucosylation</span><span class="p">,</span> 
+                <span class="s1">&#39;Antenna fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_antenna_fucosylation</span><span class="p">,</span> 
+            <span class="p">}</span>
+
+            <span class="n">glyco_feature_to_enzyme_tables</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;LacNAc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;GlcNAc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Lewis&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;LacdiNAc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Sialylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;sialyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Neu5Ac sialylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;sialyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Neu5Gc sialylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;sialyltransferases&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Fucosylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;fucosyltransferase&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Core fucosylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;fucosyltransferase&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;Antenna fucosylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;fucosyltransferase&#39;</span><span class="p">],</span>
+            <span class="p">}</span>
+
+            <span class="k">def</span> <span class="nf">judge_lacnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">exclude_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(does not bind lactose|does not bind (carbohydrate|galactoside|galactose))&quot;</span>
+                <span class="n">lacunac_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(beta-?galactoside|galactose-specific|lactose|LacNAc|N-acetyllactosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;galectin|cell-surface glycans|glycan recognition)\b&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">lacunac_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_glcnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">glcnac_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;binds?([^.;]*?)n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;binds?([^.;]*?)glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;n-acetylglucosamine-?binding|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;glcnac-?binding|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;catalyz(es|ing) ([^.;]*?)n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;catalyz(es|ing) ([^.;]*?)glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;transfer of n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;transfer of glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;addition of n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;addition of glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;n-acetylglucosaminyltransferase|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;glcnac-?transferase|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;glcnac\([^\)]*\)man|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;galnac[^.;]*?glcnac&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="n">exclude_o_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(O-?linked|O-?mannosyl|O-?glycosyl|O-?mannosylation|O-?glycan|O-?Ser/Thr)&quot;</span>
+                <span class="n">exclude_undp_glcnac_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;UDP-GlcNAc|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;UDP-GalNAc|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;uridine diphosphate[- ]?(N-)?acetyl(glucosamine|galactosamine)|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sugar nucleotide|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;hexosamine biosynthetic pathway|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;biosynthesis of (UDP-)?n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;converts [^.;]* to (UDP-)?n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;catalyzing the formation of (UDP-)?n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;pyrophosphorylation of (UDP-)?n-acetylglucosamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;precursor for [^.;]*glycosylation|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;GlcNAc[- ]?1[- ]?phosphate&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_o_glycan_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_undp_glcnac_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+                <span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">glcnac_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_lewis_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">lewis_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialyl[\s-]?lewis[\s-]?(x|a|y)|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;lewis[\s-]?(x|a|y)|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;\b(slex|sl[a-z]x|lex|lea|ley)\b&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">lewis_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_lacdinac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">lacdiNAc_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;lacdiNac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;galnac[- ]?β?1-4[- ]?glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;galnac\(β1-4\)glcnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;n[,&#39;]?n&#39;-diacetyl[- ]?lactosediamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;diacetyl[- ]?lactosediamine|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;β1,4[- ]?n-acetylgalactosaminyltransferase|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;b4galnac|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;wfa[- ]?binding&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">lacdiNAc_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;siglec|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialic[- ]?acid[- ]?binding.*lectin|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialic[- ]?acid[- ]?dependent|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;binds? (to )?([a-zA-Z0-9\-]* )?(alpha-)?(2,3|2,6|α2,3|α2,6|2-3|2-6)[- ]?linked sialic acid|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;binds? ([a-zA-Z0-9\-]* )?sialic[- ]?acid([ -]?derivatives)?|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;containing sialic[- ]?acid( engaged in a (2,3|2,6|2-3|2-6) linkage)?|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialic[- ]?acid recognition|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialylation|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialylated&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)\b&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">sialylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                    
+            <span class="k">def</span> <span class="nf">judge_neu5ac_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(fucosyltransferase|catalyzes[^.]{0,50}(transfer|addition)[^.]{0,20}fucos|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;transfer[sred]?[^.]{0,60}fucos|addition of fucose|fucosylates|fucosylation|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;GDP-?fucose|GDP-?β?-?L-?fucose|L-?fucose)&quot;</span><span class="p">,</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">I</span>
+                <span class="p">)</span>
+                <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;N-?\s?linked|N-?\s?glycan|N-?\s?oligosaccharide|N-\s*or\s*O-linked|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;both\s+O-\s*and\s+N-linked|O-\s*and\s*N-linked|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;Asn[^.;,]{0,20}N[^P][ST]|N[^P][ST][^.;,]{0,20}Asn&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;(?:type\s*2\s*(?:lacto)?samine|LacNAc|polylactosamine|Galβ?1-4GlcNAc|&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;type\s*II\s*(?:glycan|lactosamine)|neolactoside|terminal galactose residue)&quot;</span>
+                        <span class="sa">r</span><span class="s2">&quot;(?![^.]{0,120}\b(?:lactose|milk oligosaccharide)\b)&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)&quot;</span><span class="p">,</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span>
+                <span class="p">)</span>
+                <span class="n">N_exclusion</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(lactose|milk oligosaccharide)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">fucosylation_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">N_glycan_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">N_exclusion</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;binds?([^.;]*?)fucose|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;affinity for ([^.;]*?)fucose|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;fucosylated|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;fucosylation|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;sialyl[ -]?lewis[ -]?x|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;(alpha-)?1,6-linked fucose.*(N-acetylglucosamine|GlcNAc)|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;hydrolyz(es|ing).*(alpha-)?1,6-linked fucose|&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;fucosidase&quot;</span>
+                    <span class="sa">r</span><span class="s2">&quot;)\b&quot;</span>
+                <span class="p">)</span>
+                <span class="n">exclude_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(transporter|mediates? (the )?uptake of (glucose|galactose|mannose|xylose|fucose|dehydroascorbate|fructose)|transport of (glucose|galactose|mannose|xylose|fucose|dehydroascorbate|fructose))&quot;</span>
+                <span class="n">exclude_pattern2</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(interconversion|epimerase|isomerase|mutarotase|mutase|metabolism|catabolism|anabolism)&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude_pattern2</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">fucosylation_pattern</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">def</span> <span class="nf">judge_core_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+                
+            <span class="k">def</span> <span class="nf">judge_antenna_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="n">glyco_feature_gbp_judge_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;LacNAc&#39;</span><span class="p">:</span> <span class="n">judge_lacnac_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;GlcNAc&#39;</span><span class="p">:</span> <span class="n">judge_glcnac_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;Lewis&#39;</span><span class="p">:</span> <span class="n">judge_lewis_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;LacdiNAc&#39;</span><span class="p">:</span> <span class="n">judge_lacdinac_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;Sialylation&#39;</span><span class="p">:</span> <span class="n">judge_sialylation_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;Neu5Ac sialylation&#39;</span><span class="p">:</span> <span class="n">judge_neu5ac_sialylation_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;Neu5Gc sialylation&#39;</span><span class="p">:</span> <span class="n">judge_neu5gc_sialylation_gbp</span><span class="p">,</span>
+                <span class="s1">&#39;Fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_fucosylation_gbp</span><span class="p">,</span> 
+                <span class="s1">&#39;Core fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_core_fucosylation_gbp</span><span class="p">,</span> 
+                <span class="s1">&#39;Antenna fucosylation&#39;</span><span class="p">:</span> <span class="n">judge_antenna_fucosylation_gbp</span><span class="p">,</span> 
+            <span class="p">}</span>
+            
+            <span class="c1"># 2. 缓存Uniprot Function</span>
+            <span class="n">function_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">def</span> <span class="nf">get_function_from_uniprot</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">accession</span> <span class="ow">in</span> <span class="n">function_cache</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">function_cache</span><span class="p">[</span><span class="n">accession</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># 在线请求API</span>
+                    <span class="n">func_str</span> <span class="o">=</span> <span class="n">get_function_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">)</span>
+                    <span class="n">function_cache</span><span class="p">[</span><span class="n">accession</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_str</span>
+                    <span class="k">return</span> <span class="n">func_str</span>
+
+            <span class="k">def</span> <span class="nf">get_function_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://rest.uniprot.org/uniprotkb/</span><span class="si">{</span><span class="n">accession</span><span class="si">}</span><span class="s2">.json&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                    <span class="c1"># 找到Function注释</span>
+                    <span class="n">comments</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comments</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;commentType&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;FUNCTION&quot;</span><span class="p">:</span>
+                            <span class="n">texts</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;texts&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                            <span class="k">if</span> <span class="n">texts</span><span class="p">:</span>
+                                <span class="k">return</span> <span class="n">texts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># print(f&quot;Error fetching {accession}: {e}&quot;)</span>
+                    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                
+            <span class="k">def</span> <span class="nf">get_gene_name_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                通过Uniprot API，根据蛋白accession获取gene name（如ST3GAL6）。</span>
+<span class="sd">                找不到则返回空字符串。</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://rest.uniprot.org/uniprotkb/</span><span class="si">{</span><span class="n">accession</span><span class="si">}</span><span class="s2">.json&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                    <span class="c1"># gene信息在&quot;genes&quot;列表里，主gene名称一般在&quot;geneName&quot;</span>
+                    <span class="n">genes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;genes&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">:</span>
+                        <span class="n">gene_name_data</span> <span class="o">=</span> <span class="n">gene</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;geneName&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">gene_name_data</span> <span class="ow">and</span> <span class="n">gene_name_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">):</span>
+                            <span class="k">return</span> <span class="n">gene_name_data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># print(f&quot;Error fetching {accession}: {e}&quot;)</span>
+                    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+                
+            <span class="n">network_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">reg_label</span><span class="p">,</span> <span class="n">glycopeptide_df</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s1">&#39;Up&#39;</span><span class="p">,</span> <span class="n">upregulation_only_in_glycopeptide</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;Down&#39;</span><span class="p">,</span> <span class="n">downregulation_only_in_glycopeptide</span><span class="p">)</span>
+            <span class="p">]:</span>
+                <span class="n">network_dict</span><span class="p">[</span><span class="n">reg_label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">glyco_feature_judge_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">glycan_rows</span> <span class="o">=</span> <span class="n">glycopeptide_df</span><span class="p">[</span>
+                        <span class="n">glycopeptide_df</span><span class="p">[</span><span class="s1">&#39;GlycoFeature&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">glycan_rows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># 聚糖节点：你可以合并为一个中心节点，或每个聚糖为节点</span>
+                    <span class="n">glycan_center_fc</span> <span class="o">=</span> <span class="n">glycan_rows</span><span class="p">[</span><span class="s1">&#39;fc_g&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>  <span class="c1"># 举例，中心fc为均值</span>
+                    <span class="n">feature_average_level</span> <span class="o">=</span> <span class="n">glycan_rows</span><span class="p">[[</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_Preprocess&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;sample_group&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">feature_average_level</span> <span class="o">=</span> <span class="n">feature_average_level</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Abundances (Normalized): F1: 126, Control&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 127N, Control&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 127C, Control&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 128N, Control&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 128C, Control&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 129N, Sample&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 129C, Sample&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 130N, Sample&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 130C, Sample&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;Abundances (Normalized): F1: 131, Sample&#39;</span><span class="p">]</span>
+                    <span class="n">filtered_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span> <span class="k">for</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;abundance_ratio&#39;</span><span class="p">),</span> <span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="n">ratio</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="c1"># B. 寻找相关糖基转移酶 </span>
+                    <span class="n">enzyme_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">glyco_feature_to_enzyme_tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">]):</span>
+                        <span class="c1"># table_name = &#39;fucosyltransferase&#39;</span>
+                        <span class="n">enzyme_df</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="n">table_name</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">enzyme_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                            <span class="n">accession</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Accession&#39;</span><span class="p">]</span>
+                            <span class="n">function_str</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Function&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_function_from_uniprot</span><span class="p">(</span><span class="n">accession</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">glyco_feature_judge_dict</span><span class="p">[</span><span class="n">feature</span><span class="p">](</span><span class="n">function_str</span><span class="p">):</span>
+                                <span class="c1"># 筛选显著性 accession=&#39;Q8VIB3&#39;</span>
+                                <span class="c1"># if row[&#39;pvalue_ttest&#39;] &lt; 0.05 and (row[&#39;fc&#39;] &gt; 1.5 or row[&#39;fc&#39;] &lt; 1/1.5):</span>
+                                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                                    <span class="n">enzyme_expr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">filtered_labels</span><span class="p">]</span>
+                                    <span class="c1"># print(enzyme_expr)</span>
+                                    <span class="n">gene_name</span> <span class="o">=</span> <span class="n">get_gene_name_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_name</span><span class="p">:</span>  
+                                        <span class="n">gene_name</span> <span class="o">=</span> <span class="n">accession</span>
+                                    <span class="n">rho</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">enzyme_expr</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">feature_average_level</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                                    <span class="n">enzyme_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene_name</span><span class="p">,</span>
+                                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;enzyme&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Gene&#39;</span><span class="p">,</span> <span class="n">accession</span><span class="p">),</span>
+                                        <span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">],</span>
+                                        <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">],</span>
+                                        <span class="s1">&#39;edge_weight&#39;</span><span class="p">:</span> <span class="n">rho</span><span class="p">,</span>
+                                        <span class="s1">&#39;edge_pvalue&#39;</span><span class="p">:</span> <span class="n">pval</span><span class="p">,</span>
+                                    <span class="p">})</span>
+                    <span class="n">enzyme_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">{</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">enzyme_nodes</span><span class="p">}]</span>
+                    <span class="c1"># C. 寻找相关糖结合蛋白</span>
+                    <span class="n">gbp_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">gbp_df</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;glycan_binding_protein&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                    <span class="n">gbp_pattern</span> <span class="o">=</span> <span class="n">glyco_feature_gbp_judge_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">gbp_pattern</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">gbp_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                            <span class="n">accession</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Accession&#39;</span><span class="p">]</span>
+                            <span class="n">function_str</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Function&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_function_from_uniprot</span><span class="p">(</span><span class="n">accession</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">glyco_feature_gbp_judge_dict</span><span class="p">[</span><span class="n">feature</span><span class="p">](</span><span class="n">function_str</span><span class="p">):</span>
+                                <span class="c1"># if row[&#39;pvalue_ttest&#39;] &lt; 0.05 and (row[&#39;fc&#39;] &gt; 1.5 or row[&#39;fc&#39;] &lt; 1/1.5):</span>
+                                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                                    <span class="n">gbp_expr</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">filtered_labels</span><span class="p">]</span>
+                                    <span class="n">gene_name</span> <span class="o">=</span> <span class="n">get_gene_name_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">gene_name</span><span class="p">:</span>  
+                                        <span class="n">gene_name</span> <span class="o">=</span> <span class="n">accession</span>
+                                    <span class="n">rho</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">gbp_expr</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">feature_average_level</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                                    <span class="n">gbp_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene_name</span><span class="p">,</span>
+                                        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;GBP&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Gene&#39;</span><span class="p">,</span> <span class="n">accession</span><span class="p">),</span>
+                                        <span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;fc&#39;</span><span class="p">],</span>
+                                        <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">],</span>
+                                        <span class="s1">&#39;edge_weight&#39;</span><span class="p">:</span> <span class="n">rho</span><span class="p">,</span>
+                                        <span class="s1">&#39;edge_pvalue&#39;</span><span class="p">:</span> <span class="n">pval</span><span class="p">,</span>
+                                    <span class="p">})</span>
+                    <span class="n">gbp_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">{</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">gbp_nodes</span><span class="p">}]</span>
+                    <span class="c1"># D. downstream pathway</span>
+                    <span class="n">pathway_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">module5</span> <span class="o">=</span> <span class="n">StrucGAP_FunctionAnnotation</span><span class="p">(</span><span class="n">glycan_rows</span><span class="p">,</span><span class="n">data_manager</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>  
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">module5</span><span class="o">.</span><span class="n">ora</span><span class="p">(</span><span class="n">organism</span><span class="o">=</span><span class="s1">&#39;mmusculus&#39;</span><span class="p">,</span> <span class="n">background_input</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">up_down_fc_threshold</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+                                    <span class="n">selected_terms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;KEGG&#39;</span><span class="p">])</span> 
+                        <span class="n">pathway</span> <span class="o">=</span> <span class="n">module5</span><span class="o">.</span><span class="n">ora_no_background_both_proteins_result</span>
+                        <span class="n">pathway</span> <span class="o">=</span> <span class="n">pathway</span><span class="p">[</span><span class="n">pathway</span><span class="p">[</span><span class="s1">&#39;P-value&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">]</span>
+                        <span class="n">pathway</span><span class="p">[</span><span class="s1">&#39;Term&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pathway</span><span class="p">[</span><span class="s1">&#39;Term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(.*) \(&#39;</span><span class="p">)</span>
+                        <span class="n">pathway</span><span class="p">[</span><span class="s1">&#39;Overlap_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pathway</span><span class="p">[</span><span class="s1">&#39;Overlap&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(\d+)/&#39;</span><span class="p">)</span>
+                        <span class="c1"># 合成节点数据</span>
+                        <span class="n">pathway_nodes</span> <span class="o">+=</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Term&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;P-value&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;overlap&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Overlap_num&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Overlap_num&#39;</span><span class="p">])</span> <span class="k">else</span> <span class="kc">None</span>
+                            <span class="p">}</span>
+                            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">pathway</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+                        <span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="n">pathway_nodes</span> <span class="o">+=</span> <span class="p">[]</span>
+                    <span class="n">network_dict</span><span class="p">[</span><span class="n">reg_label</span><span class="p">][</span><span class="n">feature</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;glycan_center&#39;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">feature</span> <span class="o">+</span> <span class="s1">&#39;_center&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;glycan&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="n">glycan_center_fc</span><span class="p">,</span>
+                            <span class="c1"># 可继续加统计</span>
+                        <span class="p">},</span>
+                        <span class="s1">&#39;enzymes&#39;</span><span class="p">:</span> <span class="n">enzyme_nodes</span><span class="p">,</span>
+                        <span class="s1">&#39;gbps&#39;</span><span class="p">:</span> <span class="n">gbp_nodes</span><span class="p">,</span>
+                        <span class="s1">&#39;pathway&#39;</span><span class="p">:</span> <span class="n">pathway_nodes</span><span class="p">,</span>
+                    <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">StrucGAP_GlycoNetwork_key_information</span> <span class="o">=</span> <span class="n">network_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># output the results as excel        </span>
+            <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="s1">&#39;./analysis_result/StrucGAP_GlycoNetwork_key_information.xlsx&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">reg_label</span> <span class="ow">in</span> <span class="n">network_dict</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">reg_label</span><span class="p">]:</span>
+                        <span class="n">net</span> <span class="o">=</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">reg_label</span><span class="p">][</span><span class="n">feature</span><span class="p">]</span>
+                        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="c1"># 节点</span>
+                        <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;glycan_center&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">feature</span><span class="p">,</span>
+                            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;glycan&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;glycan_center&#39;</span><span class="p">][</span><span class="s1">&#39;fc&#39;</span><span class="p">]</span>
+                        <span class="p">})</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;enzymes&#39;</span><span class="p">]:</span>
+                            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="o">**</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;enzyme&#39;</span><span class="p">})</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;gbps&#39;</span><span class="p">]:</span>
+                            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="o">**</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;GBP&#39;</span><span class="p">})</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;pathway&#39;</span><span class="p">]:</span>
+                            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;pathway&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>  <span class="c1"># pathway没fc，用空字符串</span>
+                                <span class="s1">&#39;overlap&#39;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;overlap&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                            <span class="p">})</span>
+                        <span class="c1"># 边</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;enzymes&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;gbps&#39;</span><span class="p">]:</span>
+                            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;glycan_center&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;edge_weight&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;edge_pvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span> <span class="c1"># 可加edge颜色</span>
+                            <span class="p">})</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;pathway&#39;</span><span class="p">]:</span>
+                            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;glycan_center&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">],</span>
+                                <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;overlap&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+                            <span class="p">})</span>
+                        <span class="n">nodes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+                        <span class="n">edges_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+                        <span class="c1"># Sheet名如 Up-Fucosylation</span>
+                        <span class="n">nodes_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reg_label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">-Nodes&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                        <span class="n">edges_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reg_label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">-Edges&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="StrucGAP_InsightTracker.output_pickle"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">output_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

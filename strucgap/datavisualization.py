@@ -99,11 +99,19 @@ from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
 from reportlab.lib.colors import HexColor
+from matplotlib.patches import FancyArrowPatch
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
+from packaging import version
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 数据可视化和报告生成模块
 class StrucGAP_DataVisualization:
+    """
+    Parameters:
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
     
+    """
     def __init__(self, data_manager):
         self.data_manager = data_manager    
         self.data_manager.register_module('StrucGAP_DataVisualization', self, {})
@@ -208,15 +216,87 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Radar plot',
               ):
-        
+        """
+        Generate a radar chart visualization from one or multiple DataFrames.
+    
+        This method computes values per column (either unique counts or raw counts, 
+        optionally filtered by conditions) and visualizes them on a radar plot. 
+        The output figure is saved in multiple formats (HTML, SVG, PDF, PNG), 
+        and plotting parameters are logged using `data_manager`.
+    
+        Args:
+            *data_names: One or more input DataFrames or variable names (str). 
+                Strings are `eval`-ed into DataFrames; objects can be passed directly.
+            columns (list of str): Columns to be used as radar axes.
+            colors (list of str, optional): Colors for each dataset. Defaults to a 
+                predefined color palette.
+            screen_column (str, optional): Column name for filtering data. If provided, 
+                `if_unique` is automatically set to False.
+            screen_values (list, optional): Values of `screen_column` to include in 
+                the radar plot.
+            shape (str, optional): Radar shape, "circle" or "polygon". Default is "circle".
+            text_color (str, optional): Color of axis labels. Default is "black".
+            text_font_weight (str, optional): Font weight for axis labels. 
+                One of {"normal", "bold", "bolder", "lighter"}. Default is "bold".
+            text_font_size (int, optional): Font size for axis labels. Default is 12.
+            text_split (int, optional): Maximum character length per line for axis labels. 
+                Labels are wrapped if > 0. Default is 10.
+            splitline_color (str, optional): Color of grid split lines. Default "#001F78".
+            splitline_type (str, optional): Grid line style, one of {"solid", "dashed", "dotted"}. 
+                Default is "dashed".
+            splitline_width (int, optional): Width of split lines. Default is 3.
+            splitline_opacity (float, optional): Opacity of split lines [0–1]. Default is 0.5.
+            axisline_width (int, optional): Width of axis lines. Default is 2.
+            axisline_opacity (float, optional): Opacity of axis lines [0–1]. Default is 0.3.
+            axisline_color (str, optional): Color of axis lines. Default is "grey".
+            background_opacity (float, optional): Opacity of background area [0–1]. Default is 0.2.
+            background_color (str, optional): Color of background area. Default is "white".
+            symbol (str, optional): Marker symbol for radar lines. 
+                Options: {"circle","rect","roundRect","triangle","diamond","pin","arrow","none"}. 
+                Default is "none".
+            area_opacity (float, optional): Opacity of filled radar area [0–1]. Default is 0.5.
+            if_unique (bool, optional): If True, radar values are based on counts of unique 
+                values per column; otherwise use total counts. Default is True.
+            legend (list of str or str, optional): Legend labels. If None, they are inferred 
+                from `data_names` or `screen_values`.
+            legend_font_size (int, optional): Font size for legend text. Default is 12.
+            plot_title (str, optional): Title of the radar plot. Default is None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving output. Default is "plot".
+            filename (str, optional): Prefix for saved file names. A timestamp is appended automatically.
+            figure_description (str, optional): Description string recorded with the output. 
+                Default is "Radar plot".
+    
+        Returns:
+            dict: A dictionary with:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+    
+        Side Effects:
+            - Saves radar chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output files via `data_manager`.
+    
+        Raises:
+            ValueError: If invalid parameter values are provided or filtering fails.
+        """
         if isinstance(data_names, str):
             data_names = [data_names]
             
-        dataframes = [
-            eval(name) if isinstance(name, str) else name
-            for name in data_names
-        ]
-        dataframe_names = [name.split('.')[-1] for name in data_names]
+        # dataframes = [
+        #     eval(name) if isinstance(name, str) else name
+        #     for name in data_names
+        # ]
+        # dataframe_names = [name.split('.')[-1] for name in data_names]
+        
+        dataframes = []
+        dataframe_names = []
+        for idx, name in enumerate(data_names):
+            if isinstance(name, str):
+                df = eval(name)
+                dataframes.append(df)
+                dataframe_names.append(name.split('.')[-1])
+            else:  # 直接是 DataFrame
+                dataframes.append(name)
+                dataframe_names.append(f"df{idx}")
         
         if screen_column is not None:
             if_unique = False
@@ -455,262 +535,333 @@ class StrucGAP_DataVisualization:
                   filename = None,
                   figure_description = 'Polar plot',
                   ):
+        """
+        Generate a polar plot visualization from one or more DataFrames.
     
-            # 读取传入的dataframe
-            if isinstance(data_names, str):
-                data_names = [data_names]
-            dataframes = [
-                eval(name) if isinstance(name, str) else name
-                for name in data_names
-            ]
-            dataframe_names = [name.split('.')[-1] for name in data_names]
+        This method creates a polar coordinate chart using the specified `columns`
+        (categorical variables) or `number_column` (numeric values). It supports 
+        both multiple dataset comparison and single dataset visualization. The 
+        figure is exported in multiple formats (HTML, SVG, PDF, PNG), and plotting 
+        parameters are logged using `data_manager`.
+    
+        Behavior:
+            - Multiple DataFrames:
+                Each DataFrame is summarized by counting values per column 
+                (unique counts if `if_unique=True`, otherwise raw counts). 
+                Each dataset is plotted as a separate series in polar coordinates.
+            - Single DataFrame + `number_column`:
+                Plots the numeric values in `number_column` against the categories 
+                in `columns[0]`.
+    
+        Args:
+            *data_names: Input DataFrames or variable names (str). Strings are 
+                evaluated with `eval()`, or DataFrames can be passed directly.
+            columns (list of str): Categorical columns to use for polar axes. 
+                If length is 1, `number_column` must be provided.
+            number_column (str, optional): Column containing numeric values when 
+                `columns` has only one entry. Default is None.
+            colors (list of str, optional): Colors for series. Defaults to a preset palette.
+            splitline_color (list of str, optional): Colors for radial split lines. Default ["#001F78"].
+            splitline_type (str, optional): Style of split lines. One of {"solid", "dashed", "dotted"}. 
+                Default "dashed".
+            splitline_width (int, optional): Width of split lines. Default 3.
+            splitline_opacity (float, optional): Opacity of split lines [0–1]. Default 0.5.
+            axisline_width (int, optional): Width of axis lines. Default 2.
+            axisline_opacity (float, optional): Opacity of axis lines [0–1]. Default 0.3.
+            axisline_color (str, optional): Color of axis lines. Default "grey".
+            background_opacity (float, optional): Opacity of background fill [0–1]. Default 0.2.
+            background_color (str, optional): Background color. Default "white".
+            symbol (str, optional): Marker symbol for data points. 
+                Options: {"circle","rect","roundRect","triangle","diamond","pin","arrow","none"}. 
+                Default "none".
+            symbol_size (int, optional): Size of marker symbols. Default 0.
+            area_opacity (float, optional): Opacity of filled area [0–1]. Default 0.5.
+            if_unique (bool, optional): Whether to count unique values (`True`) 
+                or total counts (`False`). Default True.
+            radiusaxis_label_show (bool, optional): Show/hide radius axis labels. Default False.
+            radiusaxis_label_color (str, optional): Color of radius axis labels. Default "black".
+            radiusaxis_label_font_weight (str, optional): Font weight for radius axis labels. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            radiusaxis_label_font_size (int, optional): Font size for radius axis labels. Default 12.
+            angleaxis_label_show (bool, optional): Show/hide angle axis labels. Default True.
+            angleaxis_label_color (str, optional): Color of angle axis labels. Default "black".
+            angleaxis_label_font_weight (str, optional): Font weight for angle axis labels. 
+                One of {"normal","bold","bolder","lighter"}. Default "bold".
+            angleaxis_label_font_size (int, optional): Font size for angle axis labels. Default 12.
+            legend (list of str or str, optional): Legend labels. If None, inferred from input names. Default None.
+            legend_font_size (int, optional): Font size for legend labels. Default 12.
+            plot_title (str, optional): Title of the polar plot. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. Default "Polar plot".
+    
+        Returns:
+            dict: 
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+    
+        Side Effects:
+            - Saves polar chart as HTML, SVG, PDF, and PNG under `./plot/<subfolder>/`.
+            - Logs parameters and outputs using `data_manager`.
+    
+        Raises:
+            ValueError: If parameter values are invalid or required inputs are missing.
+        """
+        # 读取传入的dataframe
+        if isinstance(data_names, str):
+            data_names = [data_names]
+        dataframes = [
+            eval(name) if isinstance(name, str) else name
+            for name in data_names
+        ]
+        dataframe_names = [name.split('.')[-1] for name in data_names]
 
-            polar_data = []
-            schema = []
-    
-            # 处理颜色和其他参数
-            # splitline_color.insert(1, 'white')
+        polar_data = []
+        schema = []
+
+        # 处理颜色和其他参数
+        # splitline_color.insert(1, 'white')
+        
+        if splitline_type not in ['solid', 'dashed', 'dotted']:
+            splitline_type = 'dashed'
             
-            if splitline_type not in ['solid', 'dashed', 'dotted']:
-                splitline_type = 'dashed'
-                
-            splitline_width = int(splitline_width)  
-            splitline_opacity = float(splitline_opacity)
-            if (splitline_opacity < 0) or (splitline_opacity > 1):
-                splitline_opacity = float(0.5)
-                
-            axisline_width = int(axisline_width)  
-            axisline_opacity = float(axisline_opacity)
-            if (axisline_opacity < 0) or (axisline_opacity > 1):
-                axisline_opacity = float(0.5)
-    
-            background_opacity = float(background_opacity)
-            if (background_opacity < 0) or (background_opacity > 1):
-                background_opacity = float(0.5)
-    
-            if symbol not in ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']:
-                symbol = 'none'
-    
-            area_opacity = float(area_opacity)
-            if (area_opacity < 0) or (area_opacity > 1):
-                area_opacity = float(0.5)
-    
-            if if_unique not in [True, False]:
-                if_unique = True
-                
-            if radiusaxis_label_show not in [True, False]:
-                radiusaxis_label_show = False
-                
-            if radiusaxis_label_font_weight not in ['normal', 'bold', 'bolder', 'lighter']:
-                radiusaxis_label_font_weight = 'normal'   
+        splitline_width = int(splitline_width)  
+        splitline_opacity = float(splitline_opacity)
+        if (splitline_opacity < 0) or (splitline_opacity > 1):
+            splitline_opacity = float(0.5)
             
-            if angleaxis_label_show not in [True, False]:
-                angleaxis_label_show = True
-                
-            if angleaxis_label_font_weight not in ['normal', 'bold', 'bolder', 'lighter']:
-                angleaxis_label_font_weight = 'bold' 
-    
-            if colors is None:
-                colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
-                          "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"][:len(dataframes)]
+        axisline_width = int(axisline_width)  
+        axisline_opacity = float(axisline_opacity)
+        if (axisline_opacity < 0) or (axisline_opacity > 1):
+            axisline_opacity = float(0.5)
+
+        background_opacity = float(background_opacity)
+        if (background_opacity < 0) or (background_opacity > 1):
+            background_opacity = float(0.5)
+
+        if symbol not in ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']:
+            symbol = 'none'
+
+        area_opacity = float(area_opacity)
+        if (area_opacity < 0) or (area_opacity > 1):
+            area_opacity = float(0.5)
+
+        if if_unique not in [True, False]:
+            if_unique = True
             
-            max_values = {}
-            if len(columns) != 1:
-                for column in columns:
-                    if if_unique:
-                        max_values[column] = max([df[column].dropna().unique().shape[0] * 1.1 for df in dataframes])
-                    else:
-                        max_values[column] = max([df[column].dropna().shape[0] * 1.1 for df in dataframes])
-            else:
-                max_values[columns[0]] = max(list(dataframes[0][number_column])) * 1.1
-    
-            # 处理 schema 并收集数据
-            if len(dataframes) != 1:
-                for df in dataframes:
-                    if if_unique:
-                        row_counts = [df[col].dropna().unique().shape[0] for col in columns]
-                    else:
-                        row_counts = [df[col].dropna().shape[0] for col in columns]
-                    polar_data.append([row_counts])
-            else:
-                polar_data = list(dataframes[0][number_column])
-                
-            if len(columns) == 1:
-                columns = list(dataframes[0][columns[0]])
-    
-            # 创建极坐标图
-            polar = (
-                Polar(init_opts=opts.InitOpts(
-                    renderer=RenderType.SVG,bg_color='#fff'
-                ))
-                .add_schema(
-                    radiusaxis_opts=opts.RadiusAxisOpts(type_='category', 
-                                                        data = columns,
-                                                        name_location = 'middle',
-                                                        splitline_opts = opts.SplitLineOpts(                            
+        if radiusaxis_label_show not in [True, False]:
+            radiusaxis_label_show = False
+            
+        if radiusaxis_label_font_weight not in ['normal', 'bold', 'bolder', 'lighter']:
+            radiusaxis_label_font_weight = 'normal'   
+        
+        if angleaxis_label_show not in [True, False]:
+            angleaxis_label_show = True
+            
+        if angleaxis_label_font_weight not in ['normal', 'bold', 'bolder', 'lighter']:
+            angleaxis_label_font_weight = 'bold' 
+
+        if colors is None:
+            colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
+                        "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"][:len(dataframes)]
+        
+        max_values = {}
+        if len(columns) != 1:
+            for column in columns:
+                if if_unique:
+                    max_values[column] = max([df[column].dropna().unique().shape[0] * 1.1 for df in dataframes])
+                else:
+                    max_values[column] = max([df[column].dropna().shape[0] * 1.1 for df in dataframes])
+        else:
+            max_values[columns[0]] = max(list(dataframes[0][number_column])) * 1.1
+
+        # 处理 schema 并收集数据
+        if len(dataframes) != 1:
+            for df in dataframes:
+                if if_unique:
+                    row_counts = [df[col].dropna().unique().shape[0] for col in columns]
+                else:
+                    row_counts = [df[col].dropna().shape[0] for col in columns]
+                polar_data.append([row_counts])
+        else:
+            polar_data = list(dataframes[0][number_column])
+            
+        if len(columns) == 1:
+            columns = list(dataframes[0][columns[0]])
+
+        # 创建极坐标图
+        polar = (
+            Polar(init_opts=opts.InitOpts(
+                renderer=RenderType.SVG,bg_color='#fff'
+            ))
+            .add_schema(
+                radiusaxis_opts=opts.RadiusAxisOpts(type_='category', 
+                                                    data = columns,
+                                                    name_location = 'middle',
+                                                    splitline_opts = opts.SplitLineOpts(                            
+                                                                    is_show = True,
+                                                                    linestyle_opts = opts.LineStyleOpts(
                                                                         is_show = True,
-                                                                        linestyle_opts = opts.LineStyleOpts(
-                                                                            is_show = True,
-                                                                            width = splitline_width,
-                                                                            opacity = splitline_opacity,
-                                                                            curve = 1,
-                                                                            type_ = splitline_type, 
-                                                                            color = splitline_color
+                                                                        width = splitline_width,
+                                                                        opacity = splitline_opacity,
+                                                                        curve = 1,
+                                                                        type_ = splitline_type, 
+                                                                        color = splitline_color
+                                                                    )
+                                                                ),
+                                                    splitarea_opts = opts.SplitAreaOpts(
+                                                                    is_show = True, 
+                                                                    areastyle_opts = opts.AreaStyleOpts(
+                                                                        opacity = background_opacity,
+                                                                        color = {
+                                                                            'type': 'radial',
+                                                                            'x': 0.5,
+                                                                            'y': 0.5,
+                                                                            'r': 0.5,
+                                                                            'colorStops': [
+                                                                                {'offset': 0, 'color': background_color},  # 0%处的颜色
+                                                                                {'offset': 1, 'color': background_color}  # 100%处的颜色
+                                                                            ],
+                                                                            'global': False  
+                                                                        }
+                                                                    )
+                                                                ),
+                                                    axisline_opts = opts.AxisLineOpts(                              
+                                                                    is_show = True,
+                                                                    linestyle_opts = opts.LineStyleOpts(
+                                                                        width = axisline_width,
+                                                                        opacity = axisline_opacity,
+                                                                        color = axisline_color
                                                                         )
                                                                     ),
-                                                        splitarea_opts = opts.SplitAreaOpts(
-                                                                        is_show = True, 
-                                                                        areastyle_opts = opts.AreaStyleOpts(
-                                                                            opacity = background_opacity,
-                                                                            color = {
-                                                                                'type': 'radial',
-                                                                                'x': 0.5,
-                                                                                'y': 0.5,
-                                                                                'r': 0.5,
-                                                                                'colorStops': [
-                                                                                    {'offset': 0, 'color': background_color},  # 0%处的颜色
-                                                                                    {'offset': 1, 'color': background_color}  # 100%处的颜色
-                                                                                ],
-                                                                                'global': False  
-                                                                            }
-                                                                        )
+                                                    axislabel_opts = opts.LabelOpts(                                
+                                                                    is_show = radiusaxis_label_show,
+                                                                    color = radiusaxis_label_color,
+                                                                    font_family = 'Arial',
+                                                                    font_weight = radiusaxis_label_font_weight,
+                                                                    interval = 0,
+                                                                    font_size = radiusaxis_label_font_size,
                                                                     ),
-                                                        axisline_opts = opts.AxisLineOpts(                              
-                                                                        is_show = True,
-                                                                        linestyle_opts = opts.LineStyleOpts(
-                                                                            width = axisline_width,
-                                                                            opacity = axisline_opacity,
-                                                                            color = axisline_color
-                                                                            )
-                                                                        ),
-                                                        axislabel_opts = opts.LabelOpts(                                
-                                                                        is_show = radiusaxis_label_show,
-                                                                        color = radiusaxis_label_color,
-                                                                        font_family = 'Arial',
-                                                                        font_weight = radiusaxis_label_font_weight,
-                                                                        interval = 0,
-                                                                        font_size = radiusaxis_label_font_size,
-                                                                        ),
-                                                        ),
-                    angleaxis_opts=opts.AngleAxisOpts(is_clockwise=True, 
-                                                      max_=max(max_values.values()),
-                                                      splitline_opts = opts.SplitLineOpts(                            
-                                                                        is_show = True,
-                                                                        linestyle_opts = opts.LineStyleOpts(
-                                                                                        width = axisline_width,
-                                                                                        opacity = axisline_opacity,
-                                                                                        color = axisline_color
-                                                                                        )
-                                                                        ),
-                                                      axisline_opts = opts.AxisLineOpts(                              
-                                                                        is_show = False
-                                                                        ),
-                                                      axislabel_opts = opts.LabelOpts(                                
-                                                                        is_show = angleaxis_label_show,
-                                                                        color = angleaxis_label_color,
-                                                                        font_family = 'Arial',
-                                                                        font_weight = angleaxis_label_font_weight,
-                                                                        interval = 0,
-                                                                        font_size = angleaxis_label_font_size,
-                                                                        ),
-                                                      
-                                                      
-                                                      ),
-                    
-                )
-                .set_global_opts(
-                title_opts=opts.TitleOpts(
-                    title = plot_title,
-                    pos_left="center",  # 标题居中
-                    pos_top="0%"       # 标题位置靠上
-                ),
-                legend_opts=opts.LegendOpts(
-                    pos_right="center",  # 图例靠右
-                    pos_top="top",
-                    textstyle_opts = opts.TextStyleOpts(
-                                                    font_family = 'Arial',
-                                                    font_weight = 'normal',
-                                                    font_size = legend_font_size),
-                ),
-                )
+                                                    ),
+                angleaxis_opts=opts.AngleAxisOpts(is_clockwise=True, 
+                                                    max_=max(max_values.values()),
+                                                    splitline_opts = opts.SplitLineOpts(                            
+                                                                    is_show = True,
+                                                                    linestyle_opts = opts.LineStyleOpts(
+                                                                                    width = axisline_width,
+                                                                                    opacity = axisline_opacity,
+                                                                                    color = axisline_color
+                                                                                    )
+                                                                    ),
+                                                    axisline_opts = opts.AxisLineOpts(                              
+                                                                    is_show = False
+                                                                    ),
+                                                    axislabel_opts = opts.LabelOpts(                                
+                                                                    is_show = angleaxis_label_show,
+                                                                    color = angleaxis_label_color,
+                                                                    font_family = 'Arial',
+                                                                    font_weight = angleaxis_label_font_weight,
+                                                                    interval = 0,
+                                                                    font_size = angleaxis_label_font_size,
+                                                                    ),
+                                                    
+                                                    
+                                                    ),
+                
             )
-            
-            if legend is not None:
-                if isinstance(legend, str):
-                    legend = [legend]
-            if legend is None:
-                if len(dataframes) != 1:
-                    legend = dataframe_names
-                if len(dataframes) == 1:
-                    legend = [dataframe_names[0]]
-                    
+            .set_global_opts(
+            title_opts=opts.TitleOpts(
+                title = plot_title,
+                pos_left="center",  # 标题居中
+                pos_top="0%"       # 标题位置靠上
+            ),
+            legend_opts=opts.LegendOpts(
+                pos_right="center",  # 图例靠右
+                pos_top="top",
+                textstyle_opts = opts.TextStyleOpts(
+                                                font_family = 'Arial',
+                                                font_weight = 'normal',
+                                                font_size = legend_font_size),
+            ),
+            )
+        )
+        
+        if legend is not None:
+            if isinstance(legend, str):
+                legend = [legend]
+        if legend is None:
             if len(dataframes) != 1:
-                # 为每个数据集添加线条
-                for idx, data in enumerate(polar_data):
-                    polar.add(
-                        series_name = legend[idx],
-                        data = data[0],
-                        type_='bar',
-                        # linestyle_opts = opts.LineStyleOpts(color=colors[idx], width=3),  
-                        symbol = symbol,
-                        symbol_size = symbol_size,
-                        # color = colors[idx],
-                        label_opts = opts.LabelOpts(                                
-                            is_show = False
-                            ),
-                        areastyle_opts = opts.AreaStyleOpts(opacity = area_opacity)
-                    )
-                
+                legend = dataframe_names
             if len(dataframes) == 1:
-                polar.add(
-                        series_name = legend[0],
-                        data = polar_data,
-                        type_='bar',
-                        # linestyle_opts = opts.LineStyleOpts(color=colors[idx], width=3),  
-                        symbol = symbol,
-                        symbol_size = symbol_size,
-                        # color = colors[idx],
-                        label_opts = opts.LabelOpts(                                
-                            is_show = False
-                            ),
-                        areastyle_opts = opts.AreaStyleOpts(opacity = area_opacity)
-                    )
+                legend = [dataframe_names[0]]
                 
-            polar.set_colors(colors)
-            output_dir = os.path.join('./plot', subfolder)
-            os.makedirs(output_dir, exist_ok=True)
+        if len(dataframes) != 1:
+            # 为每个数据集添加线条
+            for idx, data in enumerate(polar_data):
+                polar.add(
+                    series_name = legend[idx],
+                    data = data[0],
+                    type_='bar',
+                    # linestyle_opts = opts.LineStyleOpts(color=colors[idx], width=3),  
+                    symbol = symbol,
+                    symbol_size = symbol_size,
+                    # color = colors[idx],
+                    label_opts = opts.LabelOpts(                                
+                        is_show = False
+                        ),
+                    areastyle_opts = opts.AreaStyleOpts(opacity = area_opacity)
+                )
             
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
-            file_name = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.html")
-            polar.render(file_name)
-            svg_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.svg")
-            make_snapshot(snapshot, file_name, svg_file)
+        if len(dataframes) == 1:
+            polar.add(
+                    series_name = legend[0],
+                    data = polar_data,
+                    type_='bar',
+                    # linestyle_opts = opts.LineStyleOpts(color=colors[idx], width=3),  
+                    symbol = symbol,
+                    symbol_size = symbol_size,
+                    # color = colors[idx],
+                    label_opts = opts.LabelOpts(                                
+                        is_show = False
+                        ),
+                    areastyle_opts = opts.AreaStyleOpts(opacity = area_opacity)
+                )
             
-            pdf_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.pdf")
-            drawing = svg2rlg(svg_file)  
-            renderPDF.drawToFile(drawing, pdf_file)  
-            
-            png_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.png")
-            pdf_document = fitz.open(pdf_file)
-            page = pdf_document.load_page(0)
-            pix = page.get_pixmap(matrix=fitz.Matrix(8,8))
-            pix.save(png_file)
-            
-            png_file = png_file
-            image = Image.open(png_file)
-            trimmed_image = self.trim_white_border(image)
-            trimmed_image.save(png_file)
-            
-            # 自动获取所有参数
-            params = locals()
-            # 去掉不需要记录的局部变量 'self'
-            params.pop('self')
-            # 使用data_manager记录这些参数
-            self.data_manager.log_params('StrucGAP_DataVisualization', 'polar1', params)
-            self.data_manager.log_output('StrucGAP_DataVisualization', 'polar1',  f"{'_'.join(dataframe_names)}_polar1.pdf")
-    
-            return {'file_path': png_file, 'legend': figure_description}
+        polar.set_colors(colors)
+        output_dir = os.path.join('./plot', subfolder)
+        os.makedirs(output_dir, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        file_name = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.html")
+        polar.render(file_name)
+        svg_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.svg")
+        make_snapshot(snapshot, file_name, svg_file)
+        
+        pdf_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.pdf")
+        drawing = svg2rlg(svg_file)  
+        renderPDF.drawToFile(drawing, pdf_file)  
+        
+        png_file = os.path.join(output_dir, f"{filename}_polar1_{timestamp}.png")
+        pdf_document = fitz.open(pdf_file)
+        page = pdf_document.load_page(0)
+        pix = page.get_pixmap(matrix=fitz.Matrix(8,8))
+        pix.save(png_file)
+        
+        png_file = png_file
+        image = Image.open(png_file)
+        trimmed_image = self.trim_white_border(image)
+        trimmed_image.save(png_file)
+        
+        # 自动获取所有参数
+        params = locals()
+        # 去掉不需要记录的局部变量 'self'
+        params.pop('self')
+        # 使用data_manager记录这些参数
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'polar1', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'polar1',  f"{'_'.join(dataframe_names)}_polar1.pdf")
+
+        return {'file_path': png_file, 'legend': figure_description}
     
     def polar2(self, *data_names, columns, colors=None,
               splitline_color = ['#001F78'],
@@ -741,7 +892,67 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Polar plot',
               ):
+        """
+        Generate a stacked polar plot comparing multiple DataFrames across specified columns.
 
+        This method creates a polar coordinate chart where:
+        - The angle axis represents different input DataFrames.
+        - The radius axis represents the selected `columns`.
+        - Each column is plotted as a separate stacked bar series, showing either
+            unique value counts or total counts depending on `if_unique`.
+
+        The figure is exported in multiple formats (HTML, SVG, PDF, PNG), and plotting
+        parameters are logged using `data_manager`.
+
+        Args:
+            *data_names: Input DataFrames or variable names (str). Strings are 
+                evaluated with `eval()`, or DataFrames can be passed directly.
+            columns (list of str): Column names to compare across datasets.
+            colors (list of str, optional): Series colors. Defaults to a preset palette.
+            splitline_color (list of str, optional): Colors of radial split lines. Default ["#001F78"].
+            splitline_type (str, optional): Split line style, one of {"solid","dashed","dotted"}. Default "dashed".
+            splitline_width (int, optional): Width of split lines. Default 3.
+            splitline_opacity (float, optional): Opacity of split lines [0–1]. Default 0.5.
+            axisline_width (int, optional): Width of axis lines. Default 2.
+            axisline_opacity (float, optional): Opacity of axis lines [0–1]. Default 0.3.
+            axisline_color (str, optional): Axis line color. Default "grey".
+            background_opacity (float, optional): Background opacity [0–1]. Default 0.2.
+            background_color (str, optional): Background color. Default "white".
+            symbol (str, optional): Marker symbol for data points. 
+                Options: {"circle","rect","roundRect","triangle","diamond","pin","arrow","none"}. 
+                Default "none".
+            symbol_size (int, optional): Marker symbol size. Default 0.
+            area_opacity (float, optional): Opacity of filled areas [0–1]. Default 0.5.
+            if_unique (bool, optional): Whether to count unique values (`True`) 
+                or total counts (`False`). Default True.
+            radiusaxis_label_show (bool, optional): Show/hide labels on radius axis. Default True.
+            radiusaxis_label_color (str, optional): Radius axis label color. Default "black".
+            radiusaxis_label_font_weight (str, optional): Font weight of radius labels. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            radiusaxis_label_font_size (int, optional): Radius axis label font size. Default 12.
+            angleaxis_label_show (bool, optional): Show/hide labels on angle axis. Default True.
+            angleaxis_label_color (str, optional): Angle axis label color. Default "black".
+            angleaxis_label_font_weight (str, optional): Font weight of angle labels. Default "bold".
+            angleaxis_label_font_size (int, optional): Angle axis label font size. Default 12.
+            legend (list of str or str, optional): Legend labels. Defaults to `columns` if None.
+            legend_font_size (int, optional): Legend font size. Default 12.
+            plot_title (str, optional): Title of the polar plot. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp appended automatically.
+            figure_description (str, optional): Description string logged with output. Default "Polar plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves polar chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Raises:
+            ValueError: If parameter values are invalid or required inputs are missing.
+        """
         # 读取传入的dataframe
         if isinstance(data_names, str):
             data_names = [data_names]
@@ -906,9 +1117,6 @@ class StrucGAP_DataVisualization:
                 legend = [legend]
         if legend is None:
             legend = columns
-
-
-
         # 为每个数据集添加线条
         for idx, data in enumerate(polar_data):
             polar.add(
@@ -976,7 +1184,47 @@ class StrucGAP_DataVisualization:
                filename = None,
                figure_description = 'Funnel plot',
                ):
-        
+        """
+        Generate a funnel chart visualization from a DataFrame.
+
+        The funnel chart displays values from `number_column` grouped by categories 
+        in `item_column`. Items are truncated to the top N (`top`) and can be sorted 
+        and oriented as specified. The chart is exported in multiple formats 
+        (HTML, SVG, PDF, PNG), and plotting parameters are logged using `data_manager`.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            item_column (str): Column containing item/category names.
+            number_column (str): Column containing numeric values to plot.
+            colors (list of str, optional): Custom colors for funnel layers. 
+                Defaults to a preset palette.
+            top (int, optional): Number of top items to display. Default is 10.
+            orient (str, optional): Orientation of the funnel. One of {"vertical", "horizontal"}. 
+                Default "vertical".
+            sort (str, optional): Sorting order of items. One of {"ascending", "descending", "none"}. 
+                Default "ascending".
+            gap (int, optional): Gap size between funnel layers. Default 1.
+            label_font_size (int, optional): Font size of labels inside the funnel. Default 12.
+            label_font_weight (str, optional): Font weight of labels. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            plot_title (str, optional): Title of the funnel plot. Default None.
+            legend_font_size (int, optional): Font size of legend text. Default 12.
+            subfolder (str, optional): Subfolder under `./plot/` for saving output files. Default "plot".
+            filename (str, optional): Base filename prefix. A timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. Default "Funnel plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves funnel chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file using `data_manager`.
+
+        Raises:
+            ValueError: If parameter values are invalid.
+        """
         data = data.iloc[:top,:]
         max_value = max(data[number_column])
         min_value = 0
@@ -1085,7 +1333,56 @@ class StrucGAP_DataVisualization:
                  filename = None,
                  figure_description = 'Parallel plot',
                  ):
-        
+        """
+        Generate a parallel coordinates plot comparing multiple DataFrames.
+
+        Each column in `columns` is treated as a dimension in the parallel plot. 
+        For each input DataFrame, values are computed as either unique counts 
+        (`if_unique=True`) or total counts (`if_unique=False`). The datasets are 
+        drawn as separate polylines across the parallel axes, allowing comparison 
+        across multiple categorical dimensions.
+
+        The plot is exported in multiple formats (HTML, SVG, PDF, PNG), and plotting 
+        parameters are logged using `data_manager`.
+
+        Args:
+            *data_names: Input DataFrames or variable names (str). Strings are 
+                evaluated with `eval()`, or DataFrames can be passed directly.
+            columns (list of str): Column names to use as parallel dimensions.
+            colors (list of str, optional): Line colors for each dataset. 
+                Defaults to a preset palette.
+            axis_width (int, optional): Width of axis lines. Default 2.
+            axis_color (str, optional): Color of axis lines. Default "black".
+            axis_label_color (str, optional): Color of axis labels. Default "black".
+            axis_label_font_weight (str, optional): Font weight of axis labels. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            axis_label_font_size (int, optional): Font size of axis labels. Default 12.
+            line_width (int, optional): Line width for polylines. Default 3.
+            is_smooth (bool, optional): Whether to smooth polylines. Default False.
+            if_unique (bool, optional): Whether to count unique values (`True`) 
+                or total counts (`False`). Default True.
+            legend (list of str or str, optional): Legend labels. If None, inferred 
+                from dataset names. Default None.
+            legend_font_size (int, optional): Font size of legend text. Default 12.
+            plot_title (str, optional): Title of the parallel plot. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. 
+                Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Parallel plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves parallel plot as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file using `data_manager`.
+
+        Raises:
+            ValueError: If parameter values are invalid.
+        """
         dataframes = [
                 eval(name) if isinstance(name, str) else name
                 for name in data_names
@@ -1238,7 +1535,55 @@ class StrucGAP_DataVisualization:
              filename = None,
              figure_description = 'Pie chart',
              ):
-        
+        """
+        Generate a pie chart (or rose chart) from a DataFrame.
+
+        This method plots categories from `item_column` against numeric values 
+        from `number_column`. Users can limit the number of displayed items 
+        (via `top` or `end`), choose pie or rose style, customize label/legend 
+        appearance, and adjust chart radius. The chart is exported in multiple 
+        formats (HTML, SVG, PDF, PNG), and plotting parameters are logged using 
+        `data_manager`.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            item_column (str): Column containing category/item labels.
+            number_column (str): Column containing numeric values.
+            colors (list of str, optional): Colors for pie slices. 
+                Defaults to a preset palette.
+            top (int, optional): Display the first N items. Default 10.
+            end (int, optional): Display the last N items. If both `top` and `end` 
+                are None, all items are used.
+            radius (list of str, optional): Inner and outer radius for the pie. 
+                Default ["10%", "70%"].
+            rosetype (str or None, optional): Rose chart mode. 
+                One of {"radius", "area", None}. Default "radius".
+            label_show (bool, optional): Whether to show labels on slices. Default True.
+            label_color (str, optional): Label text color. Default "black".
+            label_font_weight (str, optional): Label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Label font size. Default 12.
+            label_text_width (int, optional): Max characters per line in label text. Default 10.
+            plot_title (str, optional): Title of the pie chart. Default None.
+            legend_show (bool, optional): Whether to display legend. Default True.
+            legend_font_size (int, optional): Font size of legend text. Default 12.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Pie chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves pie chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Raises:
+            ValueError: If invalid parameter values are provided.
+        """
         if top is not None and end is not None:
             data = data
         if top is not None and end is None:
@@ -1349,7 +1694,63 @@ class StrucGAP_DataVisualization:
                    filename = None,
                    figure_description = 'Nested pie chart',
                    ):
-        
+        """
+        Generate a nested (two-level) pie/rose chart from a DataFrame.
+
+        The chart consists of an inner ring and an outer ring, which together 
+        represent a split of the input data. Data can be provided directly 
+        (`item_column` + `number_column`) or generated by counting values 
+        in `value_counts_column`. The top N items are selected, then divided 
+        into two groups based on `split` and displayed in concentric layers. 
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            item_column (str): Column containing category labels.
+            number_column (str): Column containing numeric values.
+            value_counts_column (str, optional): If provided, use value counts of 
+                this column as data instead of `item_column` and `number_column`. 
+                Default None.
+            colors (list of str, optional): Custom colors for slices. Defaults to 
+                a preset palette sized to `top`.
+            top (int, optional): Number of top items to include. Default 15.
+            split (int, optional): Index to split items into inner and outer rings. 
+                Default 3.
+            inner_data_first (bool, optional): Whether the first split goes to the 
+                inner ring (`True`) or outer ring (`False`). Default True.
+            inner_radius (list of str, optional): Radius range for inner ring. 
+                Default ["0%", "30%"].
+            inner_rosetype (str, optional): Rose chart type for inner ring. 
+                One of {"radius","area"}. Default "radius".
+            outer_radius (list of str, optional): Radius range for outer ring. 
+                Default ["40%", "70%"].
+            outer_rosetype (str, optional): Rose chart type for outer ring. 
+                One of {"radius","area"}. Default "radius".
+            inner_label_show (bool, optional): Whether to show labels on inner ring. Default True.
+            outer_label_show (bool, optional): Whether to show labels on outer ring. Default True.
+            label_color (str, optional): Label text color. Default "black".
+            label_font_weight (str, optional): Label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Label font size. Default 12.
+            plot_title (str, optional): Title of the chart. Default None.
+            legend_font_size (int, optional): Font size for legend text. Default 12.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. 
+                Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Nested pie chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves nested pie chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Raises:
+            ValueError: If invalid parameter values are provided.
+        """
         if value_counts_column == None:
             data = data.iloc[:top,:]
         else:
@@ -1492,7 +1893,47 @@ class StrucGAP_DataVisualization:
                filename = None,
                figure_description = 'Sankey plot',
                ):
-        
+        """
+        Generate a Sankey diagram for term–gene relationships.
+
+        The function expects an input DataFrame with at least two columns:
+        - "Term": category/annotation names (e.g., enriched pathways). 
+            Names may include counts in parentheses (e.g., "Pathway (10)").
+        - "Genes": semicolon-separated list of genes associated with each term.
+
+        The top N terms are selected (`top`), then each gene is linked to its 
+        corresponding term to construct a Sankey diagram. The chart is exported 
+        in multiple formats (HTML, SVG, PDF, PNG), and plotting parameters are 
+        logged using `data_manager`.
+
+        Args:
+            data (pd.DataFrame): Input dataset containing at least "Term" and "Genes".
+            node1_column (str): Name of the first node column (kept for logging).
+            node2_column (str): Name of the second node column (kept for logging).
+            top (int, optional): Number of top terms to visualize. Default 3.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. 
+                Default "plot".
+            plot_title (str, optional): Title of the Sankey diagram. Default None.
+            legend_font_size (int, optional): Font size of legend text. Default 12.
+            filename (str, optional): Base filename prefix. A timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Sankey plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves Sankey diagram as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Input `node1_column` and `node2_column` are not used in plotting logic, 
+            but are included in output logs for traceability.
+            - Terms are truncated at `(` if counts are included in their names.
+            - Each gene–term pair is drawn as a link with value=1.
+        """
         data = data[:top]
         
         nodes = []
@@ -1584,7 +2025,57 @@ class StrucGAP_DataVisualization:
                        filename = None,
                        figure_description = 'Sunburst plot',
                        ):
+        """
+        Generate a multi-level sunburst plot from hierarchical data.
 
+        This method constructs a sunburst chart where:
+        - The `root_column` defines the root grouping (outermost category).
+        - The subsequent `columns` define hierarchical values that expand 
+            inward to outward.
+        - Each row in the DataFrame becomes a hierarchical path through 
+            the specified columns.
+
+        The chart is exported in multiple formats (HTML, SVG, PDF, PNG), 
+        and plotting parameters are logged using `data_manager`.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            root_column (str): Column used as the root node (first grouping).
+            columns (list of str): Columns representing hierarchical levels 
+                to be expanded in the sunburst plot.
+            colors (list of str, optional): Colors for root categories. 
+                Defaults to a preset palette sized by unique values of `root_column`.
+            radius (list of str, optional): Inner and outer radius of the sunburst. 
+                Default ["30%", "90%"].
+            label_show (bool, optional): Whether to display labels on nodes. Default True.
+            label_color (str, optional): Label text color. Default "black".
+            label_font_weight (str, optional): Label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Label font size. Default 12.
+            hide_root_label (bool, optional): Whether to hide root node labels. Default True.
+            plot_title (str, optional): Title of the sunburst plot. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Sunburst plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves sunburst plot as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Each path from `root_column` through `columns` is converted into 
+            hierarchical `SunburstItem` nodes.
+            - If `hide_root_label=True`, root node names are hidden but their 
+            children remain visible.
+            - Values in non-root columns are expected to be numeric and 
+            are converted into int before plotting.
+        """
         data = data[columns]
         
         if colors is None:
@@ -1708,7 +2199,51 @@ class StrucGAP_DataVisualization:
                        filename = None,
                        figure_description = 'Sunburst plot',
                        ):
-        
+        """
+        Generate a two-level sunburst plot from a DataFrame.
+
+        The chart shows hierarchical relationships between `root_column` 
+        (outer categories) and `child_column` (subcategories) with their 
+        corresponding numeric values (`child_column_value`). Each root node 
+        is colored from `colors`, while children receive distinct colors from 
+        a generated palette.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            root_column (str): Column defining root-level categories.
+            child_column (str): Column defining child-level categories under each root.
+            child_column_value (str): Column containing numeric values for child nodes.
+            colors (list of str, optional): Colors for root nodes. Defaults to a preset palette.
+            radius (list of str, optional): Inner and outer radius of the sunburst. 
+                Default ["30%", "90%"].
+            label_show (bool, optional): Whether to display labels. Default True.
+            label_color (str, optional): Label text color. Default "black".
+            label_font_weight (str, optional): Label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Label font size. Default 12.
+            legend_show (bool, optional): Whether to display legend. Default True.
+            hide_root_label (bool, optional): Whether to hide root node labels. Default True.
+            plot_title (str, optional): Title of the sunburst plot. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Sunburst plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves sunburst plot as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Root nodes are assigned colors from `colors`.
+            - Child nodes (`child_column`) are assigned distinct colors from a palette 
+            generated by `self.select_palette`.
+            - Tooltip displays both name and value (`{b}: {c}`).
+        """
         palette = self.select_palette(data, child_column)
 
         # 生成Core_structure的颜色
@@ -1893,7 +2428,67 @@ class StrucGAP_DataVisualization:
                   filename = None,
                   figure_description = 'Bar chart',
                   ):
-            
+            """
+            Generate a bar chart (stacked or simple) from a DataFrame.
+
+            This method supports:
+            - Standard bar charts (single category vs value).
+            - Stacked bar charts (x_column vs y_column groups, stacked by category).
+            - Ratio transformation (`transform_ratio=True`) to normalize values 
+                by total (e.g., percentage bars).
+
+            It provides extensive customization for axes, labels, legends, colors, 
+            and layout. The chart is exported in multiple formats (HTML, SVG, PDF, PNG), 
+            and plotting parameters are logged using `data_manager`.
+
+            Args:
+                data (pd.DataFrame): Input dataset.
+                x_column (str, optional): Column for x-axis categories. If None, uses `y_column`.
+                y_column (str, optional): Column for grouping/legend categories.
+                y_column_value (str, optional): Column containing numeric values for bar heights.
+                colors (list of str, optional): Colors for bars or groups. Defaults to preset palette.
+                top (int, optional): Number of top rows to display. Default 10.
+                end (int, optional): Number of last rows to display. Default None.
+                if_stack (bool, optional): Whether to use stacked bar chart. Default True.
+                transform_ratio (bool, optional): Whether to normalize values as ratios. Default False.
+                label_show (bool, optional): Whether to display labels on bars. Default False.
+                label_color (str, optional): Label text color. Default "black".
+                label_font_weight (str, optional): Label font weight. 
+                    One of {"normal","bold","bolder","lighter"}. Default "normal".
+                label_font_size (int, optional): Label font size. Default 12.
+                bar_width (str or int, optional): Width of bars. Default "10%".
+                category_gap (str, optional): Gap between categories. Default "40%".
+                gap (str, optional): Gap between bars. Default "80%".
+                xaxis_* , yaxis_* (various): Options for axis labels, ticks, lines, 
+                    and split lines (see code for full details).
+                y_max (float, optional): Maximum value for y-axis. Default None.
+                right_yaxis_line_show (bool, optional): Whether to display right-side y-axis line. Default True.
+                legend (list of str or str, optional): Custom legend labels. Defaults to `y_column` unique values.
+                legend_font_size (int, optional): Legend font size. Default 12.
+                plot_title (str, optional): Title of the chart. Default None.
+                xaxis_title (str, optional): Title for x-axis. Default None.
+                xaxis_title_gap (int, optional): Gap between x-axis title and axis. Default 25.
+                yaxis_title (str, optional): Title for y-axis. Default None.
+                yaxis_title_gap (int, optional): Gap between y-axis title and axis. Default 40.
+                subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+                filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+                figure_description (str, optional): Description string logged with output. 
+                    Default "Bar chart".
+
+            Returns:
+                dict:
+                    - "file_path": Path to the saved PNG file.
+                    - "legend": Figure description string.
+
+            Side Effects:
+                - Saves bar chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+                - Logs plotting parameters and output file via `data_manager`.
+
+            Notes:
+                - If both `top` and `end` are provided, no truncation is applied.
+                - If `transform_ratio=True`, values are normalized either within 
+                each x-category or across y-categories depending on stacking.
+            """
             if top is not None and end is not None:
                 data = data
             if top is not None and end is None:
@@ -1915,7 +2510,7 @@ class StrucGAP_DataVisualization:
                     stack = 'stack1'
                     bar_width = None
                 else:
-                    stack = None
+                    stack = False
                     bar_width = bar_width
                     
             if transform_ratio in [True, False]:
@@ -2215,7 +2810,52 @@ class StrucGAP_DataVisualization:
                    filename = None,
                    figure_description = 'Butterfly plot',
                    ):
-    
+        """
+        Generate a butterfly plot (mirrored horizontal bar chart) to compare two datasets.
+
+        This chart is typically used to compare the distribution of two groups 
+        (e.g., male vs female, case vs control) across the same categories.
+
+        Args:
+            data1 (pd.DataFrame): First dataset containing category and value columns.
+            data2 (pd.DataFrame): Second dataset with the same structure as `data1`.
+            item_column (str): Column containing category labels.
+            count_column (str): Column containing numeric values for bar lengths.
+            colors (list of str, optional): Two colors for left and right bars. 
+                Must be length 2. Default None.
+            top (int, optional): Number of top categories to display. Default 10.
+            order_by (str, optional): Sorting order. One of {"descending","ascending"}. 
+                Default "descending".
+            bar_width (float, optional): Thickness of horizontal bars. Default 0.8.
+            label_font_size (int, optional): Font size of category labels. Default 10.
+            xaxis_title (str, optional): Title for the x-axis. Default None.
+            xaxis_title_font_size (int, optional): Font size of x-axis title. Default 20.
+            plot_title (str, optional): Title of the plot. Default None.
+            plot_title_font_size (int, optional): Font size of plot title. Default 20.
+            legend (list of str or str, optional): Labels for the two datasets in the legend. 
+                If string, converted to list. Default None.
+            legend_fontsize (int, optional): Font size of legend text. Default 12.
+            legend_loc (str, optional): Location of the legend (matplotlib style). Default "best".
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Butterfly plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves butterfly plot as PDF and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Left bars represent `data1` (plotted as negative values).
+            - Right bars represent `data2`.
+            - Category labels are drawn outside of bars for readability.
+            - X-axis tick labels are shown as absolute values.
+        """
         if order_by not in ['descending', 'ascending']:
             print('The data was ranked by descending!')
         if top is not None:
@@ -2369,7 +3009,52 @@ class StrucGAP_DataVisualization:
                   filename = None,
                   figure_description = 'Multi bar chart',
                   ):
-        
+        """
+        Generate a multi-panel bar chart where each row of the DataFrame is drawn as a separate bar chart.
+
+        This method is useful for visualizing multiple entities (rows) across the same set 
+        of categories (columns). Each row becomes its own horizontal subplot stacked vertically. 
+        The x-axis contains the non-`x_column` columns of the DataFrame, while the y-values 
+        are taken from each row. Each subplot has its row label shown on the y-axis.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            x_column (str): Column to be treated as row identifier (e.g., sample, branch).
+            y_column (str, optional): If provided, filters to a subset of data by column. Default None.
+            y_column_value (str, optional): Not directly used in this method, reserved for compatibility.
+            colors (list of str, optional): Colors for bars. Defaults to a preset palette.
+
+            label_show (bool, optional): Whether to display labels on bars. Default False.
+            label_color (str, optional): Bar label color. Default "black".
+            label_font_weight (str, optional): Bar label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Bar label font size. Default 12.
+            bar_width (str, optional): Width of bars. Default "10%".
+            category_gap (str, optional): Gap between bar categories. Default "40%".
+
+            xaxis_* , yaxis_* (various): Options for axis labels, ticks, lines, and split lines 
+                (see function definition for full parameter list).
+            plot_title (str, optional): Title of the whole figure. Default None.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Multi bar chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves the multi-bar chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Each row in the DataFrame becomes a separate subplot stacked vertically.
+            - X-axis = all columns except `x_column`. Y-axis values = row values.
+            - The y-axis label of each subplot is set to the value in `x_column`.
+            - Missing values are replaced with 0 before plotting.
+        """
         if colors is None:
             colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
                       "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"]
@@ -2569,7 +3254,61 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Up down bar chart',
               ):
-        
+        """
+        Generate an up-down bar chart with symmetric positive and negative bars.
+
+        This chart is designed to compare two related quantities (e.g., 
+        up-regulated vs down-regulated, gains vs losses). The "up" values 
+        are drawn as positive bars, while the "down" values are inverted 
+        (multiplied by -1) to appear on the opposite side.
+
+        Args:
+            data (pd.DataFrame): Input dataset containing x-axis categories and 
+                two numeric columns (`up_column`, `down_column`).
+            x_column (str): Column containing category labels for the x-axis.
+            up_column (str): Column containing "up" (positive) values.
+            down_column (str): Column containing "down" (negative) values.
+            colors (list of str, optional): Colors for up and down bars. 
+                Must be length 2. Defaults to preset palette.
+            if_stack (bool, optional): Whether to stack bars. Default True.
+            label_show (bool, optional): Whether to show labels on bars. Default False.
+            label_color (str, optional): Label text color. Default "black".
+            label_font_weight (str, optional): Label font weight. 
+                One of {"normal","bold","bolder","lighter"}. Default "normal".
+            label_font_size (int, optional): Font size of bar labels. Default 12.
+            bar_width (str or float, optional): Width of bars. Default "40%".
+            category_gap (str, optional): Gap between bar categories. Default "40%".
+
+            xaxis_* , yaxis_* (various): Options for axis labels, ticks, lines, 
+                and split lines (see function definition for full parameter list).
+
+            legend (list of str or str, optional): Custom legend labels for up/down. 
+                Defaults to `[up_column, down_column]`.
+            legend_font_size (int, optional): Font size of legend text. Default 12.
+            plot_title (str, optional): Title of the chart. Default None.
+            xaxis_title (str, optional): Title for x-axis. Default None.
+            xaxis_title_gap (int, optional): Gap between x-axis title and axis. Default 25.
+            yaxis_title (str, optional): Title for y-axis. Default None.
+            yaxis_title_gap (int, optional): Gap between y-axis title and axis. Default 40.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description string logged with output. 
+                Default "Up down bar chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Handles duplicate column names by merging automatically.
+            - "Down" values are negated for symmetric visualization.
+            - Useful for visualizing changes (e.g., up vs down regulation).
+        """
         if colors is None:
             colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
                       "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"][:2]
@@ -2579,7 +3318,7 @@ class StrucGAP_DataVisualization:
                 stack = 'stack1'
                 # bar_width = None
             else:
-                stack = None
+                stack = False
                 # bar_width = bar_width
 
         def handle_duplicate_columns(data, x_column, up_column, down_column):
@@ -2877,7 +3616,54 @@ class StrucGAP_DataVisualization:
                       subfolder='plot',
                       filename = None,
                       figure_description = 'Volcano plot'):
-    
+        """
+        Generate an up/down ratio bar chart with dual y-axes.
+
+        This plot combines:
+            - Bar charts showing the proportion of up-regulated (positive) and 
+            down-regulated (negative) IGPs for each glycan feature across multiple 
+            fold-change (FC) thresholds.
+            - Line plots showing the up/down ratio at each threshold.
+
+        Args:
+            feature (str): Glycan feature to visualize. Must be one of:
+                ['core_structure','branches_structure','glycan_type',
+                'branches_count','glycan_composition','lacdinac',
+                'fucosylated_type','acgc'].
+            colors (list of str): List of hex color codes for glycan types. If empty, 
+                random colors will be generated.
+            screen_feature (list, optional): Subset of glycan features to display. 
+                If empty, all features are included.
+            axis_line_width (int, optional): Width of axis lines. Default 3.
+            axis_line_color (str, optional): Color of axis lines. Default "black".
+            plot_title (str, optional): Title of the chart. Default None.
+            plot_title_font_size (int, optional): Font size of the title. Default 20.
+            xaxis_font_size (int, optional): Font size for x-axis labels. Default 20.
+            yaxis_font_size (int, optional): Font size for y-axis labels. Default 20.
+            legend_fontsize (int, optional): Font size for legend text. Default 15.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. 
+                Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended 
+                automatically.
+            figure_description (str, optional): Description logged with output. 
+                Default "Volcano plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves chart as PDF and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Up bars are plotted with full opacity; down bars are plotted with 
+            reduced opacity.
+            - A secondary y-axis shows the up/down ratio.
+            - For `feature='core_structure'`, shorthand names (Core-I, Core-II, …) 
+            are substituted automatically.
+        """
         print("You can only choose feature from ['core_structure','branches_structure','glycan_type','branches_count','glycan_composition','lacdinac','fucosylated_type','acgc']")
     
         data_up = getattr(self.data_manager.module_records['StrucGAP_GlycoPeptideQuant']['instance'], f"result_{feature}_up_ratio") 
@@ -3074,7 +3860,87 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Multi columns bar chart',
               ):
-        
+        """
+        Generate a grouped or stacked bar chart from multiple numeric columns.
+
+        Each category defined by `y_column` is represented by a group of bars 
+        corresponding to values from `x_columns`. Bars can be drawn side-by-side 
+        or stacked depending on `if_stack`.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame.
+            y_column (str): Column name representing categories (e.g., groups).
+            x_columns (list of str): Column names containing numeric values.
+            colors (list of str, optional): Colors for each category. Defaults to a preset palette.
+            if_stack (bool, optional): Whether to stack bars. Default True.
+            label_show (bool, optional): Whether to show bar labels. Default False.
+            label_color (str, optional): Label color. Default "black".
+            label_font_weight (str, optional): Label font weight. Default "normal".
+            label_font_size (int, optional): Label font size. Default 12.
+            bar_width (str or int, optional): Width of bars. Default "10%".
+            category_gap (str, optional): Gap between categories. Default "40%".
+            xaxis_label_show (bool, optional): Show/hide x-axis labels. Default True.
+            xaxis_label_color (str, optional): X-axis label color. Default "black".
+            xaxis_label_font_weight (str, optional): X-axis label weight. Default "normal".
+            xaxis_label_font_size (int, optional): X-axis label font size. Default 9.
+            xaxis_label_rotate (int, optional): Rotation of x-axis labels. Default -15.
+            xaxis_label_margin (int, optional): Margin of x-axis labels. Default 15.
+            xaxis_label_text_split (int, optional): Split long labels into multiple lines. 
+                Default 0 (no split).
+            xaxis_line_show (bool, optional): Show x-axis line. Default True.
+            xaxis_line_width (int, optional): X-axis line width. Default 2.
+            xaxis_line_color (str, optional): X-axis line color. Default "black".
+            xaxis_tick_show (bool, optional): Show x-axis ticks. Default True.
+            xaxis_tick_length (int, optional): Length of ticks. Default 8.
+            xaxis_tick_width (int, optional): Tick line width. Default 2.
+            xaxis_tick_color (str, optional): Tick color. Default "black".
+            xaxis_splitline_show (bool, optional): Show grid splitlines. Default True.
+            xaxis_splitline_width (float, optional): Splitline width. Default 0.5.
+            xaxis_splitline_color (str, optional): Splitline color. Default "grey".
+            top_xaxis_line_show (bool, optional): Show top x-axis line. Default True.
+            y_max (int, optional): Maximum value of y-axis. Default None.
+            yaxis_label_show (bool, optional): Show y-axis labels. Default True.
+            yaxis_label_color (str, optional): Y-axis label color. Default "black".
+            yaxis_label_font_weight (str, optional): Y-axis label weight. Default "normal".
+            yaxis_label_font_size (int, optional): Y-axis label font size. Default 14.
+            yaxis_label_margin (int, optional): Margin for y-axis labels. Default 15.
+            yaxis_line_show (bool, optional): Show y-axis line. Default True.
+            yaxis_line_width (int, optional): Y-axis line width. Default 2.
+            yaxis_line_color (str, optional): Y-axis line color. Default "black".
+            yaxis_tick_show (bool, optional): Show y-axis ticks. Default True.
+            yaxis_tick_length (int, optional): Length of y-axis ticks. Default 8.
+            yaxis_tick_width (int, optional): Width of y-axis ticks. Default 2.
+            yaxis_tick_color (str, optional): Y-axis tick color. Default "black".
+            yaxis_splitline_show (bool, optional): Show horizontal splitlines. Default True.
+            yaxis_splitline_width (float, optional): Splitline width. Default 0.5.
+            yaxis_splitline_color (str, optional): Splitline color. Default "grey".
+            right_yaxis_line_show (bool, optional): Show right y-axis line. Default True.
+            legend (list of str, optional): Custom legend labels. Default None (use y_column values).
+            legend_font_size (int, optional): Legend font size. Default 12.
+            plot_title (str, optional): Title of the chart. Default None.
+            xaxis_title (str, optional): Label for the x-axis. Default None.
+            xaxis_title_gap (int, optional): Gap for x-axis title. Default 25.
+            yaxis_title (str, optional): Label for the y-axis. Default None.
+            yaxis_title_gap (int, optional): Gap for y-axis title. Default 40.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Description logged with output. 
+                Default "Multi columns bar chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves chart as HTML, SVG, PDF, and PNG in `./plot/<subfolder>/`.
+            - Logs plotting parameters and output file via `data_manager`.
+
+        Notes:
+            - Each `y_column` value produces one series across `x_columns`.
+            - `if_stack=True` stacks bars of different series at each x position.
+            - Labels can be auto-split across multiple lines with `xaxis_label_text_split`.
+        """
         data = data.replace(np.nan, 0)
         
         if colors is None:
@@ -3086,7 +3952,7 @@ class StrucGAP_DataVisualization:
                 stack = 'stack1'
                 bar_width = None
             else:
-                stack = None
+                stack = False
                 bar_width = bar_width
                 
         if label_show not in [True, False]:
@@ -3353,7 +4219,68 @@ class StrucGAP_DataVisualization:
                        filename = None,
                        figure_description = 'Frequency bar chart',
                        ):
-        
+        """
+        Plot frequency distribution histograms for selected columns.
+
+        Each selected column in `data` is plotted as a histogram, optionally log2-
+        transformed. Reference vertical lines (e.g., ±log2(1.5)) can be added to 
+        indicate fold-change thresholds. Multiple columns are overlaid for 
+        comparison.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame.
+            columns (list of str): Column names to plot.
+            colors (list of str, optional): List of colors for each column. Defaults 
+                to preset palette.
+            log2_transformation (bool, optional): Apply log2 transform before plotting. 
+                Default True.
+            bins (int, optional): Number of histogram bins. Default 50.
+            density (bool, optional): Normalize histogram to density. Default True.
+            alpha (float, optional): Bar transparency. Default 0.7.
+            edge_color (str, optional): Bar edge color. Default "white".
+            ref_line_style (str, optional): Line style for reference lines. Default "--".
+            ref_line_width (float, optional): Reference line width. Default 1.5.
+            ref_lines_value (float, optional): Fold-change value for reference lines 
+                (drawn at log2(ref_lines_value) and -log2(ref_lines_value)). Default 1.5.
+            xaxis_label_color, yaxis_label_color (str, optional): Axis label colors. 
+                Default "black".
+            xaxis_label_font_weight, yaxis_label_font_weight (str, optional): Axis label 
+                font weights. Default "normal".
+            xaxis_label_font_size, yaxis_label_font_size (int, optional): Axis label font 
+                sizes. Defaults: 9 (x), 14 (y).
+            axis_line_width (int, optional): Axis line thickness. Default 2.
+            axis_tick_length (int, optional): Length of axis ticks. Default 5.
+            axis_tick_width (int, optional): Width of axis ticks. Default 2.
+            add_x_grid (bool, optional): Show vertical grid lines. Default False.
+            add_y_grid (bool, optional): Show horizontal grid lines. Default True.
+            x_grid_line_color, y_grid_line_color (str, optional): Grid line colors. Default "grey".
+            x_grid_line_style, y_grid_line_style (str, optional): Grid line styles. Default "-".
+            x_grid_line_width, y_grid_line_width (float, optional): Grid line widths. Default 0.5.
+            xaxis_title, yaxis_title, plot_title (str, optional): Axis and plot titles. 
+                Default None.
+            xaxis_title_font_size, yaxis_title_font_size, plot_title_font_size (int, optional): 
+                Title font sizes. Defaults: 20.
+            legend (list of str, optional): Legend labels for each column. Default None.
+            legend_fontsize (int, optional): Legend font size. Default 12.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs. 
+                Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str, optional): Figure description. Default "Frequency bar chart".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves histogram to PDF and PNG in `./plot/<subfolder>/`.
+            - Logs parameters and output file via `data_manager`.
+
+        Notes:
+            - If `log2_transformation=True`, data is transformed before plotting.
+            - Reference lines are symmetric about 0 on the log2 scale.
+            - Multiple histograms are overlaid for comparison.
+        """
         data = data[columns]
         if log2_transformation == True:
             data = np.log2(data)
@@ -3481,7 +4408,58 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Box plot',
               ):
-        
+        """
+        Generate side-by-side boxplots for two groups across multiple items.
+
+        For each `item_name` in `item_column`, this function extracts values from 
+        `group1_columns` and `group2_columns` and plots paired boxplots. Statistical 
+        significance values (`p_column`) from `p_data` are displayed on the top axis.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame containing numeric values for groups.
+            item_column (str): Column name identifying item categories (e.g., glycan types).
+            item_name (list of str): Items to include in the boxplot.
+            group1_columns (list of str): Column names for group 1 values.
+            group2_columns (list of str): Column names for group 2 values.
+            p_data (pd.DataFrame): DataFrame containing p-values per item.
+            p_column (str): Column name in `p_data` that holds p-values.
+            colors (list of str, optional): Colors for group1 and group2 boxes. 
+                Defaults to preset palette.
+            label_show (bool, optional): Show data labels inside boxes. Default False.
+            label_color, label_font_weight, label_font_size: Style options for labels.
+            bar_width (str, optional): Width of box elements. Default "10%".
+            category_gap (str, optional): Gap between categories. Default "40%".
+            xaxis_label_show, yaxis_label_show (bool, optional): Show/hide axis labels.
+            xaxis_label_color, yaxis_label_color (str, optional): Axis label colors.
+            xaxis_label_font_weight, yaxis_label_font_weight (str, optional): Font weight.
+            xaxis_label_font_size, yaxis_label_font_size (int, optional): Font sizes.
+            ... (many axis customization options)
+            legend (list of str, optional): Legend labels for the two groups. 
+                Default ["Group1", "Group2"].
+            legend_font_size (int, optional): Legend font size. Default 12.
+            plot_title (str, optional): Title of the plot.
+            xaxis_title, yaxis_title (str, optional): Axis titles.
+            subfolder (str, optional): Subfolder under `./plot/` for saving outputs.
+                Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended.
+            figure_description (str, optional): Figure description. Default "Box plot".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Saves plot in HTML, SVG, PDF, and PNG formats under `./plot/<subfolder>/`.
+            - Crops whitespace from PNG output.
+            - Logs parameters and output path with `data_manager`.
+
+        Notes:
+            - p-values from `p_data[p_column]` are aligned to each `item_name` and 
+            displayed along the top axis.
+            - Group1 and Group2 are plotted side-by-side with separate colors.
+            - Long item labels are wrapped every 20 characters for readability.
+        """
         if colors is None:
             colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
                       "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"]
@@ -3716,7 +4694,48 @@ class StrucGAP_DataVisualization:
                 filename = None,
                 figure_description = 'Heatmap',
                 ):
-        
+        """
+        Generate a clustered heatmap with optional log-transformation and custom styling.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame containing numeric values.
+            columns (list of str): Column names to include in the heatmap.
+            colors (list of str, optional): Color gradient for the heatmap. 
+                Defaults to a red-blue diverging palette.
+            cluster (str, optional): Clustering mode: 'row', 'col', 'both', or 'none'. Default 'both'.
+            cluster_method (str, optional): Linkage method for hierarchical clustering. 
+                One of ['single','complete','average','weighted','centroid','median','ward'].
+                Default 'weighted'.
+            log (bool, optional): Apply log2 transformation to data. Default True.
+            minvalue (float, optional): Minimum value for color scale. Default -1.
+            maxvalue (float, optional): Maximum value for color scale. Default 1.
+            xaxis_label_show, yaxis_label_show (bool): Show/hide axis labels.
+            xaxis_label_color, yaxis_label_color (str): Label font colors.
+            xaxis_label_font_weight, yaxis_label_font_weight (str): Label font weights.
+            xaxis_label_font_size, yaxis_label_font_size (int): Label font sizes.
+            label_show (bool, optional): Whether to display heatmap values inside cells.
+            label_color, label_font_weight, label_font_size: Styling for value labels.
+            plot_title (str, optional): Title for the heatmap.
+            subfolder (str, optional): Subfolder under `./plot/` to save outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended.
+            figure_description (str, optional): Figure description string. Default "Heatmap".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Applies hierarchical clustering on rows/columns if requested.
+            - Saves heatmap in HTML, SVG, PDF, and PNG formats under `./plot/<subfolder>/`.
+            - Crops whitespace from PNG output.
+            - Logs parameters and output path with `data_manager`.
+
+        Notes:
+            - Values are rounded to two decimals when displayed inside cells.
+            - When `cluster='both'`, both rows and columns are reordered by hierarchical clustering.
+            - Default color palette is a diverging scheme suitable for log fold changes.
+        """
         df = data[columns]
         
         if colors == None:
@@ -3905,7 +4924,67 @@ class StrucGAP_DataVisualization:
                  figsize=(10, 8),  # 新增的参数：图形尺寸，默认为 10x8 英寸
                  figure_description = 'Heatmap',
                  ):
-        
+        """
+        Generate a clustered heatmap using seaborn.clustermap with flexible filtering, 
+        clustering, annotation, and styling options.
+
+        Args:
+            data (pd.DataFrame): Input DataFrame containing numeric values.
+            columns (list of str): Columns to include in the heatmap.
+            colors (str or list, optional): Colormap name (string from `plt.colormaps()`) 
+                or a list of colors. Default 'coolwarm'.
+            filter_data (pd.DataFrame, optional): External DataFrame for filtering rows.
+            filter_columns (list, optional): Column(s) in `filter_data` to filter by.
+            filter_values (list, optional): Threshold(s) for filtering.
+                - If column == "fc", keeps rows with fold-change > val or < 1/val.
+                - Else, keeps rows with values < val.
+            cluster (str, optional): Clustering mode: 'row', 'col', 'both', or 'none'. Default 'both'.
+            cluster_method (str, optional): Linkage method for hierarchical clustering.
+                One of ['single','complete','average','weighted','centroid','median','ward'].
+            log (bool, optional): Apply log2 transformation to data. Default False.
+            text_annotation (bool, optional): Whether to display values inside cells. Default False.
+            text_size (int, optional): Font size for annotations.
+            text_color (str, optional): Font color for annotations.
+            minvalue (float): Minimum value for colormap.
+            centervalue (float): Center value for diverging colormaps. Default 0.
+            maxvalue (float): Maximum value for colormap.
+            xaxis_label_show, yaxis_label_show (bool): Whether to display tick labels.
+            xaxis_label_color, yaxis_label_color (str): Axis label colors.
+            xaxis_label_font_weight, yaxis_label_font_weight (str): Font weights.
+            xaxis_label_font_size, yaxis_label_font_size (int): Font sizes.
+            xaxis_label_rotate (int): Rotation angle for x-axis tick labels. Default 90.
+            clusterline_width (float): Line width of dendrograms. Default 2.
+            splitline_width (float): Line width of cell borders. Default 2.
+            splitline_color (str): Border color for heatmap cells. Default 'white'.
+            xaxis_title (str, optional): X-axis label.
+            yaxis_title (str, optional): Y-axis label.
+            xaxis_title_font_size, yaxis_title_font_size (int): Axis title font sizes.
+            plot_title (str, optional): Plot title.
+            plot_title_font_size (int): Title font size.
+            subfolder (str): Subfolder under `./plot/` to save outputs. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended.
+            z_score (int, optional): Standardize rows or columns before clustering (seaborn option).
+            figsize (tuple, optional): Figure size in inches. Default (10, 8).
+            figure_description (str): Figure description string. Default "Heatmap".
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description string.
+
+        Side Effects:
+            - Optionally filters rows based on `filter_data`.
+            - Performs hierarchical clustering on rows/columns if requested.
+            - Saves heatmap in PDF and PNG formats under `./plot/<subfolder>/`.
+            - Crops whitespace from PNG output.
+            - Logs parameters and output path with `data_manager`.
+
+        Notes:
+            - If `text_annotation=True`, integers are shown as whole numbers,
+            floats as 2 decimal places.
+            - Unlike `heatmap1` (pyecharts), this function uses seaborn and
+            produces static plots suitable for publications.
+        """
         print('You can choose colors in following range: ', plt.colormaps())
         
         # 取选定的列
@@ -4009,6 +5088,7 @@ class StrucGAP_DataVisualization:
         )
         g.ax_heatmap.tick_params(
             axis='y',
+            labelrotation=0,
             labelsize=yaxis_label_font_size,
             labelcolor=yaxis_label_color
         )
@@ -4095,7 +5175,57 @@ class StrucGAP_DataVisualization:
                              filename = None,
                              figure_description = 'Heatmap',
                              ):
+        """
+        Generate a circle-style correlation heatmap with Spearman correlation coefficients 
+        and p-values, using multiple input DataFrames.
 
+        Workflow:
+            1. All input DataFrames are aligned to have the same column names.
+            2. DataFrames are concatenated (row-wise) and transposed so that 
+            each variable is in a column and each row corresponds to samples.
+            3. Pairwise Spearman correlations and p-values are calculated.
+            4. Heatmap is drawn:
+            - Upper triangle: left blank (transparent squares).
+            - Lower triangle: circles whose radius reflects correlation strength, 
+                color reflects correlation sign/magnitude.
+            - Each circle is annotated with correlation coefficient (r) and p-value.
+
+        Args:
+            data_list (list of pd.DataFrame): List of DataFrames to combine and analyze.
+                All DataFrames must have the same number of columns.
+            colors (str or Colormap): Colormap for circle coloring. Default 'coolwarm'.
+            minvalue (float): Minimum value for color scale. Default -1.
+            centervalue (float): Center point for diverging colormaps. Default 0.
+            maxvalue (float): Maximum value for color scale. Default 1.
+            xaxis_label_show, yaxis_label_show (bool): Whether to display axis tick labels.
+            xaxis_label_color, yaxis_label_color (str): Color of axis labels.
+            xaxis_label_font_weight, yaxis_label_font_weight (str): Font weight for axis labels.
+            xaxis_label_font_size, yaxis_label_font_size (int): Font size for axis labels.
+            xaxis_title, yaxis_title (str, optional): Titles for x and y axes.
+            xaxis_title_font_size, yaxis_title_font_size (int): Axis title font sizes.
+            plot_title (str, optional): Overall plot title.
+            plot_title_font_size (int): Title font size.
+            subfolder (str): Subfolder under './plot/' to save results. Default "plot".
+            filename (str, optional): Base filename prefix. Timestamp is appended automatically.
+            figure_description (str): Short description of the figure for logging.
+
+        Returns:
+            dict:
+                - "file_path": Path to saved PNG file.
+                - "legend": Figure description.
+
+        Side Effects:
+            - Saves correlation heatmap as PDF and PNG in ./plot/<subfolder>/.
+            - Crops whitespace from PNG output.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - Correlation values range between [-1, 1].
+            - Circle radius ∝ sqrt(|r|), so stronger correlations produce larger circles.
+            - Each circle shows both r (above) and p (below) for interpretability.
+            - For consistent input, all DataFrames in `data_list` are forced to share 
+            identical column names before merging.
+        """
         # 1. 统一重设每个 DataFrame 的列名称
         new_cols = [f"col{i}" for i in range(data_list[0].shape[1])]
         data_list_updated = []
@@ -4227,7 +5357,69 @@ class StrucGAP_DataVisualization:
                 filename = None,
                 figure_description = 'Multi data heatmap',
                 ):
-        
+        """
+        Create heatmaps to compare multiple datasets, either by top frequency counts
+        or by user-specified statistical methods.
+
+        Modes:
+            1. **Frequency mode** (when `statistical_methods` does not contain "both"/"unique"):
+            - For each dataset, compute `value_counts()` of the specified column(s).
+            - Take top `count_top` values (default=10).
+            - Render side-by-side heatmaps with a shared colorbar.
+
+            2. **Statistical mode** (when `statistical_methods` contains "both"/"unique"):
+            - For each dataset and column:
+                * "both": count total non-empty entries.
+                * "unique": count number of unique non-empty values.
+                * If column contains ';', it is exploded before counting.
+                * If column is a combination (e.g., "col1+col2"), values are concatenated
+                    across multiple columns before counting.
+            - Combine results into a single DataFrame.
+            - Render a heatmap or clustered heatmap (`cluster` = 'row', 'col', 'both', 'none').
+
+        Args:
+            *data_names: str or DataFrame
+                Either variable names as strings (evaluated with `eval`) or DataFrame objects directly.
+            columns (list[str]): Columns to analyze (single or combined with '+').
+            statistical_methods (list[str]): Statistical methods applied to each column.
+                Options: "both", "unique". Must align with `columns` in length.
+            colors (str or Colormap): Colormap for the heatmap. Default "coolwarm".
+            count_top (int): Number of top values to include in frequency mode. Default 10.
+            cluster (str): Clustering option: 'row', 'col', 'both', 'none'. Default 'none'.
+            cluster_method (str): Linkage method for hierarchical clustering. Default 'weighted'.
+            minvalue, maxvalue (float): Color scale limits.
+            xaxis_label_show, yaxis_label_show (bool): Whether to show axis labels.
+            xaxis_label_color, yaxis_label_color (str): Label colors.
+            xaxis_label_font_weight, yaxis_label_font_weight (str): Label font weights.
+            xaxis_label_font_size, yaxis_label_font_size (int): Label font sizes.
+            clusterline_width (float): Line width for dendrograms in clustered heatmaps.
+            splitline_width (float): Width of grid lines in the heatmap.
+            splitline_color (str): Color of grid lines in the heatmap.
+            xaxis_title, yaxis_title (str): Titles for axes.
+            xaxis_title_font_size, yaxis_title_font_size (int): Font sizes for axis titles.
+            plot_title (str): Overall plot title.
+            plot_title_font_size (int): Title font size.
+            annotation_font_size (int): Font size for annotated values in non-cluster heatmaps.
+            subfolder (str): Output subfolder under `./plot/`. Default "plot".
+            filename (str): Base name for saved files. Timestamp appended automatically.
+            figure_description (str): Short description of the figure for logging.
+
+        Returns:
+            dict:
+                - "file_path": Path to saved PNG file.
+                - "legend": Figure description.
+
+        Side Effects:
+            - Saves heatmap(s) as PDF and PNG in `./plot/<subfolder>/`.
+            - Crops whitespace from PNG output.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - If `columns` contains a combination (e.g., "col1+col2"), values across columns
+            are concatenated before counting.
+            - Exploded ';'-separated entries are treated as separate values.
+            - In frequency mode, heatmaps are rendered side-by-side with a shared color scale.
+        """
         print('You can choose the camp in following range: ', plt.colormaps())
         
         # 从传入的data_names中生成dataframes
@@ -4516,7 +5708,64 @@ class StrucGAP_DataVisualization:
                        filename = None,
                        figure_description = 'Complex heatmap',
                        ):
-        
+        """
+        Create a complex clustered heatmap with optional row/column annotations.
+
+        This function uses **pyComplexHeatmap (pch)** to generate advanced heatmaps 
+        supporting row/column dendrograms, clustering, splitting, custom annotations, 
+        and flexible styling. It is suitable for high-dimensional omics data visualization.
+
+        Args:
+            data (pd.DataFrame): Input dataframe.
+            columns (list[str]): Columns to include in the heatmap.
+            row_annotation_data (list[pd.Series] or None): Optional row annotation data.
+            row_annotation_data_log2 (list[bool] or None): Whether to log2-transform each row annotation.
+            row_annotation_plot_type (list[str] or None): Plot type for each row annotation.
+                Options: "bar", "scatter".
+            col_annotation_data (list[pd.Series] or None): Optional column annotation data.
+            col_annotation_data_log2 (list[bool] or None): Whether to log2-transform each column annotation.
+            col_annotation_plot_type (list[str] or None): Plot type for each column annotation.
+                Options: "bar", "scatter".
+            z_score (int): Apply z-score normalization (0=row-wise, 1=col-wise, None=off).
+            log2 (bool): Apply log2 transformation to the main data.
+            col_cluster (bool): Whether to cluster columns.
+            row_cluster (bool): Whether to cluster rows.
+            col_cluster_method (str): Linkage method for column clustering. Default 'ward'.
+            row_cluster_method (str): Linkage method for row clustering. Default 'ward'.
+            show_colnames (bool): Whether to display column names.
+            show_rownames (bool): Whether to display row names.
+            col_dendrogram (bool): Whether to display column dendrogram.
+            row_dendrogram (bool): Whether to display row dendrogram.
+            col_split (int): Number of groups to split columns into. Default 2.
+            row_split (int): Number of groups to split rows into. Default 2.
+            tree_line_cmap (str): Colormap for dendrogram tree lines. Default "Dark2".
+            tree_line_width (float): Width of dendrogram tree lines. Default 3.
+            col_split_gap (int): Gap between column split groups.
+            row_split_gap (int): Gap between row split groups.
+            linewidths (float): Width of grid lines in the heatmap. Default 0.1.
+            linecolor (str): Color of grid lines in the heatmap. Default "white".
+            cmap (str): Colormap for the heatmap. Default "coolwarm".
+            subfolder (str): Output subfolder under `./plot/`. Default "plot".
+            filename (str): Base name for output files. Timestamp appended automatically.
+            figure_description (str): Short description of the figure for logging.
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description.
+
+        Side Effects:
+            - Saves the heatmap as PDF and PNG in `./plot/<subfolder>/`.
+            - Trims whitespace around the PNG.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - Row and column annotations can be multiple. 
+            Each is dynamically named (Bar1, Bar2, ...).
+            - Supports log2-transformation separately for main data and annotation data.
+            - Dendrogram styling controlled by `tree_line_cmap` and `tree_line_width`.
+            - Splitting (`row_split`, `col_split`) is useful for grouped datasets.
+        """
         print('You can choose the camp in following range: ', plt.colormaps())
         
         # 主要数据处理
@@ -4693,7 +5942,59 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Line chart',
               ):
-        
+        """
+        Create a customizable line chart with multiple series.
+
+        This function uses **pyecharts Line** to draw line plots supporting:
+        - Multiple series defined by `y_column` groups
+        - Optional stacking (area stacked line chart)
+        - Smooth curves or step lines
+        - Customizable markers, labels, and axis styles
+        - Export to HTML, SVG, PDF, PNG with white border trimming
+
+        Args:
+            data (pd.DataFrame): Input data.
+            y_column (str): Column defining different series (categories).
+            x_columns (list[str]): Columns used as x-axis points.
+            colors (list[str] or None): Custom colors for series. Default color palette if None.
+            if_stack (bool): Whether to stack the series. Default False.
+            is_smooth (bool): Whether to smooth the lines. Default False.
+            area_opacity (float): Opacity of the filled area under the line. Default 0.5.
+            line_width (int): Line thickness. Default 2.
+            symbol (str): Marker symbol type. Options: 'circle', 'rect', 'roundRect', 
+                        'triangle', 'diamond', 'pin', 'arrow', 'none'.
+            symbol_size (int): Marker size. Default 15.
+            is_step (bool): Whether to draw step line. Default False.
+            label_show (bool): Whether to display labels on points. Default False.
+            label_color (str): Label text color.
+            label_font_weight (str): Label font weight. Options: 'normal', 'bold', 'bolder', 'lighter'.
+            label_font_size (int): Label font size.
+            xaxis_* / yaxis_* (various): Control label, line, tick, and splitline styles.
+            legend (list[str] or None): Custom legend names. Defaults to series names.
+            legend_font_size (int): Legend text size. Default 12.
+            plot_title (str): Plot title.
+            xaxis_title (str): X-axis title.
+            yaxis_title (str): Y-axis title.
+            subfolder (str): Output subfolder under `./plot/`. Default "plot".
+            filename (str): Base filename for output files.
+            figure_description (str): Figure description for logging.
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description.
+
+        Side Effects:
+            - Saves interactive chart as HTML, static images as SVG/PDF/PNG.
+            - PNG image is post-processed to remove white border.
+            - Parameters and outputs are logged via `data_manager`.
+
+        Notes:
+            - Supports multi-series plotting by grouping on `y_column`.
+            - Use `if_stack=True` to create stacked area line charts.
+            - Use `is_smooth=True` for smooth curves, `is_step=True` for step lines.
+            - X-axis labels can be wrapped with `xaxis_label_text_split`.
+        """
         data = data.dropna(axis=1, how='all')
         data = data.replace(np.nan, 0)
         
@@ -5005,7 +6306,52 @@ class StrucGAP_DataVisualization:
               filename = None,
               figure_description = 'Scatter plot',
               ):
-        
+        """
+        Create a customizable scatter plot grouped by a categorical column.
+
+        This function uses **pyecharts Scatter** to plot scatter points grouped by 
+        `group_column`, with support for multiple marker shapes, colors, and 
+        comprehensive axis/legend styling. It can export plots to HTML, SVG, PDF, and PNG.
+
+        Args:
+            data (pd.DataFrame): Input dataset.
+            group_column (str): Column to group data (defines separate scatter series).
+            x_column (str): Column for x-axis values.
+            y_column (str): Column for y-axis values.
+            colors (list[str] or None): Custom colors per group. Defaults to a predefined palette.
+            symbols (list[str]): Marker symbols per group. 
+                                Options include: 'circle', 'rect', 'roundRect', 'triangle', 
+                                'diamond', 'pin', 'arrow', 'none'.
+            symbol_size (int): Marker size. Default 15.
+            label_show (bool): Whether to show labels on scatter points.
+            label_color (str): Label text color.
+            label_font_weight (str): Font weight for labels. Options: 'normal', 'bold', 'bolder', 'lighter'.
+            label_font_size (int): Font size for labels.
+            xaxis_* / yaxis_* (various): Parameters to control axis lines, ticks, gridlines, and labels.
+            legend (list[str] or None): Custom legend labels. Defaults to unique values in `group_column`.
+            legend_font_size (int): Font size of the legend text.
+            plot_title (str): Title of the plot.
+            xaxis_title (str): Label for x-axis.
+            yaxis_title (str): Label for y-axis.
+            subfolder (str): Output subfolder under `./plot/`. Default "plot".
+            filename (str): Base filename for saving output files.
+            figure_description (str): Textual description of the figure, recorded in logs.
+
+        Returns:
+            dict:
+                - "file_path": Path to the saved PNG file.
+                - "legend": Figure description.
+
+        Side Effects:
+            - Exports interactive chart as HTML, and static images as SVG/PDF/PNG.
+            - PNG image is post-processed to trim white borders.
+            - Logs parameters and outputs using `data_manager`.
+
+        Notes:
+            - Each unique value in `group_column` is plotted as a separate scatter series.
+            - Use `symbols` and `colors` to customize group-wise appearance.
+            - Axis labels can be wrapped using `xaxis_label_text_split`.
+        """
         data = data.replace(np.nan, 0)
         
         if colors is None:
@@ -5250,7 +6596,55 @@ class StrucGAP_DataVisualization:
                            filename = None,
                            figure_description = 'Up and down scatter plot',
                            ):
+        """
+        Create an up/down scatter plot to visualize fold-change distributions across datasets.
 
+        Each dataset is plotted along the x-axis with log2 fold-change (FC) values on the y-axis.
+        Points above `fc_threshold` are considered "up" (colored `up_color`), while points below 
+        are "down" (colored `down_color`). For each dataset, the up/down counts are displayed 
+        at the top/bottom, and a label is drawn in the center with a bounding box.
+
+        Args:
+            datasets (list[pd.DataFrame]): List of datasets, each containing a 'fc' column.
+            labels (list[str]): Labels corresponding to each dataset.
+            fc_threshold (float): Fold-change cutoff for up/down classification. Default 1.
+            rectangle_width (float): Width of the background rectangle for each dataset.
+            show_xaxis (bool): Whether to show the x-axis line and ticks.
+            spine_width (int): Width of plot spines (borders).
+            ytick_labelsize (int): Font size of y-axis tick labels.
+            scatter_size (int): Size of scatter points.
+            scatter_edgecolor (str): Edge color of scatter points.
+            up_color (str): Color for upregulated points.
+            down_color (str): Color for downregulated points.
+            rectangle_colors (list[str] or None): Background rectangle colors per dataset.
+            bbox_facecolor (str): Background color of dataset labels.
+            bbox_textsize (int): Font size of dataset labels inside bounding box.
+            xaxis_title (str): Label for the x-axis.
+            xaxis_title_font_size (int): Font size for x-axis title.
+            yaxis_title (str): Label for the y-axis.
+            yaxis_title_font_size (int): Font size for y-axis title.
+            plot_title (str): Title of the plot.
+            plot_title_font_size (int): Font size of the plot title.
+            legend (list[str] or None): Custom legend labels. Defaults to ["Up", "Down"].
+            legend_fontsize (int): Font size for legend text.
+            subfolder (str): Subfolder under `./plot/` to save output files.
+            filename (str): Base name for saved files.
+            figure_description (str): Description of the figure for logging.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Side Effects:
+            - Saves the plot as PDF and PNG (trimmed to remove white borders).
+            - Logs parameters and output using `data_manager`.
+
+        Notes:
+            - Up counts are displayed above each dataset, down counts below.
+            - Dataset label is centered inside a rounded box (`bbox_facecolor`).
+            - Jittering is applied in the x-direction to avoid overplotting.
+        """
         def jitter(center, size, width=0.6):
             return np.random.uniform(center - width / 2.3, center + width / 2.3, size=size)
         
@@ -5362,7 +6756,60 @@ class StrucGAP_DataVisualization:
              filename = None,
              figure_description = 'Tree plot',
              ):
-        
+        """
+        Create a hierarchical tree plot from pathway or enrichment results.
+
+        This function visualizes terms (e.g., pathways) as nodes and expands them 
+        into gene members. Each term is abbreviated with a short index (e.g., 0, 1, 2...) 
+        while a legend annotation on the side shows the mapping from abbreviations 
+        to full names.
+
+        Args:
+            data (pd.DataFrame): Input table containing term and gene information.
+                                Must include a `Term` column and a `Genes` column 
+                                (semicolon-separated gene list).
+            node1_column (str): Placeholder, reserved for hierarchical data inputs (not used directly).
+            node2_column (str): Placeholder, reserved for hierarchical data inputs (not used directly).
+            screen_index_value (float): Threshold for filtering terms when `screen_index` is provided.
+            screen_index (str, optional): Column name used to filter terms (e.g., `p.adjust`).
+            colors (list[str], optional): Custom node colors (currently unused).
+            rootname (str): Name of the root node of the tree. Default "pathway".
+            layout (str): Tree layout, one of {"radial", "orthogonal"}. Default "radial".
+            symbol (str): Node shape. Options: {"emptyCircle", "circle", "rect", 
+                            "roundRect", "triangle", "diamond", "pin", "arrow", "none"}.
+            symbol_size (int): Size of node symbols. Default 15.
+            collapse_interval (int): Interval for collapsing tree levels.
+            legend_labels (dict, optional): Mapping of short term IDs to full names.
+                                            Defaults to auto-generated from `Term`.
+            tree_pos_top (str): Vertical position of tree plot (e.g., "30%").
+            tree_pos_right (str): Horizontal position of tree plot (e.g., "50%").
+            label_show (bool): Whether to display node labels.
+            label_color (str): Label font color.
+            label_font_weight (str): Label font weight, e.g., {"normal", "bold"}.
+            label_font_size (int): Label font size.
+            annotation_pos_left (str): Left offset for legend annotation text box.
+            annotation_pos_top (str): Top offset for legend annotation text box.
+            annotation_font_size (int): Font size for legend annotation.
+            plot_title (str, optional): Title of the tree plot.
+            subfolder (str): Subfolder under "./plot/" to save results.
+            filename (str): Base filename for saved outputs.
+            figure_description (str): Description of the figure for logging.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Side Effects:
+            - Saves tree visualization as HTML, SVG, PDF, and PNG.
+            - Trims white borders in the final PNG.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - Terms are automatically abbreviated to numeric IDs for clarity.
+            - The right-hand side annotation shows mapping between short IDs and full term names.
+            - Genes under each term are displayed as leaf nodes.
+        """
         if layout not in ['radial', 'orthogonal']:
             layout = 'radial'
             
@@ -5508,7 +6955,55 @@ class StrucGAP_DataVisualization:
                      filename = None,
                      figure_description = 'Venn diagram',
                      ):
-        
+        """
+        Draw a Venn diagram from multiple datasets.
+
+        This function creates a Venn diagram visualization for 2–5 sets, 
+        using either colormaps or user-provided color lists. 
+        It supports automatic or custom legends and saves the plot in multiple formats.
+
+        Args:
+            *data_names (list of str or pd.Series): Datasets or variable names to visualize. 
+                Each dataset should be a pandas Series or iterable of elements.
+            colors (str or list, optional): 
+                - If a colormap name (e.g., 'viridis', 'coolwarm'), colors are sampled automatically.
+                - If a list of color strings (e.g., ['red', 'blue']), they are applied directly.
+                Default: "Tropic".
+            legend_loc (str): Location of the legend. One of:
+                {"best","upper right","upper left","lower left","lower right",
+                "right","center left","center right","lower center","upper center","center"}.
+            font_name (str): Font family used for labels (default: "Arial").
+            subfolder (str): Subfolder under `./plot/` to save outputs.
+            plot_title (str, optional): Title for the Venn diagram.
+            plot_title_font_size (int): Font size of the title.
+            number_fontsize (int): Font size for numbers inside diagram regions.
+            legend (list[str] or str, optional): Custom legend labels. 
+                If None, dataframe variable names are used.
+            legend_fontsize (int): Font size of the legend labels.
+            filename (str, optional): Base filename for saving files.
+            figure_description (str): Description for logging purposes.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Side Effects:
+            - Saves the Venn diagram as PDF and PNG files.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - Supports 2–5 sets (depending on backend `matplotlib-venn` / `venn` package).
+            - If dataset variable names are not accessible, defaults to "unknown".
+            - Uses `venn` package for visualization, which provides flexible styling.
+
+        Example:
+            >>> set1 = pd.Series(['A', 'B', 'C', 'D'])
+            >>> set2 = pd.Series(['C', 'D', 'E', 'F'])
+            >>> set3 = pd.Series(['A', 'E', 'G'])
+            >>> viz.venn_diagram(set1, set2, set3, colors=['red','blue','green'],
+            ...                  plot_title="3-way Venn", filename="example")
+        """
         print('You can choose colors in following range: ', plt.colormaps())
         print("\n or enter a color list like ['red', 'blue']")
         
@@ -5549,7 +7044,10 @@ class StrucGAP_DataVisualization:
                     dataframe_names.append("unknown")  # 如果变量名未知，标记为未知
 
         sets = {name: set(series) for name, series in zip(dataframe_names, dataframes)}
-        venn_diagram = venn(sets, cmap=colors, fontsize=number_fontsize)
+        if isinstance(colors, (list, tuple)):
+            venn_diagram = venn(sets, colors=colors, fontsize=number_fontsize)
+        else:
+            venn_diagram = venn(sets, cmap=colors, fontsize=number_fontsize)
         handles = [plt.Line2D([0], [0], color=venn_diagram.patches[i].get_facecolor(), lw=4) 
                    for i in range(len(dataframe_names))]
         
@@ -5601,7 +7099,47 @@ class StrucGAP_DataVisualization:
                    filename = None,
                    figure_description = 'Upset plot',
                    ):
+        """
+        Draw an UpSet plot for multiple datasets.
 
+        This function visualizes set intersections across multiple datasets 
+        using an UpSet plot (a scalable alternative to Venn diagrams). 
+        It supports 2 or more sets and outputs publication-ready figures.
+
+        Args:
+            *data_names (list of str or pd.Series): 
+                Datasets (Series, list, or set) or variable names to include in the UpSet plot.
+            colors (str, optional): Color for intersection bars. 
+                Accepts matplotlib color names or hex codes. Default: 'navyblue'.
+            font_name (str, optional): Font family for all text. Default: 'Arial'.
+            legend_loc (str, optional): Legend location (not heavily used in UpSet plots). 
+                One of {"best","upper right","upper left","lower left","lower right",
+                "right","center left","center right","lower center","upper center","center"}.
+            legend_fontsize (int, optional): Font size of the legend labels. Default: 12.
+            subfolder (str, optional): Subfolder under `./plot/` to save outputs. Default: "plot".
+            filename (str, optional): Base filename for saving files. Default: None.
+            figure_description (str, optional): Description for logging. Default: "Upset plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Side Effects:
+            - Saves the UpSet plot as both PDF and PNG files.
+            - Logs parameters and outputs via `data_manager`.
+
+        Notes:
+            - Works best when there are more than 3 sets (where Venn diagrams become unreadable).
+            - Uses the `UpSetPlot` library for visualization.
+            - `show_counts` and `show_percentages` are enabled by default.
+
+        Example:
+            >>> set1 = pd.Series(['A','B','C','D'])
+            >>> set2 = pd.Series(['C','D','E'])
+            >>> set3 = pd.Series(['B','E','F','G'])
+            >>> viz.upset_plot(set1, set2, set3, colors='darkred', filename="example_upset")
+        """
         plt.rcParams['font.family'] = font_name
         dataframes = [
                 eval(name) if isinstance(name, str) else name
@@ -5722,7 +7260,42 @@ class StrucGAP_DataVisualization:
                     filename = None,
                     figure_description = 'Violin plot',
                     ):  
-        
+        """
+        Draw a violin plot with two groups per item, scatter overlay, and p-value annotations.
+
+        Args:
+            data (pd.DataFrame): Input data.
+            item_column (str): Column name specifying the items (e.g., features).
+            item_name (list of str): List of item names to plot.
+            group1_columns (list of str): Column names for group 1 values.
+            group2_columns (list of str): Column names for group 2 values.
+            p_data (pd.DataFrame): DataFrame containing p-values for each item.
+            p_column (str): Column name in `p_data` with p-values.
+            colors (list, optional): Two colors for group1 and group2 violins.
+            showmeans (bool, optional): Whether to show the mean line. Default False.
+            showmedians (bool, optional): Whether to show the median line. Default True.
+            violin_width (float, optional): Width of violins. Default 0.5.
+            scatter_alpha (float, optional): Transparency of scatter points. Default 0.7.
+            scatter_color (str, optional): Color of scatter points. Default 'black'.
+            line_color (str, optional): Color of violin borders and median line. Default 'black'.
+            add_group_lines (bool, optional): Whether to draw separator lines between groups. Default True.
+            p_text_offset (float, optional): Vertical offset for p-value text. Default 0.05.
+            xaxis_title, yaxis_title, plot_title (str, optional): Axis and plot titles.
+            filename (str, optional): Base name for output files.
+            subfolder (str, optional): Folder under ./plot/ to save outputs. Default 'plot'.
+            figure_description (str, optional): Figure description for logging. Default 'Violin plot'.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - Each item has two violins (group1 and group2).
+            - Scatter points are overlaid for raw values.
+            - p-values from `p_data` are annotated above violins.
+            - Outputs are saved as PDF and PNG files, with white border automatically trimmed.
+        """
         if colors is None:
             colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
                       "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"]
@@ -5884,7 +7457,44 @@ class StrucGAP_DataVisualization:
                     filename = None,
                     figure_description = 'Volcano plot',
                     ):  
-        
+        """
+        Generate a volcano plot for fold-change and p-value visualization.
+
+        Args:
+            data (pd.DataFrame): Input data.
+            fc_column (str): Column name for fold change values.
+            p_column (str): Column name for p-values.
+            fc (float, optional): Base for log transformation of fold change. Default = 2.
+            p_value (float, optional): Threshold for significance. Default = 0.05.
+            color_na, opacity_na, size_na: Appearance of non-significant points.
+            color_middle, opacity_middle, size_middle: Appearance of significant but moderate FC points.
+            color_right, opacity_right, size_right: Appearance of significantly up-regulated points.
+            color_left, opacity_left, size_left: Appearance of significantly down-regulated points.
+            p_line_color, p_line_linestyle, p_line_linewidth: Style of p-value threshold line.
+            fc_line_right_color, fc_line_right_linestyle, fc_line_right_linewidth: Style of right FC threshold line.
+            fc_line_left_color, fc_line_left_linestyle, fc_line_left_linewidth: Style of left FC threshold line.
+            plot_title (str, optional): Plot title.
+            plot_title_font_size (int, optional): Font size of plot title. Default = 20.
+            subfolder (str, optional): Output subfolder under ./plot/. Default = 'plot'.
+            filename (str, optional): Base filename for output files.
+            figure_description (str, optional): Description used for logging. Default = 'Volcano plot'.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - Fold change values are log-transformed to base `fc`.
+            - P-values are transformed to -log10(p).
+            - Data points are categorized into four groups:
+                * Non-significant (p >= threshold)
+                * Significant with moderate FC
+                * Significantly up-regulated
+                * Significantly down-regulated
+            - Threshold lines for p-value and FC are drawn automatically.
+            - Output includes PDF and PNG with trimmed borders.
+        """
         data_g = data[[fc_column,p_column]]
         data_g[fc_column] = np.log(data_g[fc_column])/np.log(fc)
         data_g['MinusLog10PValue'] = -np.log10(data_g[p_column])
@@ -5972,7 +7582,41 @@ class StrucGAP_DataVisualization:
                 filename = None,
                 figure_description = 'Dot plot',
                 ):
-        
+        """
+        Generate a clustered dot plot with column annotations.
+
+        Args:
+            data (pd.DataFrame): Input data containing enrichment results or gene set statistics.
+            category (str): Column name representing dataset categories (e.g., conditions, groups).
+            p_column (str): Column name containing p-values for sorting significance.
+            top (int): Number of top terms per category to include (lowest p-values).
+            term (str): Column name containing term names (e.g., pathways, GO terms).
+            dot_color_column (str): Column name to map dot color (e.g., enrichment score).
+            dot_size_column (str): Column name to map dot size (e.g., count or hits/total).
+            annotation_cmap (str, optional): Colormap for top annotation (categories). Default = "Pastel2".
+            col_split (bool, optional): Whether to split columns by dataset category. Default = True.
+            row_cluster (bool, optional): Whether to cluster rows. Default = False.
+            col_cluster (bool, optional): Whether to cluster columns. Default = True.
+            dot_cmap (str, optional): Colormap for dot colors. Default = "RdYlGn".
+            xaxis_font_size (int, optional): Font size for x-axis labels. Default = 20.
+            yaxis_font_size (int, optional): Font size for y-axis labels. Default = 20.
+            subfolder (str, optional): Output subfolder under ./plot/. Default = "plot".
+            filename (str, optional): Base filename for saved output.
+            figure_description (str, optional): Description string for logging. Default = "Dot plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - For each category, the top `top` terms with lowest p-values are selected.
+            - `dot_size_column` values are automatically converted from "hits/total" format
+            to integer counts (only numerator is used).
+            - Column annotations show dataset categories with colors from `annotation_cmap`.
+            - Supports optional clustering of rows/columns and splitting by category.
+            - Output files include both PDF and PNG versions with trimmed borders.
+        """
         gene_set_categories = data[category].unique()
 
         top10_list = []
@@ -6053,7 +7697,41 @@ class StrucGAP_DataVisualization:
                 filename = None,
                 figure_description = 'Dot plot',
                 ):
-        
+        """
+        Generate a clustered dot plot with row annotations.
+
+        Args:
+            data (pd.DataFrame): Input data containing enrichment results or gene set statistics.
+            category (str): Column name representing dataset categories (e.g., experimental groups).
+            p_column (str): Column name containing p-values for sorting significance.
+            top (int): Number of top terms per category to include (lowest p-values).
+            term (str): Column name containing term names (e.g., pathways, GO terms).
+            dot_color_column (str): Column name mapped to dot colors (e.g., enrichment score).
+            dot_size_column (str): Column name mapped to dot sizes (e.g., "hits/total" format, converted to ratio).
+            annotation_cmap (str, optional): Colormap for row annotations. Default = "Pastel2".
+            row_split (bool, optional): Whether to split rows by category. Default = True.
+            row_cluster (bool, optional): Whether to cluster rows. Default = True.
+            col_cluster (bool, optional): Whether to cluster columns. Default = False.
+            dot_cmap (str, optional): Colormap for dot colors. Default = "RdYlGn".
+            xaxis_font_size (int, optional): Font size for x-axis labels. Default = 20.
+            yaxis_font_size (int, optional): Font size for y-axis labels. Default = 20.
+            subfolder (str, optional): Output subfolder under ./plot/. Default = "plot".
+            filename (str, optional): Base filename for saved output.
+            figure_description (str, optional): Description string for logging. Default = "Dot plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - For each category, the top `top` terms with lowest p-values are selected.
+            - `dot_size_column` values are expected in "hits/total" format and are converted
+            to the ratio (hits ÷ total).
+            - Row annotations (`annotation_cmap`) indicate the category of each term.
+            - Supports optional clustering of rows/columns and row splitting.
+            - Output files include both PDF and PNG versions with trimmed borders.
+        """
         print('You can choose the camp in following range: ', plt.colormaps())
         
         gene_set_categories = data[category].unique()
@@ -6142,7 +7820,52 @@ class StrucGAP_DataVisualization:
                         filename = None,
                         figure_description = 'Dot plot',
                         ):
-        
+        """
+        Generate a two-dimensional dot plot (dotplot) with both row and column categories.
+
+        This function creates a clustered dot plot where:
+            - The x-axis represents datasets (from `col_category`).
+            - The y-axis represents terms or gene sets (from `row_category`).
+            - Dot size encodes values from `dot_size_column` (e.g., hits/total ratio).
+            - Dot color encodes values from `dot_color_column` (e.g., enrichment score or fold change).
+            - Rows/columns can optionally include category annotations and be split by categories.
+
+        Args:
+            data (pd.DataFrame): Input dataframe containing enrichment results or gene set statistics.
+            row_category (str): Column name defining row categories (e.g., gene set group).
+            col_category (str): Column name defining column categories (e.g., datasets).
+            p_column (str): Column name containing p-values used for ranking.
+            top (int): Number of top terms (lowest p-values) per category to include.
+            term (str): Column name containing the term or pathway names.
+            dot_color_column (str): Column name mapped to dot color scale.
+            dot_size_column (str): Column name mapped to dot sizes. If formatted as "hits/total",
+                                it will be converted into a ratio.
+            annotate_rows (bool, optional): Whether to show row annotation for row categories. Default = False.
+            annotate_cols (bool, optional): Whether to show column annotation for column categories. Default = False.
+            col_split (bool, optional): Whether to split columns by category. Default = True.
+            row_split (bool, optional): Whether to split rows by category. Default = True.
+            annotation_cmap (str, optional): Colormap for annotations. Default = "Pastel2".
+            dot_cmap (str, optional): Colormap for dot colors. Default = "RdYlGn".
+            xaxis_font_size (int, optional): Font size of x-axis labels. Default = 20.
+            yaxis_font_size (int, optional): Font size of y-axis labels. Default = 20.
+            subfolder (str, optional): Output subfolder under `./plot/`. Default = "plot".
+            filename (str, optional): Base filename for saved outputs. Default = None.
+            figure_description (str, optional): Description string for logging. Default = "Dot plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - The function selects the top `top` terms with the lowest p-values for each combination
+            of `row_category` × `col_category`.
+            - If `dot_size_column` contains values like "5/100", they are converted to ratios (e.g., 0.05).
+            - Annotations (`annotate_rows` / `annotate_cols`) add extra categorical information
+            alongside the heatmap axes.
+            - Supports row/column splitting for improved visualization of grouped categories.
+            - The output includes both PDF and PNG formats, with white borders trimmed.
+        """
         data_set_categories = data[col_category].unique()
         gene_set_categories = data[row_category].unique()
     
@@ -6294,7 +8017,59 @@ class StrucGAP_DataVisualization:
                 filename = None,
                 figure_description = 'Sankey & dot plot',
                 ):
-        
+        """
+        Generate a combined Sankey diagram and dot plot for enriched terms and their associated genes.
+
+        This function integrates two visualization styles:
+            1. Sankey diagram: Shows relationships between genes (left nodes) and enriched terms (right nodes),
+            where links represent gene-term associations.
+            2. Dot plot: Highlights term-level statistics (e.g., significance, overlap ratio), where
+            dot color encodes values from a specified column, and dot size encodes gene overlap counts.
+
+        Args:
+            data (pd.DataFrame): Input dataframe containing enrichment results.
+            category (str): Column name specifying the dataset or category grouping terms.
+            p_column (str): Column name containing p-values, used to rank top terms.
+            top (int): Number of top terms (lowest p-values) to select per category.
+            term (str): Column name containing term names (e.g., pathways).
+            dot_color_column (str): Column mapped to dot colors (e.g., -log10(p-value)).
+            dot_size_column (str): Column mapped to dot size. Values like "5/100" will be converted to ratios.
+            genes (str): Column containing gene lists (semicolon-separated) for each term.
+
+            colors_term (list, optional): List of colors to assign categories in the Sankey diagram.
+            color_node (list, optional): Additional node color settings. Default = None.
+            annotation_cmap (str, optional): Colormap for annotations. Default = "mrybm".
+            dot_cmap (str, optional): Colormap for dot plot coloring. Default = "rainbow".
+
+            sankey_node_fontsize (int, optional): Font size for Sankey node labels. Default = 6.
+            sankey_node_padding (float, optional): Padding between Sankey nodes. Default = 1.5.
+            sankey_node_width (int, optional): Node width in Sankey diagram. Default = 50.
+
+            dot_xaxis_fontsize (int, optional): Font size of x-axis labels in dot plot. Default = 20.
+            dot_size_min (int, optional): Minimum dot size in dot plot. Default = 10.
+            dot_opacity (float, optional): Transparency of dots (0–1). Default = 1.
+
+            axis_line_color (str, optional): Color of axis lines in dot plot. Default = "black".
+            axis_line_width (float, optional): Line width for axes. Default = 3.
+            grid_line_color (str, optional): Gridline color. Default = "grey".
+            grid_line_width (float, optional): Gridline width. Default = 2.
+
+            subfolder (str, optional): Output subfolder under `./plot/`. Default = "plot".
+            filename (str, optional): Base filename for saved outputs. Default = None.
+            figure_description (str, optional): Description string for logging. Default = "Sankey & dot plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Notes:
+            - The Sankey diagram links individual genes (sources) to enriched terms (targets).
+            - Dot plot encodes overlap ratio on the x-axis, with dot size proportional to hit counts.
+            - Only the top `top` terms (lowest p-values) per category are included.
+            - Colors for terms are derived from `colors_term`, while gene nodes are assigned colors automatically.
+            - Outputs are saved as both `.pdf` and `.png` with trimmed white borders.
+        """
         # print('You can choose the cmap in following range: ', plt.colormaps())
         
         if colors_term is None:
@@ -6571,7 +8346,54 @@ class StrucGAP_DataVisualization:
                             filename = None,
                             figure_description = 'Dimension reduction plot',
                             ):
-        
+        """
+        Perform dimensionality reduction (PCA, t-SNE, or UMAP) and visualize samples in 2D with group annotations.
+
+        This function reduces high-dimensional data (e.g., expression or intensity values) into
+        two dimensions using PCA, t-SNE, or UMAP. Samples are plotted as scatter points, optionally
+        grouped by experimental conditions with distinct markers, colors, and confidence ellipses.
+
+        Args:
+            data (pd.DataFrame): Input data matrix with features as rows and samples as columns.
+            data_columns (list[str]): List of columns in `data` to include in dimensionality reduction.
+            sample_group (pd.DataFrame): DataFrame mapping sample IDs (index) to group labels 
+                (must contain a column named 'group').
+            filter_data (pd.DataFrame or None): Optional filtering DataFrame (e.g., differential expression results). 
+                If provided, only samples/genes passing thresholds are kept.
+            p_column (str): Column name in `filter_data` containing p-values for filtering.
+            p_value (float): P-value threshold; only entries below this threshold are retained.
+            fc (float): Fold-change threshold; entries outside [1/fc, fc] are retained.
+            method (str, optional): Dimensionality reduction method: 'pca', 'tsne', or 'umap'. Default = 'tsne'.
+            dimension_number (int, optional): Number of dimensions to reduce to (usually 2 or 3). Default = 3.
+            colors (list, optional): List of colors for groups. Default uses preset color palette.
+            marker_shape (list, optional): List of matplotlib marker styles for groups. Default = ['o', 'v'].
+            marker_size (list, optional): Marker sizes for groups. Default = [100, 100].
+            marker_alpha (list, optional): Transparency of markers (0–1). Default = [1, 1].
+            ellipse_alpha (float, optional): Transparency of group confidence ellipses. Default = 0.3.
+            ellipse_linestyle (str, optional): Line style for ellipses ('-', '--', '-.', ':'). Default = '-'.
+            ellipse_linewidth (int, optional): Line width of ellipses. Default = 4.
+            axis_line_width (int, optional): Width of axis lines. Default = 3.
+            axis_line_color (str, optional): Color of axis lines. Default = "black".
+            subfolder (str, optional): Subdirectory for saving results. Default = 'plot'.
+            random_state (int or None, optional): Random seed for reproducibility. Default = None.
+            show_labels (bool, optional): Whether to annotate sample points with labels. Default = False.
+            plot_title (str, optional): Title of the plot. Default = None.
+            plot_title_font_size (int, optional): Font size of plot title. Default = 20.
+            filename (str, optional): Base filename for saving results. Default = None.
+            figure_description (str, optional): Description string for logging. Default = "Dimension reduction plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG plot file.
+                - "legend" (str): Figure description for downstream reporting.
+
+        Notes:
+            - PCA is deterministic; t-SNE and UMAP are stochastic, so results vary unless `random_state` is fixed.
+            - If `filter_data` is provided, only significant and fold-change-filtered features are used.
+            - Groups in `sample_group` are assigned colors and markers in plotting.
+            - Confidence ellipses are drawn using group covariance to approximate data spread.
+            - Outputs include `.pdf` and `.png` files with trimmed borders.
+        """
         if colors is None:
             colors = ["#bd221f", "#099eda", "#fee301", "#abb7bd", "#A07EBA", "#293a6e", 
                       "#d6c223", "#6ebb53", "#d75d73", "#e63b29", "#e0592b", "#58b7b3"]
@@ -6676,7 +8498,7 @@ class StrucGAP_DataVisualization:
         plt.savefig(os.path.join(output_dir, f'{filename}_{method}_{timestamp}.pdf'),dpi=900, bbox_inches='tight')
         png_file = os.path.join(output_dir, f'{filename}_{method}_{timestamp}.png')
         plt.savefig(png_file,dpi=900, bbox_inches='tight')
-        plt.show()
+        # plt.show()
         
         png_file = png_file
         image = Image.open(png_file)
@@ -6705,7 +8527,58 @@ class StrucGAP_DataVisualization:
                      filename = None,
                      figure_description = 'Network plot',
                      ):
-        
+        """
+        Construct and visualize a pathway–protein interaction network using STRING database.
+
+        This function builds a bipartite network of pathways and proteins, integrating STRING 
+        protein–protein interaction (PPI) data to visualize both pathway–protein associations 
+        and intra-protein interactions. Nodes representing pathways and proteins are 
+        drawn with customizable sizes, and multi-pathway proteins are shown as pie-chart 
+        nodes with multiple colors.
+
+        Args:
+            data (pd.DataFrame): Input table containing enrichment results or associations, 
+                with at least columns for terms, genes, and p-values.
+            term (str): Column name in `data` containing pathway/term identifiers.
+            gene (str): Column name in `data` containing associated genes (semicolon-separated).
+            p_column (str): Column name containing p-values.
+            p (float): P-value threshold; only terms below this cutoff are used.
+            species (int, optional): STRING taxonomy ID for the species (default = 10090 for mouse).
+            pathway_size (int, optional): Node size for pathway nodes. Default = 1500.
+            pathway_font_size (int, optional): Font size for pathway labels. Default = 0 (hidden).
+            protein_size (int, optional): Node size for protein nodes. Default = 800.
+            protein_font_size (int, optional): Font size for protein labels. Default = 0 (hidden).
+            pathway_protein_weight (float, optional): Edge width for pathway–protein connections. Default = 2.
+            subfolder (str, optional): Subdirectory under `./plot/` to save results. Default = 'plot'.
+            filename (str, optional): Base filename for output files. Default = None.
+            figure_description (str, optional): Text description of the figure. Default = "Network plot".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file of the network plot.
+                - "legend" (str): Figure description (for downstream reporting).
+
+        Notes:
+            - This function uses the STRING database API (version 12.0) to retrieve protein–protein 
+            interactions (PPIs). An internet connection is required.
+            - Pathways are represented as colored nodes; proteins connected to multiple pathways 
+            are drawn as pie-chart nodes with multiple colors.
+            - Both PDF and PNG versions of the plot are saved in the specified subfolder.
+            - Edges:
+                * Pathway–protein edges: fixed width (`pathway_protein_weight`).
+                * Protein–protein edges: weighted by STRING combined score.
+            - Outputs are trimmed to remove white margins.
+
+        Example:
+            >>> vis.network_plot(data=df, 
+                                term='Pathway', 
+                                gene='Genes', 
+                                p_column='pvalue', 
+                                p=0.05, 
+                                species=9606,
+                                filename='KEGG_network')
+            # Returns a dict with file path and description, and saves PDF/PNG plots.
+        """
         data = data[data[p_column] < p]
         data = data[[term, gene]]
         genes_split = data[gene].str.split(';', expand=True)
@@ -6928,10 +8801,331 @@ class StrucGAP_DataVisualization:
         return {'file_path': os.path.join(output_dir, '{filename}_network_plot_{timestamp}.png'), 
                 'legend': figure_description}
     
+    def glyconetwork(self, network_dict, regulation_type, 
+                                  feature, 
+                                  fc_scale=300, 
+                                  overlap_scale=15, 
+                                  center_scale=3000,
+                                  center_node_fontsize = 20,
+                                  other_node_fontsize = 18,
+                                  subfolder='plot',
+                                  filename = None,
+                                  figure_description = 'Network',):
+        """
+        Visualize a glycan-centered regulatory network.
+
+        This function constructs and plots a directed network for a selected glycan feature, 
+        integrating enzymes, glycan-binding proteins (GBPs), and downstream pathways. 
+        The glycan center serves as the hub, with upstream regulators (enzymes/GBPs) 
+        connected by correlation-weighted edges, and downstream pathways connected 
+        according to enrichment overlaps. Node sizes are scaled by fold change or overlap, 
+        and edges are colored according to regulatory effect.
+
+        Args:
+            network_dict (dict): Nested dictionary containing network data in the format:
+                network_dict[regulation_type][feature] = {
+                    'glycan_center': {'id': ..., 'fc': ...},
+                    'enzymes': [{'id': ..., 'type': 'enzyme', 'fc': ..., 'edge_weight': ...}, ...],
+                    'gbps': [{'id': ..., 'type': 'GBP', 'fc': ..., 'edge_weight': ...}, ...],
+                    'pathway': [{'term': ..., 'overlap': ...}, ...]
+                }
+            regulation_type (str): The regulation category (e.g., "up", "down").
+            feature (str): The glycan feature to visualize as the network center.
+            fc_scale (float, optional): Scaling factor for enzyme/GBP node sizes by fold change. Default = 300.
+            overlap_scale (float, optional): Scaling factor for downstream pathway node sizes by overlap. Default = 15.
+            center_scale (float, optional): Fixed size for the glycan center node. Default = 3000.
+            center_node_fontsize (int, optional): Font size for the center node label. Default = 20.
+            other_node_fontsize (int, optional): Font size for other node labels. Default = 18.
+            subfolder (str, optional): Subdirectory under `./plot/` for saving outputs. Default = 'plot'.
+            filename (str, optional): Base filename for outputs. Default = None.
+            figure_description (str, optional): Description of the figure for logging. Default = "Network".
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Visualization details:
+            - **Nodes**:
+                * Center (glycan feature): Purple (#5C0A98), fixed size.
+                * Enzymes: Orange (#E99E75), size proportional to |fold change| × `fc_scale`.
+                * GBPs: Brown (#776483), size proportional to |fold change| × `fc_scale`.
+                * Pathways: Gray, size proportional to overlap × `overlap_scale`.
+            - **Edges**:
+                * Enzyme/GBP → glycan: Blue (#3558AE) for positive correlation, 
+                Pink (#B64074) for negative correlation.
+                * Glycan → pathway: Green (#1F5F5B), weighted by overlap.
+            - Legends for node types and edge types are automatically added.
+
+        Output:
+            - PDF and PNG plots are saved in `./plot/{subfolder}/` with time-stamped filenames.
+            - White margins are trimmed from the PNG.
+            - Parameters and outputs are logged via `self.data_manager`.
+
+        Example:
+            >>> vis.glyconetwork(network_dict=my_network,
+                                regulation_type='up',
+                                feature='HexNAc',
+                                filename='glyco_up_HexNAc')
+            # Saves PDF/PNG network plot and returns file path + description.
+        """
+        net = network_dict[regulation_type][feature]
+        G = nx.DiGraph()
+
+        # 1. 添加中心节点
+        glycan_center_id = net['glycan_center']['id']
+        glycan_center_fc = net['glycan_center']['fc']
+        G.add_node(glycan_center_id, label=feature, type='center', size=center_scale)
+
+        # 2. 添加上游节点及边
+        for node in net['enzymes'] + net['gbps']:
+            G.add_node(node['id'], label=node['id'], type=node['type'], size=abs(node['fc']*fc_scale))
+            G.add_edge(node['id'], glycan_center_id, color='#3558AE' if node['edge_weight'] > 0 else '#B64074',
+                       weight=max(0.5, abs(node['edge_weight'])*8), label=f"{node['edge_weight']:.2f}")
+
+        # 3. 添加下游节点及边
+        for node in net['pathway']:
+            term = node['term']
+            G.add_node(term, label=term, type='pathway', size=(node['overlap'] or 1)*overlap_scale)
+            G.add_edge(glycan_center_id, term, color='#1F5F5B', weight=max(0.5, (node['overlap'] or 1)/2))
+
+        # ==== 定义手工布局 ====
+        pos = {}
+        # 假设中心节点为(0, 0)，上游在左，下游在右
+        center_pos = np.array([0, 0])
+        r1 = 5
+        
+        # 上游节点在左（π到2π）
+        upstream = [n for n in G.nodes if G.nodes[n]['type'] in ('enzyme', 'GBP')]
+        # 上游节点均匀分布在左侧
+        n_up = len(upstream)
+        for i, n in enumerate(upstream):
+            # θ: 135°~225°（π*3/4~π*5/4），均匀分布，保证全部在左侧
+            theta = (3*np.pi/4) + (np.pi/2) * (i+1)/(n_up+1)
+            pos[n] = np.array([
+                center_pos[0] + r1 * np.cos(theta),
+                center_pos[1] + r1 * np.sin(theta)
+            ])        
+        # 下游节点在右（0到π）
+        downstream = [n for n in G.nodes if G.nodes[n]['type']=='pathway']
+        n_down = len(downstream)
+        for i, n in enumerate(downstream):
+            # θ: -45°~+45°（-π/4~+π/4），全部在右侧
+            theta = (-np.pi/4) + (np.pi/2) * (i+1)/(n_down+1)
+            pos[n] = np.array([
+                center_pos[0] + r1 * np.cos(theta),
+                center_pos[1] + r1 * np.sin(theta)
+            ])
+            
+        # 中心节点
+        pos[glycan_center_id] = center_pos
+
+        # ==== 绘图 ====
+        node_sizes = [G.nodes[n]['size'] for n in G.nodes]
+        node_colors = [
+            '#5C0A98' if G.nodes[n]['type']=='center' else
+            '#E99E75' if G.nodes[n]['type']=='enzyme' else
+            '#776483' if G.nodes[n]['type']=='GBP' else
+            'gray'
+            for n in G.nodes
+        ]
+        edge_colors = [G[u][v]['color'] for u,v in G.edges]
+        edge_widths = [G[u][v]['weight'] for u,v in G.edges]
+
+        plt.figure(figsize=(13,10))
+        nx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color=node_colors, alpha=0.95)
+        
+        def get_radius(node_size, k=1600):
+            return np.sqrt(node_size/np.pi)/k
+
+        ax = plt.gca()
+        r_dict = {n: get_radius(G.nodes[n]['size']) for n in G.nodes}
+        
+        for u, v in G.edges:
+            x1, y1 = pos[u]
+            x2, y2 = pos[v]
+            r_src = r_dict[u]
+            r_dst = r_dict[v]
+            dx, dy = x2-x1, y2-y1
+            dist = np.hypot(dx, dy)
+            dx, dy = dx/dist, dy/dist
+        
+            # 判断是上游->中心还是中心->下游
+            if v == glycan_center_id:
+                # 上游→中心，缩短终点（到中心节点外圈）
+                x1_new = x1 + dx * r_src * 40
+                y1_new = y1 + dy * r_src * 40
+                x2_new = x2 - dx * r_dst * 30  # 稍微大于1，防止被盖住
+                y2_new = y2 - dy * r_dst * 30
+            elif u == glycan_center_id:
+                # 中心→下游，缩短起点（从中心节点外圈出发）
+                x1_new = x1 + dx * r_src * 35
+                y1_new = y1 + dy * r_src * 35
+                x2_new = x2 - dx * r_dst * 35
+                y2_new = y2 - dy * r_dst * 35
+            else:
+                # 其它边（默认）
+                x1_new = x1 + dx * r_src
+                y1_new = y1 + dy * r_src
+                x2_new = x2 - dx * r_dst
+                y2_new = y2 - dy * r_dst
+        
+            color = G[u][v]['color']
+            width = G[u][v]['weight']
+            arrow = FancyArrowPatch(
+                (x1_new, y1_new), (x2_new, y2_new),
+                arrowstyle='-|>',
+                color=color,
+                linewidth=width,
+                mutation_scale=28,
+                alpha=0.9,
+                zorder=1
+            )
+            ax.add_patch(arrow)
+        
+        for n in G.nodes:
+            x, y = pos[n]
+            label = G.nodes[n]['label']
+            if n == glycan_center_id:  # 中心节点
+                plt.text(x, y + 0.15*r1, label, ha='center', va='bottom', fontsize=14, fontweight='bold')
+                if len(G.nodes) == 1:
+                    margin = 2
+                    plt.xlim(x - margin, x + margin)
+                    plt.ylim(y - margin, y + margin)
+            elif n in upstream:  # 上游
+                plt.text(x - 0.05*r1, y, label, ha='right', va='center', fontsize=12)
+            elif n in downstream:  # 下游
+                plt.text(x + 0.05*r1, y, label, ha='left', va='center', fontsize=12)
+            else:
+                plt.text(x, y, label, ha='center', va='center', fontsize=12)
+        # nx.draw_networkx_labels(G, pos, labels={n:G.nodes[n]['label'] for n in G.nodes}, font_size=12)
+        # plt.title(f"Glyco Network for {feature}", fontsize=20)
+        plt.axis('off')
+        plt.tight_layout()
+        
+        if len(G.nodes) != 1:
+            # 获取中心节点坐标
+            x_center, y_center = pos[glycan_center_id]
+            r_center = get_radius(G.nodes[glycan_center_id]['size'])
+            # ---- 1. 节点图例（上方） ----
+            node_legend_handles = [
+                mpatches.Circle((0, 0), radius=0.1, color='#E99E75', label='Enzyme'),
+                mpatches.Circle((0, 0), radius=0.1, color='#776483', label='Glycan-binding protein'),
+                mpatches.Circle((0, 0), radius=0.1, color='gray', label='Downstream pathway')
+            ]
+            legend_y_gap = 2.9  # 与中心节点的距离（可以微调）
+            legend_y = y_center + legend_y_gap
+            legend_x = x_center
+            circle_colors = ['#E99E75', '#776483', 'gray']
+            circle_labels = ['Enzyme', 'Glycan-binding protein', 'Downstream pathway']
+            for i, (c, lab) in enumerate(zip(circle_colors, circle_labels)):
+                plt.scatter([legend_x - 1.3], [legend_y - i*0.3], s=450, color=c, zorder=10)
+                plt.text(legend_x - 0.9, legend_y - i*0.3, lab, va='center', ha='left', fontsize=14)
+            # ---- 2. 连线图例（下方） ----
+            edge_legend_handles = [
+                mlines.Line2D([], [], color='#3558AE', linewidth=5, label='Positive correlation'),
+                mlines.Line2D([], [], color='#B64074', linewidth=5, label='Negative correlation'),
+                mlines.Line2D([], [], color='#1F5F5B', linewidth=5, label='Pathway overlap')
+            ]
+            edge_legend_y_gap = 2.3  # 下方距离
+            edge_legend_y = y_center - edge_legend_y_gap
+            edge_legend_x = x_center
+            for i, handle in enumerate(edge_legend_handles):
+                plt.plot([edge_legend_x - 1.5, edge_legend_x -1],
+                         [edge_legend_y - i*0.3, edge_legend_y - i*0.3],
+                         color=handle.get_color(), linewidth=handle.get_linewidth())
+                plt.text(edge_legend_x - 0.9, edge_legend_y - i*0.3, handle.get_label(), va='center', ha='left', fontsize=14)
+        
+        # plt.show()
+        
+        output_dir = os.path.join('./plot', subfolder)
+        os.makedirs(output_dir, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        plt.savefig(os.path.join(output_dir, f'{regulation_type}_{feature}_network_{timestamp}.pdf'), format='pdf')
+        png_file = os.path.join(output_dir, f'{regulation_type}_{feature}_network_{timestamp}.png')
+        plt.savefig(png_file, format='png')
+        plt.close()
+        
+        png_file = png_file
+        image = Image.open(png_file)
+        trimmed_image = self.trim_white_border(image)
+        trimmed_image.save(png_file)
+
+        # 自动获取所有参数
+        params = locals()
+        # 去掉不需要记录的局部变量 'self'
+        params.pop('self')
+        # 使用data_manager记录这些参数
+        self.data_manager.log_params('StrucGAP_DataVisualization', 'glyconetwork', params)
+        self.data_manager.log_output('StrucGAP_DataVisualization', 'glyconetwork',f'{regulation_type}_{feature}_network.pdf')
+
+        return {'file_path': os.path.join(output_dir, f'{regulation_type}_{feature}_network_{timestamp}.png'), 
+                'legend': figure_description}
+    
     def draw_glycans(self, chain_list, linewidth=0.2,
                      subfolder='plot',
                      figure_description = 'Glycans plot',
                      filename = None):
+        """
+        Visualize glycan chain structures as symbolic tree-like diagrams.
+
+        This function parses simplified string representations of glycan chains
+        into hierarchical tree structures, applies color and layout rules,
+        and renders each glycan in a separate subplot. Nodes are drawn with
+        specific shapes and colors depending on monosaccharide type, and 
+        branches are connected with lines. Optional fucose (F5) residues are 
+        drawn as special side branches.
+
+        Args:
+            chain_list (list of str): 
+                List of glycan chain strings to visualize. 
+                Each chain string encodes branching with uppercase letters for opening 
+                residues (with numeric types, e.g., 'A1', 'B2', 'F5') and lowercase letters 
+                for branch closures.
+                Example: "A1B2b" (root A1 with child B2, then branch closed).
+            linewidth (float, optional): 
+                Line width for edges and node borders. Default = 0.2.
+            subfolder (str, optional): 
+                Subdirectory under `./plot/` for saving outputs. Default = 'plot'.
+            figure_description (str, optional): 
+                Text description of the figure, logged in metadata. Default = 'Glycans plot'.
+            filename (str, optional): 
+                Base filename for saving figures (without extension). Default = None.
+
+        Returns:
+            dict:
+                - "file_path" (str): Path to the saved PNG file.
+                - "legend" (str): Figure description.
+
+        Visualization details:
+            - **Node types (num_type → color & marker):**
+                * 1 → Green circle (`#00C832`)
+                * 2 → Blue square (`#0000FA`)
+                * 3 → Purple diamond (`#C800C8`)
+                * 4 → White diamond
+                * 5 → Red triangle (`#FA0000`, typically fucose)
+            - **Branching logic:**
+                * Uppercase + digit starts a branch (e.g., 'A1').
+                * Lowercase closes the matching branch (e.g., 'a' closes 'A').
+                * F5 nodes (fucose) attach laterally as `fucose_child`.
+            - **Layout:**
+                * X-coordinates assigned to center branches evenly.
+                * Y-coordinates increase by `level_gap` for each level.
+                * Fucose (F5) residues are placed at a side offset.
+            - **Labels:**
+                * Each chain string is annotated below its corresponding diagram.
+
+        Output:
+            - One subplot per glycan chain.
+            - PDF and PNG files saved in `./plot/{subfolder}/` with a timestamp.
+            - Parameters and outputs logged using `self.data_manager`.
+
+        Example:
+            >>> vis.draw_glycans(["A1B2b", "C1D1dE2e"])
+            # Generates and saves glycan diagrams for both chains.
+        """
         # 内部 Node 类（每个节点记录字母、类型、颜色、坐标等信息）
         class Node:
             def __init__(self, letter, num_type):
@@ -7057,21 +9251,38 @@ class StrucGAP_DataVisualization:
                 px, py = node.parent.x, node.parent.y
                 ax.plot([px, node.x], [py, node.y], color='black', linewidth=linewidth, zorder=1)
             # 根据 num_type 设置不同形状
-            if node.num_type == 1:
-                marker = 'o'
-                size = 400
-            elif node.num_type == 2:
-                marker = 's'
-                size = 400
-            elif node.num_type in (3, 4):
-                marker = 'D'
-                size = 200
-            elif node.num_type == 5:
-                marker = '<'
-                size = 400
+            if version.parse(matplotlib.__version__) > version.parse("3.5.3"):
+                if node.num_type == 1:
+                    marker = 'o'
+                    size = 12
+                elif node.num_type == 2:
+                    marker = 's'
+                    size = 12
+                elif node.num_type in (3, 4):
+                    marker = 'D'
+                    size = 6
+                elif node.num_type == 5:
+                    marker = '<'
+                    size = 12
+                else:
+                    marker = 'o'
+                    size = 12
             else:
-                marker = 'o'
-                size = 400
+                if node.num_type == 1:
+                    marker = 'o'
+                    size = 400
+                elif node.num_type == 2:
+                    marker = 's'
+                    size = 400
+                elif node.num_type in (3, 4):
+                    marker = 'D'
+                    size = 200
+                elif node.num_type == 5:
+                    marker = '<'
+                    size = 400
+                else:
+                    marker = 'o'
+                    size = 400
             ax.scatter(node.x, node.y, s=size, marker=marker, 
                        facecolor=node.color, edgecolor='black', linewidths=linewidth, zorder=2)
             if node.fucose_child:
@@ -7205,7 +9416,8 @@ class StrucGAP_DataVisualization:
         """
         return chr(ord('a') + num - 1)
     
-    def compose_figures(self, output_path: str, figure_name: str = None, custom_sizes: list = None):
+    def compose_figures(self, output_path: str, figure_name: str = None, custom_sizes: list = None,
+                       pdf_description: str = None, pdf_description_bg_color='white'):
         """
         Composes a combined PDF of figures, allowing for custom image area assignments.
     
@@ -7252,6 +9464,27 @@ class StrucGAP_DataVisualization:
 
         # 创建画布
         c = canvas.Canvas(output_path, pagesize=A4)
+        # -------- 添加标题区域（不影响图像布局） --------
+        if pdf_description:
+            title_font_size = 10
+            title_padding = 4  # 上下 padding，适配10号字体
+            title_height = 21
+            c.setFillColor(HexColor(pdf_description_bg_color))  
+            c.rect(
+                0, 
+                page_height - title_height, 
+                page_width, 
+                title_height, 
+                stroke=0, 
+                fill=1
+            )
+            c.setFillColor(HexColor("#000000"))  
+            c.setFont("Helvetica-Bold", title_font_size)
+            c.drawString(
+                2 * mm, 
+                page_height - title_height + 6,  
+                pdf_description
+            )
 
         # -------- 绘制图片部分 --------
         max_row = 0  # 记录图片占用的最大行数（从0开始）

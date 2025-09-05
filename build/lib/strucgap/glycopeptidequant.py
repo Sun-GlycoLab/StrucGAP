@@ -103,6 +103,19 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 糖肽定量分析模块--86
 class StrucGAP_GlycoPeptideQuant:
+    """
+    Parameters:
+        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess), to be further processed by StrucGAP_GlycoPeptideQuant.
+        data_manager: Data manager instance, such as 'data_manager' if data_manager = StrucGAP_InsightTracker().
+        data_type: Specifies which preprocessing stage data 
+            to use from `gs_data`. Options are:
+            - "psm_filtered"
+            - "cv_filtered"
+            - "outliers_filtered"
+            - "data"
+            Default is "psm_filtered".
+    
+    """
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered'):
         self.gs_data = gs_data
         self.sample_group = self.gs_data.sample_group
@@ -291,8 +304,12 @@ class StrucGAP_GlycoPeptideQuant:
             n1 = len(control)
             n2 = len(sample)
             SE1 = np.sqrt((roc_auc * (1 - roc_auc) + (n1 - 1) * ((roc_auc / (2-roc_auc)) - roc_auc**2) + (n2 - 1) * ((2 * roc_auc**2 / (1+roc_auc)) - roc_auc**2)) / (n1 * n2))
-            z1 = (roc_auc - 0.5) / SE1
-            p_value1 = 2 * (1 - stats.norm.cdf(abs(z1)))
+            if SE1 == 0 or np.isnan(SE1):
+                z1 = np.nan
+                p_value1 = 1.0
+            else:
+                z1 = (roc_auc - 0.5) / SE1
+                p_value1 = 2 * (1 - stats.norm.cdf(abs(z1)))
             pvaluelist.append(p_value1)
 
         roc_result['auc'] = auclist
@@ -462,6 +479,7 @@ class StrucGAP_GlycoPeptideQuant:
         up_data_overview = pd.DataFrame()
         up_data_overview['item'] = ['Glycan', 'Glycanpeptide', 'Glycanprotein', 'Glycosite']
         temp_data1 = self.up_data[['ProteinID','structure_coding']]
+        temp_data1 = temp_data1.copy()
         temp_data1['ProteinID'] = temp_data1['ProteinID'].str.split(';')
         temp_data1 = temp_data1.explode(['ProteinID'])
         temp_data2 = pd.DataFrame(self.up_data[['ProteinID', 'Glycosite_Position']])
@@ -477,6 +495,7 @@ class StrucGAP_GlycoPeptideQuant:
         down_data_overview = pd.DataFrame()
         down_data_overview['item'] = ['Glycan', 'Glycanpeptide', 'Glycanprotein', 'Glycosite']
         temp_data1 = self.down_data[['ProteinID','structure_coding']]
+        temp_data1 = temp_data1.copy()
         temp_data1['ProteinID'] = temp_data1['ProteinID'].str.split(';')
         temp_data1 = temp_data1.explode(['ProteinID'])
         temp_data2 = pd.DataFrame(self.down_data[['ProteinID', 'Glycosite_Position']])
@@ -703,13 +722,14 @@ class StrucGAP_GlycoPeptideQuant:
         
         return GlycanComposition_rank
     
-    def threshold_variation_analysis(self, statistic_index=None, pvalue_type='pvalue_ttest'):
+    def threshold_variation_analysis(self, statistic_index=None, pvalue_type='pvalue_ttest', fc_range = None):
         """
         Explores how glycan substructural regulation varies across a range of index thresholds.
         
         Parameters:
             statistic_index: the statistic index ('fc', 'roc', 'ml', 'pca', 'anova', 'chi2') would like to use for threshold variation analysis.
             pvalue_type: 'pvalue_ttest', 'pvalue_mannwhitneyu' or 'pvalue_ttest_mannwhitneyu'.
+            fc_range: fc threshold variation analysis, default: [1.2, 1.5, 2, 2.5, 3], you can set the fc range in 5 point, such as [5, 6, 7, 8, 9].
         
         Returns:
             self.result_branches_structure
@@ -861,8 +881,13 @@ class StrucGAP_GlycoPeptideQuant:
             result_lacdinac_ratio = pd.DataFrame(index=self.data[self.data['lacdinac'] != ' ']['lacdinac'].str.split(', ', expand=True).stack().reset_index(level=1, drop=True).to_frame('lacdinac').value_counts().index)
             result_fucosylated_type_ratio = pd.DataFrame(index=self.data[self.data['fucosylated type'] != ' ']['fucosylated type'].value_counts().index)
             result_acgc_ratio = pd.DataFrame(index=self.data[self.data['Ac/Gc'] != ' ']['Ac/Gc'].value_counts().index)
+            
+            if fc_range:
+                print("Note: You have customized the parameter fc_range, but the table headers in the analysis results still use [1.2, 1.5, 2, 2.5, 3] as thresholds, e.g. ['Branches', 'fc>1.2', 'fc>1.5', 'fc>2', 'fc>2.5', 'fc>3']. Please replace the FC thresholds in order accordingly; the subsequent code will be updated to address this issue.")
+            else:
+                fc_range = [1.2, 1.5, 2, 2.5, 3]
 
-            for i in [1.2, 1.5, 2, 2.5, 3]:
+            for i in fc_range:
                 unique_branches = set()
                 for branches_str in result['Branches'].value_counts().index:
                     branches_list = literal_eval(branches_str)

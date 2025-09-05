@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Started &mdash; StrucGAP 1.0.8 documentation</title>
+  <title>Get Started &mdash; StrucGAP 1.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -24,7 +24,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="StrucGAP_Preprocess Module" href="preprocess.html" />
+    <link rel="next" title="Troubleshooting guide" href="troubleshooting%20guide.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#id1">Get Started</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting%20guide.html">Troubleshooting guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">MODULES</span></p>
 <ul>
@@ -89,6 +90,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Get Started</li>
       <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Sun-GlycoLab/StrucGAP/blob/get_started.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -216,7 +218,7 @@
 <span class="kn">from</span> <span class="nn">strucgap.glyconetwork</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycoNetwork</span>
 <span class="kn">from</span> <span class="nn">strucgap.datavisualization</span> <span class="kn">import</span> <span class="n">StrucGAP_DataVisualization</span>
 <span class="kn">from</span> <span class="nn">strucgap.insighttracker</span> <span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
-
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="c1"># Initialization</span>
 <span class="n">data_manager</span> <span class="o">=</span> <span class="n">StrucGAP_InsightTracker</span><span class="p">()</span>
 <span class="c1"># Setting the result storage path (folder)</span>
@@ -230,11 +232,13 @@
                   <span class="n">branch_list_dir</span> <span class="o">=</span> <span class="s2">&quot;tests/branch_structures_18_mice uterus.0240401.xlsx&quot;</span><span class="p">,</span>
                   <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">data_cleaning</span><span class="p">(</span><span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;tmt&#39;</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">cv_raw</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">fdr</span><span class="p">(</span><span class="n">feature_type</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
-<span class="n">module1</span><span class="o">.</span><span class="n">outliers</span><span class="p">(</span><span class="n">abundance_ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">1.172277596</span><span class="p">,</span><span class="mf">1.142983373</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.46390136</span><span class="p">,</span><span class="mf">1.466662624</span><span class="p">,</span>
-<span class="mf">1.449428354</span><span class="p">,</span><span class="mf">1.109519196</span><span class="p">,</span><span class="mf">1.387464059</span><span class="p">,</span><span class="mf">1.291746761</span><span class="p">,</span><span class="mf">1.487440464</span><span class="p">])</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">outliers</span><span class="p">(</span><span class="n">abundance_ratio</span><span class="o">=</span><span class="p">[</span><span class="mf">1.172277596</span><span class="p">,</span><span class="mf">1.142983373</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.46390136</span><span class="p">,</span><span class="mf">1.466662624</span><span class="p">,</span><span class="mf">1.449428354</span><span class="p">,</span><span class="mf">1.109519196</span><span class="p">,</span><span class="mf">1.387464059</span><span class="p">,</span><span class="mf">1.291746761</span><span class="p">,</span><span class="mf">1.487440464</span><span class="p">],</span>
+             <span class="n">samplewise_normalization</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">threshold</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">psm</span><span class="p">(</span><span class="n">psm_number</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
+<span class="n">module1</span><span class="o">.</span><span class="n">annotation</span><span class="p">(</span><span class="n">glytoucan</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">biosynthetic_pathways</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">glycobiology_filter</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="n">module1</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
 <span class="c1"># ... Other analysis</span>
 </pre></div>
@@ -248,7 +252,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="preprocess.html" class="btn btn-neutral float-right" title="StrucGAP_Preprocess Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="troubleshooting%20guide.html" class="btn btn-neutral float-right" title="Troubleshooting guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
