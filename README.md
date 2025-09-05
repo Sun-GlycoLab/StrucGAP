@@ -10,6 +10,7 @@ View the [**documentation**](https://strucgap.readthedocs.io/en/latest/index.htm
 
 ```bash
 pip install strucgap
+```
 
 ## Troubleshooting
 
@@ -47,7 +48,7 @@ pip install pandas==1.3.5
 ```
 
 ### Q4: `ModuleNotFoundError: No module named 'importlib.metadata'`
-### Cause: This package is included in the Python standard library only since version 3.8.
+Cause: This package is included in the Python standard library only since version 3.8.
 
 **A4:**
 ```bash
