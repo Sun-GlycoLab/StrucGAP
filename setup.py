@@ -15,6 +15,7 @@ setup(
         'pandas',
         'numpy',
         'scipy',
+        'statsmodels',
         'scikit-learn',
         'xgboost',
         'tqdm',
