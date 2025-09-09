@@ -109,6 +109,9 @@ from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from collections import OrderedDict
 from typing import Any, Optional
+from collections import defaultdict
+from collections import Counter
+from collections import defaultdict, deque
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 数据质控模块--7
@@ -1870,12 +1873,14 @@ class StrucGAP_Preprocess:
         #
         return self
     
-    def annotation(self, glytoucan = True, biosynthetic_pathways = False, glycobiology_filter = True):
+    def annotation(self, glytoucan = True, glytoucan_structure = False, glytoucan_wurcs_file = None,
+                   biosynthetic_pathways = False, glycobiology_filter = True):
         """
         Glycan plausibility annotation, whereby each glycan composition is mapped to GlyTouCan identifiers, cross-checked against KEGG biosynthetic rules, and further evaluated by rule-based filters derived from biosynthetic logic and chemical constraints, with user-selectable exclusion of implausible glycans.
         
         Parameters:
             glytoucan: whether the glycan composition has been annotated by GlyTouCan.
+            glytoucan_structure: whether the plausible glycan structure has been annotated by GlyTouCan.
             biosynthetic_pathways: whether the glycan composition has been annotated by KEGG biosynthetic pathways.
             glycobiology_filter: whether the glycan composition has been annotated by rule-based filters.
         
@@ -1980,6 +1985,144 @@ class StrucGAP_Preprocess:
             # 回填到原DataFrame
             df[col_out] = df[col_in].astype(str).map(mapping)
             return df
+        ## Glytoucan structure
+        UP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        LOW = "abcdefghijklmnopqrstuvwxyz"
+        def residue_to_digit(res_desc: str) -> int:
+            """
+            残基描述 → 数字编码
+            优先级：5（deoxyhexose/Fuc）> 4（*NCCO/3=O）> 3（Aad+*NCC/3=O）> 2（*NCC/3=O）> 1（默认 Hex）
+            """
+            s = res_desc or ""
+            # 5：Fuc 等去氧糖（常见 a1221m-...）
+            if "1221m" in s:
+                return 5
+            # 4：HexA 等（你给的 G4 场景：*NCCO/3=O）
+            if "*NCCO/3=O" in s:
+                return 4
+            # 3：唾液酸（示例：Aad... 且 *NCC/3=O）
+            if "Aad" in s and "*NCC/3=O" in s:
+                return 3
+            # 2：HexNAc（含 *NCC/3=O）
+            if "*NCC/3=O" in s:
+                return 2
+            # 1：默认 Hex
+            return 1
+
+        def parse_wurcs(wurcs: str):
+            """
+            返回:
+              - node_order: ['a','b',...]
+              - node_to_resid: {'a':'1', ...}
+              - resid_to_desc: {'1':'[...]', ...}
+              - edges: 有序列表 [(parent, child), ...]  支持 a?-b1、g2-f3|f6、e4~n 等
+            """
+            # 1) 拆出连接片段（最后一个 / 后面）
+            prefix, topology = wurcs.rsplit("/", 1)
+            # 2) 拆出节点序列（倒数第二个 / 后面）
+            prefix2, node_seq = prefix.rsplit("/", 1)
+            # 残基列表（逐一编号 1,2,3...）
+            resid_list = re.findall(r"\[([^\]]+)\]", prefix2)
+            resid_to_desc = {str(i+1): desc for i, desc in enumerate(resid_list)}
+            # 节点序列（a,b,c,... 对应 1-2-3-...）
+            node_res_seq = node_seq.split("-")
+            node_order = [chr(ord('a') + i) for i in range(len(node_res_seq))]
+            node_to_resid = {node: node_res_seq[i] for i, node in enumerate(node_order)}
+            # 3) 解析连接：保持“有序列表”，不要用 set
+            edges = []
+            for token in topology.split("_"):
+                token = token.strip()
+                if not token:
+                    continue
+                # 形如：
+                #   a4-b1
+                #   a?-b1
+                #   g2-f3|f6
+                #   e4~n   （这种没有 '-'，要跳过）
+                m = re.match(r'^([a-z])[0-9\?]*-(.+)$', token)
+                if not m:
+                    # 例如 e4~n 没有 '-'，不是父子连边，忽略
+                    continue
+                parent = m.group(1)
+                right = m.group(2)
+                # 多候选子节点用 '|' 分割；每一段只取首个子字母
+                for part in right.split("|"):
+                    cm = re.match(r'([a-z])[0-9\?]*', part)
+                    if cm:
+                        child = cm.group(1)
+                        edges.append((parent, child))
+            return node_order, node_to_resid, resid_to_desc, edges
+
+        def build_tree(edges, start='a'):
+            """
+            无向生成树：
+            - 用 edges 构造无向图；
+            - 以 start ('a') 为根（若不在图内则取最小字母）做 BFS，得到父子关系；
+            - children 按字母序排列（后续还会在 DFS 时把 num==5 的孩子放到最后）。
+            返回: root, children, reached_nodes
+            """
+            # 无向邻接表
+            adj = defaultdict(list)
+            nodes = set()
+            for u, v in edges:
+                adj[u].append(v); adj[v].append(u)
+                nodes.add(u); nodes.add(v)
+            if not nodes:
+                return None, {}, set()
+            root = start if start in nodes else min(nodes)
+            # BFS 构造生成树
+            parent = {root: None}
+            order = [root]
+            q = deque([root])
+            while q:
+                u = q.popleft()
+                # 相邻节点按字母序，保证输出稳定
+                for v in sorted(adj[u]):
+                    if v not in parent:
+                        parent[v] = u
+                        order.append(v)
+                        q.append(v)
+            # 构建 children
+            children = defaultdict(list)
+            for v, p in parent.items():
+                if p is not None:
+                    children[p].append(v)
+            for k in children:
+                children[k] = sorted(children[k])
+            return root, children, set(order)
+
+        def wurcs_to_custom(wurcs: str) -> str | None:
+            try:
+                node_order, node_to_resid, resid_to_desc, edges = parse_wurcs(wurcs)
+                # 用无向生成树来还原父子关系（以 'a' 为首选根）
+                root, children, nodes = build_tree(edges, start='a')
+                if root is None:
+                    return None
+                # 节点数字映射
+                node_digit = {}
+                for node in nodes:
+                    resid = node_to_resid.get(node)
+                    if resid is None:
+                        return None
+                    desc = resid_to_desc.get(resid, "")
+                    node_digit[node] = residue_to_digit(desc)
+                # DFS 输出；把 num==5 的孩子排到最后，避免 F5fF1
+                out = []
+                def dfs(node: str, depth: int):
+                    if depth >= len(UP):
+                        raise ValueError("Tree depth exceeds supported levels.")
+                    out.append(f"{UP[depth]}{node_digit[node]}")
+                    ordered = sorted(children.get(node, []), key=lambda ch: (node_digit[ch] == 5, ch))
+                    for ch in ordered:
+                        dfs(ch, depth + 1)
+                    out.append(LOW[depth])
+                dfs(root, 0)
+                return "".join(out)
+            except Exception:
+                return None
+        
+        
+        
         ## kegg
         # ============== 全局配置（可按需调） ==============
         TIMEOUT = 20                 # 单次请求超时（秒）
@@ -2293,6 +2436,81 @@ class StrucGAP_Preprocess:
         #
         if glytoucan:
             self.data_psm_filtered = add_glytoucan_ids(self.data_psm_filtered, col_in="GlycanComposition", col_out="Glytoucan id")
+        #
+        if glytoucan_structure:
+            df = pd.read_csv(glytoucan_wurcs_file)
+            df["structure_coding"] = df["WURCS"].apply(wurcs_to_custom)
+            df_grouped = (
+                df.groupby("structure_coding")["GlyTouCan ID"]
+                  .apply(lambda x: ",".join(x))
+                  .reset_index()
+            )
+            df_grouped = df_grouped.rename(columns={"GlyTouCan ID": "GlyTouCan ID", 
+                                                    "structure_coding": "structure_coding"})
+            def extract_branches(code: str):
+                """
+                从结构编码中提取“分支字符串”多重集（忽略顺序）：
+                1) 去掉前缀 A?B?C?（如 A2B2C1）；若不存在就不去掉；
+                2) 用小写字母块分割；保留非空段（如 D1E2F1G4）。
+                """
+                if not isinstance(code, str):
+                    return []
+                # 去掉前缀 A[1-5]B[1-5]C[1-5]
+                s = re.sub(r'^A[1-5]B[1-5]C[1-5]', '', code)
+                # 按小写字母分割，得到每个分支的“顺序串”
+                segs = [seg for seg in re.split(r'[a-z]+', s) if seg]
+                return segs
+
+            def structure_signature(code: str) -> str:
+                """
+                组合签名：
+                - part1: 大写+数字对 以及 小写字母 的种类与计数（全局计数）
+                - part2: 分支多重集（去掉 A?B?C? 前缀后，按小写切分得到的分支串的多重集），忽略分支顺序
+                返回可比较的稳定字符串签名。
+                """
+                if not isinstance(code, str):
+                    return None
+                # 全局计数（大写+数字对 + 小写字母）
+                caps_pairs = re.findall(r'[A-Z][1-5]', code)
+                lowers = re.findall(r'[a-z]', code)
+                cnt_all = Counter(caps_pairs + lowers)
+                part1 = "|".join(f"{k}:{cnt_all[k]}" for k in sorted(cnt_all.keys()))
+                # 分支多重集（忽略顺序）
+                branches = extract_branches(code)
+                cnt_br = Counter(branches)
+                part2 = "|".join(f"{k}:{cnt_br[k]}" for k in sorted(cnt_br.keys()))
+                return f"{part1}||BR||{part2}"
+            
+            left = self.data_psm_filtered.copy()
+            left = left.assign(structure_coding=left.index)
+            left["__sig__"] = left["structure_coding"].map(structure_signature)
+            right = df_grouped.copy()
+            # right = right.assign(structure_coding=right.index)
+            right["__sig__"] = right["structure_coding"].map(structure_signature)
+            def _agg_glytoucan(series):
+                ids = []
+                for s in series.dropna().astype(str):
+                    ids.extend([x.strip() for x in s.split(",") if x.strip()])
+                ids = sorted(set(ids))
+                return ",".join(ids)
+            right_agg = (
+                right.groupby("__sig__", dropna=False)
+                     .agg({"GlyTouCan ID": _agg_glytoucan})
+                     .reset_index()
+                     .rename(columns={"GlyTouCan ID": "GlyTouCan structure"})
+            )
+            left["__sig__"] = left["__sig__"].astype("object")
+            right_agg["__sig__"] = right_agg["__sig__"].astype("object")
+            ra = right_agg.set_index("__sig__")
+            ra.index = ra.index.astype("object")
+            result_both = left.join(ra["GlyTouCan structure"], on="__sig__")
+            result_both = result_both.drop(columns="__sig__")
+            # result_both = left.join(
+            #     right_agg.set_index("__sig__")["GlyTouCan structure"],
+            #     on="__sig__"
+            # )
+            # result_both = result_both.drop(columns="__sig__")
+            self.data_psm_filtered = result_both
         #
         if biosynthetic_pathways:
             df = self.data_psm_filtered.copy()
