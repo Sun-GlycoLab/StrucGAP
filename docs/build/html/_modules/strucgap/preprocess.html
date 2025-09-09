@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.preprocess &mdash; StrucGAP 1.0.9 documentation</title>
+  <title>strucgap.preprocess &mdash; StrucGAP 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -65,7 +65,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">USAGE</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28StrucGP%29.html">Tutorials(StrucGP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28MSFragger-Glyco%29.html">Tutorials(MSFragger-Glyco)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28pGlyco3%29.html">Tutorials(pGlyco3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Glyco-Decipher%29.html">Tutorials(Glyco-Decipher)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Byonic%29.html">Tutorials(Byonic)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28GlycanFinder%29.html">Tutorials(GlycanFinder)</a></li>
 </ul>
 
         </div>
@@ -204,6 +209,9 @@
 <span class="kn">from</span> <span class="nn">requests.adapters</span> <span class="kn">import</span> <span class="n">HTTPAdapter</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">deque</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 数据质控模块--7</span>
@@ -1965,12 +1973,14 @@
         <span class="c1">#</span>
         <span class="k">return</span> <span class="bp">self</span></div>
     
-<div class="viewcode-block" id="StrucGAP_Preprocess.annotation"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.annotation">[docs]</a>    <span class="k">def</span> <span class="nf">annotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">glytoucan</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">biosynthetic_pathways</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">glycobiology_filter</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_Preprocess.annotation"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.annotation">[docs]</a>    <span class="k">def</span> <span class="nf">annotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">glytoucan</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">glytoucan_structure</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">glytoucan_wurcs_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="n">biosynthetic_pathways</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">glycobiology_filter</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Glycan plausibility annotation, whereby each glycan composition is mapped to GlyTouCan identifiers, cross-checked against KEGG biosynthetic rules, and further evaluated by rule-based filters derived from biosynthetic logic and chemical constraints, with user-selectable exclusion of implausible glycans.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            glytoucan: whether the glycan composition has been annotated by GlyTouCan.</span>
+<span class="sd">            glytoucan_structure: whether the plausible glycan structure has been annotated by GlyTouCan.</span>
 <span class="sd">            biosynthetic_pathways: whether the glycan composition has been annotated by KEGG biosynthetic pathways.</span>
 <span class="sd">            glycobiology_filter: whether the glycan composition has been annotated by rule-based filters.</span>
 <span class="sd">        </span>
@@ -2075,6 +2085,144 @@
             <span class="c1"># 回填到原DataFrame</span>
             <span class="n">df</span><span class="p">[</span><span class="n">col_out</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col_in</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">df</span>
+        <span class="c1">## Glytoucan structure</span>
+        <span class="n">UP</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
+        <span class="n">LOW</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyz&quot;</span>
+        <span class="k">def</span> <span class="nf">residue_to_digit</span><span class="p">(</span><span class="n">res_desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            残基描述 → 数字编码</span>
+<span class="sd">            优先级：5（deoxyhexose/Fuc）&gt; 4（*NCCO/3=O）&gt; 3（Aad+*NCC/3=O）&gt; 2（*NCC/3=O）&gt; 1（默认 Hex）</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">res_desc</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1"># 5：Fuc 等去氧糖（常见 a1221m-...）</span>
+            <span class="k">if</span> <span class="s2">&quot;1221m&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">5</span>
+            <span class="c1"># 4：HexA 等（你给的 G4 场景：*NCCO/3=O）</span>
+            <span class="k">if</span> <span class="s2">&quot;*NCCO/3=O&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">4</span>
+            <span class="c1"># 3：唾液酸（示例：Aad... 且 *NCC/3=O）</span>
+            <span class="k">if</span> <span class="s2">&quot;Aad&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="ow">and</span> <span class="s2">&quot;*NCC/3=O&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">3</span>
+            <span class="c1"># 2：HexNAc（含 *NCC/3=O）</span>
+            <span class="k">if</span> <span class="s2">&quot;*NCC/3=O&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">2</span>
+            <span class="c1"># 1：默认 Hex</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+        <span class="k">def</span> <span class="nf">parse_wurcs</span><span class="p">(</span><span class="n">wurcs</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            返回:</span>
+<span class="sd">              - node_order: [&#39;a&#39;,&#39;b&#39;,...]</span>
+<span class="sd">              - node_to_resid: {&#39;a&#39;:&#39;1&#39;, ...}</span>
+<span class="sd">              - resid_to_desc: {&#39;1&#39;:&#39;[...]&#39;, ...}</span>
+<span class="sd">              - edges: 有序列表 [(parent, child), ...]  支持 a?-b1、g2-f3|f6、e4~n 等</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># 1) 拆出连接片段（最后一个 / 后面）</span>
+            <span class="n">prefix</span><span class="p">,</span> <span class="n">topology</span> <span class="o">=</span> <span class="n">wurcs</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># 2) 拆出节点序列（倒数第二个 / 后面）</span>
+            <span class="n">prefix2</span><span class="p">,</span> <span class="n">node_seq</span> <span class="o">=</span> <span class="n">prefix</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># 残基列表（逐一编号 1,2,3...）</span>
+            <span class="n">resid_list</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]+)\]&quot;</span><span class="p">,</span> <span class="n">prefix2</span><span class="p">)</span>
+            <span class="n">resid_to_desc</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="n">desc</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resid_list</span><span class="p">)}</span>
+            <span class="c1"># 节点序列（a,b,c,... 对应 1-2-3-...）</span>
+            <span class="n">node_res_seq</span> <span class="o">=</span> <span class="n">node_seq</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="n">node_order</span> <span class="o">=</span> <span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node_res_seq</span><span class="p">))]</span>
+            <span class="n">node_to_resid</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">node_res_seq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node_order</span><span class="p">)}</span>
+            <span class="c1"># 3) 解析连接：保持“有序列表”，不要用 set</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">topology</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># 形如：</span>
+                <span class="c1">#   a4-b1</span>
+                <span class="c1">#   a?-b1</span>
+                <span class="c1">#   g2-f3|f6</span>
+                <span class="c1">#   e4~n   （这种没有 &#39;-&#39;，要跳过）</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^([a-z])[0-9\?]*-(.+)$&#39;</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+                    <span class="c1"># 例如 e4~n 没有 &#39;-&#39;，不是父子连边，忽略</span>
+                    <span class="k">continue</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># 多候选子节点用 &#39;|&#39; 分割；每一段只取首个子字母</span>
+                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">right</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">):</span>
+                    <span class="n">cm</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([a-z])[0-9\?]*&#39;</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">cm</span><span class="p">:</span>
+                        <span class="n">child</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">parent</span><span class="p">,</span> <span class="n">child</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">node_order</span><span class="p">,</span> <span class="n">node_to_resid</span><span class="p">,</span> <span class="n">resid_to_desc</span><span class="p">,</span> <span class="n">edges</span>
+
+        <span class="k">def</span> <span class="nf">build_tree</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            无向生成树：</span>
+<span class="sd">            - 用 edges 构造无向图；</span>
+<span class="sd">            - 以 start (&#39;a&#39;) 为根（若不在图内则取最小字母）做 BFS，得到父子关系；</span>
+<span class="sd">            - children 按字母序排列（后续还会在 DFS 时把 num==5 的孩子放到最后）。</span>
+<span class="sd">            返回: root, children, reached_nodes</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># 无向邻接表</span>
+            <span class="n">adj</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+                <span class="n">adj</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">);</span> <span class="n">adj</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">u</span><span class="p">);</span> <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">start</span> <span class="k">if</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">else</span> <span class="nb">min</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="c1"># BFS 构造生成树</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="p">{</span><span class="n">root</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">root</span><span class="p">]</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+            <span class="k">while</span> <span class="n">q</span><span class="p">:</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="c1"># 相邻节点按字母序，保证输出稳定</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">adj</span><span class="p">[</span><span class="n">u</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parent</span><span class="p">:</span>
+                        <span class="n">parent</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+                        <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                        <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="c1"># 构建 children</span>
+            <span class="n">children</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">children</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                <span class="n">children</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">root</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">wurcs_to_custom</span><span class="p">(</span><span class="n">wurcs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">node_order</span><span class="p">,</span> <span class="n">node_to_resid</span><span class="p">,</span> <span class="n">resid_to_desc</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">parse_wurcs</span><span class="p">(</span><span class="n">wurcs</span><span class="p">)</span>
+                <span class="c1"># 用无向生成树来还原父子关系（以 &#39;a&#39; 为首选根）</span>
+                <span class="n">root</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">build_tree</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="c1"># 节点数字映射</span>
+                <span class="n">node_digit</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+                    <span class="n">resid</span> <span class="o">=</span> <span class="n">node_to_resid</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">resid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+                    <span class="n">desc</span> <span class="o">=</span> <span class="n">resid_to_desc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resid</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">node_digit</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">residue_to_digit</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+                <span class="c1"># DFS 输出；把 num==5 的孩子排到最后，避免 F5fF1</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">UP</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Tree depth exceeds supported levels.&quot;</span><span class="p">)</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">UP</span><span class="p">[</span><span class="n">depth</span><span class="p">]</span><span class="si">}{</span><span class="n">node_digit</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">ordered</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">children</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">[]),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ch</span><span class="p">:</span> <span class="p">(</span><span class="n">node_digit</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ch</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">ordered</span><span class="p">:</span>
+                        <span class="n">dfs</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LOW</span><span class="p">[</span><span class="n">depth</span><span class="p">])</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        
+        
+        
         <span class="c1">## kegg</span>
         <span class="c1"># ============== 全局配置（可按需调） ==============</span>
         <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">20</span>                 <span class="c1"># 单次请求超时（秒）</span>
@@ -2388,6 +2536,81 @@
         <span class="c1">#</span>
         <span class="k">if</span> <span class="n">glytoucan</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">add_glytoucan_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">,</span> <span class="n">col_in</span><span class="o">=</span><span class="s2">&quot;GlycanComposition&quot;</span><span class="p">,</span> <span class="n">col_out</span><span class="o">=</span><span class="s2">&quot;Glytoucan id&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">glytoucan_structure</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">glytoucan_wurcs_file</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;WURCS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">wurcs_to_custom</span><span class="p">)</span>
+            <span class="n">df_grouped</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">)[</span><span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">]</span>
+                  <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+                  <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">df_grouped</span> <span class="o">=</span> <span class="n">df_grouped</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">:</span> <span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">,</span> 
+                                                    <span class="s2">&quot;structure_coding&quot;</span><span class="p">:</span> <span class="s2">&quot;structure_coding&quot;</span><span class="p">})</span>
+            <span class="k">def</span> <span class="nf">extract_branches</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                从结构编码中提取“分支字符串”多重集（忽略顺序）：</span>
+<span class="sd">                1) 去掉前缀 A?B?C?（如 A2B2C1）；若不存在就不去掉；</span>
+<span class="sd">                2) 用小写字母块分割；保留非空段（如 D1E2F1G4）。</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="p">[]</span>
+                <span class="c1"># 去掉前缀 A[1-5]B[1-5]C[1-5]</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^A[1-5]B[1-5]C[1-5]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+                <span class="c1"># 按小写字母分割，得到每个分支的“顺序串”</span>
+                <span class="n">segs</span> <span class="o">=</span> <span class="p">[</span><span class="n">seg</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]+&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">seg</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">segs</span>
+
+            <span class="k">def</span> <span class="nf">structure_signature</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                组合签名：</span>
+<span class="sd">                - part1: 大写+数字对 以及 小写字母 的种类与计数（全局计数）</span>
+<span class="sd">                - part2: 分支多重集（去掉 A?B?C? 前缀后，按小写切分得到的分支串的多重集），忽略分支顺序</span>
+<span class="sd">                返回可比较的稳定字符串签名。</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="c1"># 全局计数（大写+数字对 + 小写字母）</span>
+                <span class="n">caps_pairs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[A-Z][1-5]&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+                <span class="n">lowers</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+                <span class="n">cnt_all</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">caps_pairs</span> <span class="o">+</span> <span class="n">lowers</span><span class="p">)</span>
+                <span class="n">part1</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">cnt_all</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cnt_all</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                <span class="c1"># 分支多重集（忽略顺序）</span>
+                <span class="n">branches</span> <span class="o">=</span> <span class="n">extract_branches</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+                <span class="n">cnt_br</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">branches</span><span class="p">)</span>
+                <span class="n">part2</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">cnt_br</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cnt_br</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">part1</span><span class="si">}</span><span class="s2">||BR||</span><span class="si">{</span><span class="n">part2</span><span class="si">}</span><span class="s2">&quot;</span>
+            
+            <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">structure_coding</span><span class="o">=</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">left</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">structure_signature</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">df_grouped</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># right = right.assign(structure_coding=right.index)</span>
+            <span class="n">right</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right</span><span class="p">[</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">structure_signature</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">_agg_glytoucan</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">series</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+                    <span class="n">ids</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()])</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ids</span><span class="p">))</span>
+                <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+            <span class="n">right_agg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">right</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;__sig__&quot;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                     <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">:</span> <span class="n">_agg_glytoucan</span><span class="p">})</span>
+                     <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                     <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">:</span> <span class="s2">&quot;GlyTouCan structure&quot;</span><span class="p">})</span>
+            <span class="p">)</span>
+            <span class="n">left</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+            <span class="n">right_agg</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">right_agg</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+            <span class="n">ra</span> <span class="o">=</span> <span class="n">right_agg</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;__sig__&quot;</span><span class="p">)</span>
+            <span class="n">ra</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">ra</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
+            <span class="n">result_both</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ra</span><span class="p">[</span><span class="s2">&quot;GlyTouCan structure&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;__sig__&quot;</span><span class="p">)</span>
+            <span class="n">result_both</span> <span class="o">=</span> <span class="n">result_both</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;__sig__&quot;</span><span class="p">)</span>
+            <span class="c1"># result_both = left.join(</span>
+            <span class="c1">#     right_agg.set_index(&quot;__sig__&quot;)[&quot;GlyTouCan structure&quot;],</span>
+            <span class="c1">#     on=&quot;__sig__&quot;</span>
+            <span class="c1"># )</span>
+            <span class="c1"># result_both = result_both.drop(columns=&quot;__sig__&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">result_both</span>
         <span class="c1">#</span>
         <span class="k">if</span> <span class="n">biosynthetic_pathways</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
