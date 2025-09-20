@@ -1,4 +1,4 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: strucgap
 Version: 1.1.1
 Summary: Structural and site-specific Glycoproteomics Analysis Platform
@@ -9,45 +9,6 @@ Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
-Requires-Dist: pandas
-Requires-Dist: numpy
-Requires-Dist: scipy
-Requires-Dist: statsmodels
-Requires-Dist: scikit-learn
-Requires-Dist: xgboost
-Requires-Dist: tqdm
-Requires-Dist: gprofiler-official
-Requires-Dist: umap-learn
-Requires-Dist: matplotlib
-Requires-Dist: Pillow
-Requires-Dist: PyComplexHeatmap
-Requires-Dist: cairosvg
-Requires-Dist: PyMuPDF
-Requires-Dist: gseapy
-Requires-Dist: networkx
-Requires-Dist: palettable
-Requires-Dist: plotly
-Requires-Dist: pyecharts
-Requires-Dist: pyecharts-snapshot
-Requires-Dist: reportlab
-Requires-Dist: requests
-Requires-Dist: seaborn
-Requires-Dist: snapshot-phantomjs
-Requires-Dist: svglib
-Requires-Dist: upsetplot
-Requires-Dist: venn
-Requires-Dist: werkzeug
-Requires-Dist: sphinx-autodoc-typehints
-Requires-Dist: renku-sphinx-theme
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
 
 # StrucGAP
 
