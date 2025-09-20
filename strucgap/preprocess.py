@@ -2120,9 +2120,6 @@ class StrucGAP_Preprocess:
                 return "".join(out)
             except Exception:
                 return None
-        
-        
-        
         ## kegg
         # ============== 全局配置（可按需调） ==============
         TIMEOUT = 20                 # 单次请求超时（秒）
@@ -2511,6 +2508,9 @@ class StrucGAP_Preprocess:
             # )
             # result_both = result_both.drop(columns="__sig__")
             self.data_psm_filtered = result_both
+            if glytoucan:
+                mask = self.data_psm_filtered["Glytoucan id"].isna() & self.data_psm_filtered["GlyTouCan structure"].notna()
+                self.data_psm_filtered.loc[mask, "Glytoucan id"] = "struc:" + self.data_psm_filtered.loc[mask, "GlyTouCan structure"]
         #
         if biosynthetic_pathways:
             df = self.data_psm_filtered.copy()

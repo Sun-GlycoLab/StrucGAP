@@ -22,7 +22,7 @@ copyright = '2025, Sun-GlycoLab'
 author = 'Muyao Yang'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.0'
+release = '1.1.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -68,7 +68,10 @@ html_context = {
     "display_github": True,
     "github_user": "Sun-GlycoLab",
     "github_repo": "StrucGAP",
+    "github_version": "",
+    "conf_py_path": "",
 }
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

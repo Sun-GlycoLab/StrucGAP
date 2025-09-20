@@ -24,7 +24,7 @@ StrucGAP, a pioneering Structural Glycoproteomics Analysis Platform for scalable
 Manuscript source
 ----------------------
 
-Please see our manuscript to learn more.
+Please see our manuscript and our `GitHub repository <https://github.com/Sun-GlycoLab/StrucGAP>`_ to learn more.
 
 .. toctree::
    :maxdepth: 1

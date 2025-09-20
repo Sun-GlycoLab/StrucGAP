@@ -147,6 +147,7 @@ Here is a basic example of how to use StrucGAP. We strongly recommend using the 
                  samplewise_normalization = False)
     module1.cv(threshold = 'no')
     module1.psm(psm_number = 'no')
+    # Using glytoucan = True and biosynthetic_pathways = True is a very time-consuming task, due to the limitations of the GlyTouCan and KEGG APIs. Please be patient when enabling these two annotations. If you prefer faster execution, set both options to False.
     module1.annotation(glytoucan = True, glytoucan_structure = True, glytoucan_wurcs_file = "tests/glycosmos_glycans_wurcs.csv", biosynthetic_pathways = True, glycobiology_filter = True)
     module1.output() 
     # ... Other analysis

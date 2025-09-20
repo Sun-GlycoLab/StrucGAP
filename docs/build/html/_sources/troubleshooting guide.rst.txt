@@ -48,6 +48,13 @@ Upgrade Python to ≥3.8 (recommended), or
     pip install importlib-metadata==6.7.0
 
 
+Q5: During installation, I see errors mentioning Rust or Cargo. Do StrucGAP or gseapy depend on Rust?
+
+Cause: Neither StrucGAP nor gseapy requires Rust directly. However, in some environments pip may try to compile dependencies from source (instead of using pre-built wheels). When that happens, Rust may be required if the dependency’s source build involves it.
+
+A5:
+Alternatively, ensure that your environment has access to the official Python package index (PyPI) so wheels can be downloaded. If compilation still occurs, you may need to install Rust temporarily, but this is not normally required.
+
 If your problem is not listed here, please open a GitHub Issue with your error message and environment details (Python version, OS, and package versions).
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

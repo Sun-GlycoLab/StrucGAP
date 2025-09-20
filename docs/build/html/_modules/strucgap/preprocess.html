@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.preprocess &mdash; StrucGAP 1.1.0 documentation</title>
+  <title>strucgap.preprocess &mdash; StrucGAP 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -2220,9 +2220,6 @@
                 <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-        
-        
-        
         <span class="c1">## kegg</span>
         <span class="c1"># ============== 全局配置（可按需调） ==============</span>
         <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">20</span>                 <span class="c1"># 单次请求超时（秒）</span>
@@ -2611,6 +2608,9 @@
             <span class="c1"># )</span>
             <span class="c1"># result_both = result_both.drop(columns=&quot;__sig__&quot;)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">result_both</span>
+            <span class="k">if</span> <span class="n">glytoucan</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s2">&quot;Glytoucan id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s2">&quot;GlyTouCan structure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;Glytoucan id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;struc:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s2">&quot;GlyTouCan structure&quot;</span><span class="p">]</span>
         <span class="c1">#</span>
         <span class="k">if</span> <span class="n">biosynthetic_pathways</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>

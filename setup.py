@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='strucgap',
-    version='1.1.0',
+    version='1.1.1',
     description='Structural and site-specific Glycoproteomics Analysis Platform',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',

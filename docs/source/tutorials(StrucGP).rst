@@ -34,7 +34,7 @@ A comprehensive analytical pipeline based on glycoproteomic data from our mouse 
                  samplewise_normalization = False)
     module1.cv(threshold = 'no')
     module1.psm(psm_number = 'no')
-    module1.annotation(glytoucan = True, biosynthetic_pathways = True, glycobiology_filter = True)
+    module1.annotation(glytoucan = True, glytoucan_structure = True, glytoucan_wurcs_file = "tests/glycosmos_glycans_wurcs.csv", biosynthetic_pathways = True, glycobiology_filter = True)
     module1.output() 
     
     # Substructural features of site-specific N-glycans 

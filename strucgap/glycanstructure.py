@@ -211,8 +211,16 @@ class StrucGAP_GlycanStructure:
         else:
             self.GlycanComposition_rank = self.identify_glycan_composition() # .iloc[:self.rank]  
             #
-            self.structure_coding_rank = pd.DataFrame(self.data['structure_coding'].value_counts().reset_index()) # .iloc[:rank]  
-            self.structure_coding_rank.columns = ['Structure_coding', 'Structure_coding_count']
+            self.structure_coding_rank = (
+                self.data
+                .groupby('structure_coding', dropna=False)  # 保留空值
+                .agg(
+                    Structure_coding_count=('structure_coding', 'size'),
+                    GlyTouCan_structure=('GlyTouCan structure', 'first')  # 唯一值或空值
+                )
+                .reset_index()
+                .rename(columns={'structure_coding': 'Structure_coding'})
+            )
         
         self.data_manager.log_params('StrucGAP_GlycanStructure', 'statistics', {'remove_oligo_mannose': remove_oligo_mannose})
         self.data_manager.log_output('StrucGAP_GlycanStructure', 'GlycanComposition_rank', self.GlycanComposition_rank)
@@ -224,7 +232,7 @@ class StrucGAP_GlycanStructure:
         if 'Glytoucan id' in self.data.columns:
             """Identify glycan composition with additional metadata."""
             temp_data = self.data[['GlycanComposition', 'structure_coding', 
-                                   'Glytoucan id', 'in_biosynthetic_pathways', 'RuleFlags']] 
+                                   'Glytoucan id', 'in_biosynthetic_pathways', 'RuleFlags', 'GlyTouCan structure']] 
             temp_data = temp_data.replace(np.nan, '')
             glycancomposition = {}
             for i in temp_data['GlycanComposition'].unique(): 
@@ -237,7 +245,8 @@ class StrucGAP_GlycanStructure:
             meta_info = temp_data.groupby('GlycanComposition').agg({
                 'Glytoucan id': 'first',
                 'in_biosynthetic_pathways': 'first',
-                'RuleFlags': 'first'
+                'RuleFlags': 'first',
+                'GlyTouCan structure': 'first'
             }).reset_index()
             GlycanComposition_rank = GlycanComposition_rank.merge(
                 meta_info, on='GlycanComposition', how='left'
