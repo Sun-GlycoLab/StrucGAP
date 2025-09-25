@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: strucgap
-Version: 1.1.1
+Version: 1.1.2
 Summary: Structural and site-specific Glycoproteomics Analysis Platform
 Home-page: https://github.com/your-username/StrucGAP
 Author: Muyao Yang
@@ -9,6 +9,45 @@ Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: statsmodels
+Requires-Dist: scikit-learn
+Requires-Dist: xgboost
+Requires-Dist: tqdm
+Requires-Dist: gprofiler-official
+Requires-Dist: umap-learn
+Requires-Dist: matplotlib
+Requires-Dist: Pillow
+Requires-Dist: PyComplexHeatmap
+Requires-Dist: cairosvg
+Requires-Dist: PyMuPDF
+Requires-Dist: gseapy
+Requires-Dist: networkx
+Requires-Dist: palettable
+Requires-Dist: plotly
+Requires-Dist: pyecharts
+Requires-Dist: pyecharts-snapshot
+Requires-Dist: reportlab
+Requires-Dist: requests
+Requires-Dist: seaborn
+Requires-Dist: snapshot-phantomjs
+Requires-Dist: svglib
+Requires-Dist: upsetplot
+Requires-Dist: venn
+Requires-Dist: werkzeug
+Requires-Dist: sphinx-autodoc-typehints
+Requires-Dist: renku-sphinx-theme
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # StrucGAP
 
@@ -66,6 +105,15 @@ Cause: This package is included in the Python standard library only since versio
 ```bash
 pip install importlib-metadata==6.7.0
 ```
+
+### Q5: During installation, I see errors mentioning Rust or Cargo. Do StrucGAP or gseapy depend on Rust?
+
+Cause: Neither StrucGAP nor gseapy requires Rust directly. However, in some environments pip may try to compile dependencies from source (instead of using pre-built wheels). When that happens, Rust may be required if the dependency’s source build involves it.
+
+**A5:**
+Alternatively, ensure that your environment has access to the official Python package index (PyPI) so wheels can be downloaded.  
+If compilation still occurs, you may need to install Rust temporarily, but this is not normally required.
+
 
 ### If your problem is not listed here, please open a GitHub Issue with your error message and environment details (Python version, OS, and package versions).
 

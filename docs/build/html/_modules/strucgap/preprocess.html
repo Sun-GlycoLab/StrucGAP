@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.preprocess &mdash; StrucGAP 1.1.1 documentation</title>
+  <title>strucgap.preprocess &mdash; StrucGAP 1.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -2504,9 +2504,13 @@
                 <span class="c1"># 规则1 核心结构不完整</span>
                 <span class="k">if</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">H</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
                     <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;CoreFail&quot;</span><span class="p">)</span>
-                <span class="c1"># 规则2 高甘露糖 + 外部岩藻糖</span>
-                <span class="k">if</span> <span class="n">gtype</span> <span class="o">==</span> <span class="s2">&quot;Oligo mannose&quot;</span> <span class="ow">and</span> <span class="n">F</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">external_fuc</span><span class="p">:</span>
-                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;HighMan_ExtFuc&quot;</span><span class="p">)</span>
+                <span class="c1"># # 规则2 高甘露糖 + 外部岩藻糖</span>
+                <span class="c1"># if gtype == &quot;Oligo mannose&quot; and F &gt; 1 and external_fuc:</span>
+                <span class="c1">#     tags.append(&quot;HighMan_ExtFuc&quot;)</span>
+                <span class="c1"># 规则2 高甘露糖 + 外部或核心岩藻糖</span>
+                <span class="n">core_fuc</span> <span class="o">=</span> <span class="s2">&quot;B5&quot;</span> <span class="ow">in</span> <span class="n">struct</span> 
+                <span class="k">if</span> <span class="n">gtype</span> <span class="o">==</span> <span class="s2">&quot;Oligo mannose&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">external_fuc</span> <span class="ow">or</span> <span class="n">core_fuc</span><span class="p">):</span>
+                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;HighMan_Fuc&quot;</span><span class="p">)</span>
                 <span class="c1"># 规则3 唾液酸超量</span>
                 <span class="k">if</span> <span class="n">S</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">antenna_est</span><span class="p">:</span>
                     <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ExcessSia&quot;</span><span class="p">)</span>
@@ -2527,6 +2531,9 @@
                     <span class="c1"># 查找连续多个 LacNAc 模式（X2Y1X2Y1...）</span>
                     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:[E-Z]\d+F1){2,}&#39;</span><span class="p">,</span> <span class="n">struct</span><span class="p">)</span> <span class="ow">or</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:[E-Z]2[A-Z]1){2,}&#39;</span><span class="p">,</span> <span class="n">struct</span><span class="p">):</span>
                         <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;MultiLacNAc_LowAnt&quot;</span><span class="p">)</span>
+                <span class="c1"># 规则8 高甘露糖 + Bisect (N3H6-10)</span>
+                <span class="k">if</span> <span class="n">gtype</span> <span class="o">==</span> <span class="s2">&quot;Oligo mannose&quot;</span> <span class="ow">and</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="mi">6</span> <span class="o">&lt;=</span> <span class="n">H</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;HighMan_Bisect&quot;</span><span class="p">)</span>
                 <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="k">if</span> <span class="n">tags</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
             <span class="n">df</span><span class="p">[</span><span class="s1">&#39;RuleFlags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span>
             <span class="k">return</span> <span class="n">df</span>
@@ -2621,6 +2628,7 @@
         <span class="k">if</span> <span class="n">glycobiology_filter</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">annotate_glycans</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">)</span>
         <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+(.*?)\+&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
     
 <div class="viewcode-block" id="StrucGAP_Preprocess.output"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

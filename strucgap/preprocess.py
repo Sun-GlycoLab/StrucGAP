@@ -2404,9 +2404,13 @@ class StrucGAP_Preprocess:
                 # 规则1 核心结构不完整
                 if N < 2 or H < 3:
                     tags.append("CoreFail")
-                # 规则2 高甘露糖 + 外部岩藻糖
-                if gtype == "Oligo mannose" and F > 1 and external_fuc:
-                    tags.append("HighMan_ExtFuc")
+                # # 规则2 高甘露糖 + 外部岩藻糖
+                # if gtype == "Oligo mannose" and F > 1 and external_fuc:
+                #     tags.append("HighMan_ExtFuc")
+                # 规则2 高甘露糖 + 外部或核心岩藻糖
+                core_fuc = "B5" in struct 
+                if gtype == "Oligo mannose" and (external_fuc or core_fuc):
+                    tags.append("HighMan_Fuc")
                 # 规则3 唾液酸超量
                 if S > 2 * antenna_est:
                     tags.append("ExcessSia")
@@ -2427,6 +2431,9 @@ class StrucGAP_Preprocess:
                     # 查找连续多个 LacNAc 模式（X2Y1X2Y1...）
                     if re.search(r'(?:[E-Z]\d+F1){2,}', struct) or re.search(r'(?:[E-Z]2[A-Z]1){2,}', struct):
                         tags.append("MultiLacNAc_LowAnt")
+                # 规则8 高甘露糖 + Bisect (N3H6-10)
+                if gtype == "Oligo mannose" and N == 3 and 6 <= H <= 10:
+                    tags.append("HighMan_Bisect")
                 results.append(";".join(tags) if tags else np.nan)
             df['RuleFlags'] = results
             return df
@@ -2521,6 +2528,7 @@ class StrucGAP_Preprocess:
         if glycobiology_filter:
             self.data_psm_filtered = annotate_glycans(self.data_psm_filtered)
         #
+        self.data_psm_filtered['structure_coding'] = self.data_psm_filtered['structure_coding'].str.extract(r'\+(.*?)\+')
         return self
     
     def output(self):
