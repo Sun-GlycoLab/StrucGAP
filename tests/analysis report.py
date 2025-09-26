@@ -1806,7 +1806,7 @@ module7.compose_figures("StrucGAP_GlycoSite_1.pdf", figure_name="StrucGAP_GlycoS
 fig1 = module7.volcano_plot(data = module4.fc_result,
                     fc_column = 'fc',
                     p_column = 'pvalue_ttest',
-                    fc = 1.5,
+                    fc = 1.7,
                     p_value = 0.05,
                     subfolder='StrucGAP_GlycoPeptideQuant_1',
                     figure_description = 'Volcano plot of differentially expressed glycopeptides in the dataset, showing significant up- and downregulated IGPs (FC > 1.5 or < 0.67, P value < 0.05).',
@@ -1820,7 +1820,7 @@ fig2 = module7.dimension_reduction(
     filter_data=module4.fc_result, 
     p_column='pvalue_ttest',
     p_value=0.05,
-    fc = 1.5,
+    fc = 1.7,
     method='pca',
     dimension_number = 2,
     random_state = 0,
@@ -1836,7 +1836,7 @@ fig3 = module7.heatmap2(data = plot_data,
                           '129.1315','129.1378','130.1348','130.1411','131.1382'],
                  filter_data = module4.fc_result,
                  filter_columns = ['fc', 'pvalue_ttest'],
-                 filter_values = [1.5, 0.05],
+                 filter_values = [1.7, 0.05],
                  log = False,
                  z_score = 0,
                  splitline_width = 0.0000001,
@@ -1870,7 +1870,7 @@ fig5 = module7.heatmap2(data = plot_data,
                  columns=plot_data.columns,
                  filter_data = None,
                  filter_columns = ['fc', 'pvalue_ttest'],
-                 filter_values = [1.5, 0.05],
+                 filter_values = [1.7, 0.05],
                  log = False,
                  cluster = None,
                  yaxis_label_show = True,
@@ -3206,7 +3206,8 @@ module7.compose_figures("StrucGAP_FunctionAnnotation_both_glycoproteins_3.pdf", 
 # StrucGAP_FunctionAnnotation_up_glycoproteins_1
 module5 = StrucGAP_FunctionAnnotation(module4, 
                                  data_manager=data_manager)  
-module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 65,72,79
+module5.ora(organism='mmusculus', enrich_feature='glycopeptide',
+            background_input=False, up_down_fc_threshold=1.7) # 65,72,79
 module5.go_function_structure(function_data = 'ora_no_background_up_result')  
 
 plot_data = module5.ora_no_background_up_result.copy()
@@ -3229,6 +3230,7 @@ fig1 = module7.dotplot_col(
     subfolder='StrucGAP_FunctionAnnotation_up_glycoproteins_1',
     filename="both proteins dotplot",
     figure_description = 'Enrichment results of upregulated glycoproteins based on GO enrichment.',
+    col_cluster=False,
 )
 
 plot_data = module5.bp_core_structure.copy()
@@ -3689,7 +3691,7 @@ module7.compose_figures("StrucGAP_FunctionAnnotation_up_glycoproteins_2.pdf", fi
 # StrucGAP_FunctionAnnotation_up_glycoproteins_3
 plot_data = module5.bp_lacdinac.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig1 = module7.radar('plot_data',  
+fig1 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3703,7 +3705,7 @@ fig1 = module7.radar('plot_data',
 
 plot_data = module5.mf_lacdinac.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig2 = module7.radar('plot_data',  
+fig2 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3717,7 +3719,7 @@ fig2 = module7.radar('plot_data',
 
 plot_data = module5.cc_lacdinac.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig3 = module7.radar('plot_data',  
+fig3 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3731,7 +3733,7 @@ fig3 = module7.radar('plot_data',
 
 plot_data = module5.bp_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig4 = module7.radar('plot_data',  
+fig4 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3745,7 +3747,7 @@ fig4 = module7.radar('plot_data',
 
 plot_data = module5.mf_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig5 = module7.radar('plot_data',  
+fig5 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3759,7 +3761,7 @@ fig5 = module7.radar('plot_data',
 
 plot_data = module5.cc_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig6 = module7.radar('plot_data',  
+fig6 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3773,7 +3775,7 @@ fig6 = module7.radar('plot_data',
 
 plot_data = module5.bp_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig7 = module7.radar('plot_data',  
+fig7 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3787,7 +3789,7 @@ fig7 = module7.radar('plot_data',
 
 plot_data = module5.mf_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig8 = module7.radar('plot_data',  
+fig8 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3801,7 +3803,7 @@ fig8 = module7.radar('plot_data',
 
 plot_data = module5.cc_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig9 = module7.radar('plot_data',  
+fig9 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -3833,7 +3835,8 @@ module7.compose_figures("StrucGAP_FunctionAnnotation_up_glycoproteins_3.pdf", fi
 # StrucGAP_FunctionAnnotation_down_glycoproteins_1
 module5 = StrucGAP_FunctionAnnotation(module4, 
                                  data_manager=data_manager)  
-module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 65,72,79
+module5.ora(organism='mmusculus', enrich_feature='glycopeptide',
+            background_input=False, up_down_fc_threshold=1.7) # 65,72,79
 module5.go_function_structure(function_data = 'ora_no_background_down_result')  
 
 plot_data = module5.ora_no_background_down_result.copy()
@@ -3856,6 +3859,7 @@ fig1 = module7.dotplot_col(
     subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_1',
     filename="both proteins dotplot",
     figure_description = 'Enrichment results of downregulated glycoproteins based on GO enrichment',
+    col_cluster=False,
 )
 
 plot_data = module5.bp_core_structure.copy()
@@ -3883,6 +3887,7 @@ fig2 = module7.line(data = plot_data,
              yaxis_title = 'Percentage of IGPs carrying\neach core structures (per term)',
              filename='bp_core_structure',
              figure_description = 'Distribution of different core structures across the top 10 GO:BP-enriched terms.',
+             
              )
 
 plot_data = module5.mf_core_structure.copy()
@@ -4314,51 +4319,51 @@ module7.compose_figures("StrucGAP_FunctionAnnotation_down_glycoproteins_2.pdf", 
                         custom_sizes=[[1,4], [2,5], [3,6], [7], [8], [9], [10], [11], [12]])  # 生成后自动清理figure1数据
 
 # StrucGAP_FunctionAnnotation_down_glycoproteins_3
-plot_data = module5.bp_lacdinac.copy()
-plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig1 = module7.radar('plot_data',  
-              columns = list(plot_data.columns[1:11]),
-              text_font_size = 15,
-              legend_font_size = 15,
-              text_split = 15,
-              subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
-              screen_column = plot_data.columns[0],
-              screen_values = list(plot_data.iloc[:,0]),
-              filename='bp_lacdinac',
-              figure_description = 'Distribution of different LacdiNAc across the top 10 GO:BP-enriched terms.',
-              )
+# plot_data = module5.bp_lacdinac.copy()
+# plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
+# fig1 = module7.radar(plot_data,  
+#               columns = list(plot_data.columns[1:11]),
+#               text_font_size = 15,
+#               legend_font_size = 15,
+#               text_split = 15,
+#               subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
+#               screen_column = plot_data.columns[0],
+#               screen_values = list(plot_data.iloc[:,0]),
+#               filename='bp_lacdinac',
+#               figure_description = 'Distribution of different LacdiNAc across the top 10 GO:BP-enriched terms.',
+#               )
 
-plot_data = module5.mf_lacdinac.copy()
-plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig2 = module7.radar('plot_data',  
-              columns = list(plot_data.columns[1:11]),
-              text_font_size = 15,
-              legend_font_size = 15,
-              text_split = 15,
-              subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
-              screen_column = plot_data.columns[0],
-              screen_values = list(plot_data.iloc[:,0]),
-              filename='mf_lacdinac',
-              figure_description = 'Distribution of different LacdiNAc across the top 10 GO:MF-enriched terms.',
-              )
+# plot_data = module5.mf_lacdinac.copy()
+# plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
+# fig2 = module7.radar(plot_data,  
+#               columns = list(plot_data.columns[1:11]),
+#               text_font_size = 15,
+#               legend_font_size = 15,
+#               text_split = 15,
+#               subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
+#               screen_column = plot_data.columns[0],
+#               screen_values = list(plot_data.iloc[:,0]),
+#               filename='mf_lacdinac',
+#               figure_description = 'Distribution of different LacdiNAc across the top 10 GO:MF-enriched terms.',
+#               )
 
-plot_data = module5.cc_lacdinac.copy()
-plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig3 = module7.radar('plot_data',  
-              columns = list(plot_data.columns[1:11]),
-              text_font_size = 15,
-              legend_font_size = 15,
-              text_split = 15,
-              subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
-              screen_column = plot_data.columns[0],
-              screen_values = list(plot_data.iloc[:,0]),
-              filename='cc_lacdinac',
-              figure_description = 'Distribution of different LacdiNAc across the top 10 GO:CC-enriched terms.',
-              )
+# plot_data = module5.cc_lacdinac.copy()
+# plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
+# fig3 = module7.radar(plot_data,  
+#               columns = list(plot_data.columns[1:11]),
+#               text_font_size = 15,
+#               legend_font_size = 15,
+#               text_split = 15,
+#               subfolder='StrucGAP_FunctionAnnotation_down_glycoproteins_3',
+#               screen_column = plot_data.columns[0],
+#               screen_values = list(plot_data.iloc[:,0]),
+#               filename='cc_lacdinac',
+#               figure_description = 'Distribution of different LacdiNAc across the top 10 GO:CC-enriched terms.',
+#               )
 
 plot_data = module5.bp_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig4 = module7.radar('plot_data',  
+fig1 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4372,7 +4377,7 @@ fig4 = module7.radar('plot_data',
 
 plot_data = module5.mf_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig5 = module7.radar('plot_data',  
+fig2 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4386,7 +4391,7 @@ fig5 = module7.radar('plot_data',
 
 plot_data = module5.cc_fucosylated_type.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig6 = module7.radar('plot_data',  
+fig3 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4400,7 +4405,7 @@ fig6 = module7.radar('plot_data',
 
 plot_data = module5.bp_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig7 = module7.radar('plot_data',  
+fig4 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4414,7 +4419,7 @@ fig7 = module7.radar('plot_data',
 
 plot_data = module5.mf_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig8 = module7.radar('plot_data',  
+fig5 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4428,7 +4433,7 @@ fig8 = module7.radar('plot_data',
 
 plot_data = module5.cc_acgc.copy()
 plot_data.columns = [plot_data.columns[0]] + [col.capitalize() for col in plot_data.columns[1:]]
-fig9 = module7.radar('plot_data',  
+fig6 = module7.radar(plot_data,  
               columns = list(plot_data.columns[1:11]),
               text_font_size = 15,
               legend_font_size = 15,
@@ -4446,16 +4451,16 @@ module7.add_figure(fig3, figure_name="StrucGAP_FunctionAnnotation_down_glycoprot
 module7.add_figure(fig4, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
 module7.add_figure(fig5, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
 module7.add_figure(fig6, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
-module7.add_figure(fig7, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
-module7.add_figure(fig8, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
-module7.add_figure(fig9, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
+# module7.add_figure(fig7, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
+# module7.add_figure(fig8, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
+# module7.add_figure(fig9, figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3")
 # module7.add_figure(fig10, figure_name="StrucGAP_FunctionAnnotation_both_glycoproteins_3")
 # module7.add_figure(fig11, figure_name="StrucGAP_FunctionAnnotation_both_glycoproteins_3")
 # module7.add_figure(fig12, figure_name="StrucGAP_FunctionAnnotation_both_glycoproteins_3")
 module7.compose_figures("StrucGAP_FunctionAnnotation_down_glycoproteins_3.pdf", figure_name="StrucGAP_FunctionAnnotation_down_glycoproteins_3",
                         pdf_description = "StrucGAP_FunctionAnnotation_9: GO enrichment–substructure features association analysis (continued).",
                         pdf_description_bg_color = "#FDAE86",
-                        custom_sizes=[[1], [2], [3], [4], [5], [6], [7], [8], [9]])  # 生成后自动清理figure1数据
+                        custom_sizes=[[1], [2], [3], [4], [5], [6]])  # 生成后自动清理figure1数据
 
 # StrucGAP_GlycoNetwork_1
 fig1 = module7.volcano_plot(data = module6.proteomic_fc,
@@ -6295,7 +6300,7 @@ for i in ['core_structure','glycan_type','branches_structure','branches_count',
         j = 'sialic acid structures'
     # ...生成fig1/fig2/fig3的逻辑...
     # 下面是假定逻辑，根据你的实际生成fig的代码复制粘贴即可
-    data = pd.read_excel("tests/analysis_result/StrucGAP_GlycoPeptideQuant_key_information.xlsx", sheet_name=i)
+    data = pd.read_excel("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 9_StrucGAP_GlycoPeptideQuant_key_information.xlsx", sheet_name=i)
     if not data.empty:
         data = data.replace('A2B2C1D1dD1','Core-I') \
                           .replace('A2B2C1D1dD1dcbB5','Core-II') \
@@ -6312,7 +6317,7 @@ for i in ['core_structure','glycan_type','branches_structure','branches_count',
                   )
         generated_figs.append(fig1)
 
-    da_data = pd.read_excel("tests/analysis_result/StrucGAP_GlycoPeptideQuant_key_information.xlsx", sheet_name=f'da_{i}')
+    da_data = pd.read_excel("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 9_StrucGAP_GlycoPeptideQuant_key_information.xlsx", sheet_name=f'da_{i}')
     if not da_data.empty:
         attr_name = f'differential_analysis_{i}'
         plot_data = getattr(module4, attr_name)
@@ -6395,11 +6400,11 @@ if figs:
         
     
 # key insights StrucGAP_FunctionAnnotation
-sheet_names = pd.ExcelFile("tests/analysis_result/StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx").sheet_names
+sheet_names = pd.ExcelFile("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx").sheet_names
 figs = []
 pdf_index = 1  
-for sheet in sheet_names: # sheet='cc_branches_count'
-    df = pd.read_excel("tests/analysis_result/StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx", sheet_name=sheet, header=None)
+for sheet in sheet_names: # sheet='bp_sialicacid_count'
+    df = pd.read_excel("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx", sheet_name=sheet, header=None)
     df = df.iloc[:,1:]
     df = df.replace('A2B2C1D1dD1','Core-I') \
                           .replace('A2B2C1D1dD1dcbB5','Core-II') \
@@ -6449,42 +6454,46 @@ for sheet in sheet_names: # sheet='cc_branches_count'
     elif i == 'sialicacid structure':
         i = 'sialic acid structures'
     s = f'Key information on {j} enrichment of the {i} substructure in upregulated IGPs.'
-    if df.shape[1] > 3:
-        fig = module7.radar('df',  
-                      columns = list(df.columns[1:]),
-                      text_font_size = 15,
-                      legend_font_size = 12,
-                      text_split = 15,
-                      subfolder=f'StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}',
-                      screen_column = df.columns[0],
-                      screen_values = list(df.iloc[:,0]),
-                      filename = sheet,
-                      figure_description = s,
-                      )
-        figs.append(fig)
-    if df.shape[1] <= 3:
-        fig = module7.bar_multi_columns(
-            data = df,  
-            colors = ['#00ECC2','#FB0798','#0078FF','#FBDC2E',
-                        '#FF8A25','#04C2E1','#FFD75F','#OCDE89',
-                        '#FF4359','#3E0A77'],
-            y_column = df.columns[0],
-            x_columns = df.columns[1:], 
-            subfolder=f'StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}',
-            xaxis_splitline_show = False,
-            yaxis_splitline_show = False,
-            xaxis_label_rotate = 0,
-            xaxis_label_font_size = 20,
-            xaxis_label_text_split = 50,
-            yaxis_label_font_size = 20,
-            legend_font_size = 20,
-            y_max=1,
-            xaxis_title_gap = 35,
-            yaxis_title = 'Percentage of IGPs carrying\neach core structures (per term)',
-            filename=sheet,
-            figure_description = s,
-            )
-        figs.append(fig)
+    if df.shape[0] <= 10:
+        if df.shape[1] > 3:
+            if df.shape[1] > 10:
+                df = df.iloc[:,:11]
+            fig = module7.radar(df,  
+                                colors=random_colors,
+                          columns = list(df.columns[1:]),
+                          text_font_size = 15,
+                          legend_font_size = 12,
+                          text_split = 15,
+                          subfolder=f'StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}',
+                          screen_column = df.columns[0],
+                          screen_values = list(df.iloc[:,0]),
+                          filename = sheet,
+                          figure_description = s,
+                          )
+            figs.append(fig)
+        if df.shape[1] <= 3:
+            fig = module7.bar_multi_columns(
+                data = df,  
+                colors = ['#00ECC2','#FB0798','#0078FF','#FBDC2E',
+                            '#FF8A25','#04C2E1','#FFD75F','#OCDE89',
+                            '#FF4359','#3E0A77'],
+                y_column = df.columns[0],
+                x_columns = df.columns[1:], 
+                subfolder=f'StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}',
+                xaxis_splitline_show = False,
+                yaxis_splitline_show = False,
+                xaxis_label_rotate = 0,
+                xaxis_label_font_size = 20,
+                xaxis_label_text_split = 50,
+                yaxis_label_font_size = 20,
+                legend_font_size = 20,
+                y_max=1,
+                xaxis_title_gap = 35,
+                yaxis_title = 'Percentage of IGPs carrying\neach core structures (per term)',
+                filename=sheet,
+                figure_description = s,
+                )
+            figs.append(fig)
     if len(figs) == 12:
         figure_name = f"StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}"
         pdf_file = f"StrucGAP_FunctionAnnotation_up_result_key_information_{pdf_index}.pdf"
@@ -6511,11 +6520,11 @@ if figs:
 
 
 # key insights StrucGAP_FunctionAnnotation
-sheet_names = pd.ExcelFile("tests/analysis_result/StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx").sheet_names
+sheet_names = pd.ExcelFile("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 11_StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx").sheet_names
 figs = []
 pdf_index = 1  
 for sheet in sheet_names: # sheet='cc_branches_count'
-    df = pd.read_excel("tests/analysis_result/StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx", sheet_name=sheet, header=None)
+    df = pd.read_excel("D:/doctor/analysisys/GAP_manuscript/Supplementary Tables/analysis_result/Supplementary Table 11_StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx", sheet_name=sheet, header=None)
     df = df.iloc[:,1:]
     df = df.replace('A2B2C1D1dD1','Core-I') \
                           .replace('A2B2C1D1dD1dcbB5','Core-II') \
@@ -6565,42 +6574,46 @@ for sheet in sheet_names: # sheet='cc_branches_count'
     elif i == 'sialicacid structure':
         i = 'sialic acid structures'
     s = f'Key information on {j} enrichment of the {i} substructure in downregulated IGPs.'
-    if df.shape[1] > 3:
-        fig = module7.radar('df',  
-                      columns = list(df.columns[1:]),
-                      text_font_size = 15,
-                      legend_font_size = 12,
-                      text_split = 15,
-                      subfolder=f'StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}',
-                      screen_column = df.columns[0],
-                      screen_values = list(df.iloc[:,0]),
-                      filename = sheet,
-                      figure_description = s,
-                      )
-        figs.append(fig)
-    if df.shape[1] <= 3:
-        fig = module7.bar_multi_columns(
-            data = df,  
-            colors = ['#00ECC2','#FB0798','#0078FF','#FBDC2E',
-                        '#FF8A25','#04C2E1','#FFD75F','#OCDE89',
-                        '#FF4359','#3E0A77'],
-            y_column = df.columns[0],
-            x_columns = df.columns[1:], 
-            subfolder=f'StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}',
-            xaxis_splitline_show = False,
-            yaxis_splitline_show = False,
-            xaxis_label_rotate = 0,
-            xaxis_label_font_size = 20,
-            xaxis_label_text_split = 50,
-            yaxis_label_font_size = 20,
-            legend_font_size = 20,
-            y_max=1,
-            xaxis_title_gap = 35,
-            yaxis_title = 'Percentage of IGPs carrying\neach core structures (per term)',
-            filename=sheet,
-            figure_description = s,
-            )
-        figs.append(fig)
+    if df.shape[0] <= 10:
+        if df.shape[1] > 3:
+            if df.shape[1] > 10:
+                df = df.iloc[:,:11]
+            fig = module7.radar(df,  
+                                colors=random_colors,
+                          columns = list(df.columns[1:]),
+                          text_font_size = 15,
+                          legend_font_size = 12,
+                          text_split = 15,
+                          subfolder=f'StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}',
+                          screen_column = df.columns[0],
+                          screen_values = list(df.iloc[:,0]),
+                          filename = sheet,
+                          figure_description = s,
+                          )
+            figs.append(fig)
+        if df.shape[1] <= 3:
+            fig = module7.bar_multi_columns(
+                data = df,  
+                colors = ['#00ECC2','#FB0798','#0078FF','#FBDC2E',
+                            '#FF8A25','#04C2E1','#FFD75F','#OCDE89',
+                            '#FF4359','#3E0A77'],
+                y_column = df.columns[0],
+                x_columns = df.columns[1:], 
+                subfolder=f'StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}',
+                xaxis_splitline_show = False,
+                yaxis_splitline_show = False,
+                xaxis_label_rotate = 0,
+                xaxis_label_font_size = 20,
+                xaxis_label_text_split = 50,
+                yaxis_label_font_size = 20,
+                legend_font_size = 20,
+                y_max=1,
+                xaxis_title_gap = 35,
+                yaxis_title = 'Percentage of IGPs carrying\neach core structures (per term)',
+                filename=sheet,
+                figure_description = s,
+                )
+            figs.append(fig)
     if len(figs) == 12:
         figure_name = f"StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}"
         pdf_file = f"StrucGAP_FunctionAnnotation_down_result_key_information_{pdf_index}.pdf"
@@ -7004,12 +7017,12 @@ merger.write("tests/StrucGAP_GlycoSite_GlycanStructure.pdf")
 merger.close()
 
 merger = PdfMerger()
-merger.append("tests/StrucGAP_GlycoPeptideQuant_1.pdf")
-merger.append("tests/StrucGAP_GlycoPeptideQuant_2.pdf")
-merger.append("tests/StrucGAP_GlycoPeptideQuant_3.pdf")
-merger.append("tests/StrucGAP_GlycoPeptideQuant_4.pdf")
-merger.append("tests/Glycan structures coding rule.pdf")
-merger.write("tests/StrucGAP_GlycoPeptideQuant.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant_2.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant_3.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant_4.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/Glycan structures coding rule.pdf")
+merger.write("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant.pdf")
 merger.close()
 
 merger = PdfMerger()
@@ -7026,29 +7039,29 @@ merger.write("tests/StrucGAP_GlycoNetwork.pdf")
 merger.close()
 
 merger = PdfMerger()
-merger.append("tests/StrucGAP_FunctionAnnotation_both_glycoproteins_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_both_glycoproteins_2.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_both_glycoproteins_3.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_up_glycoproteins_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_up_glycoproteins_2.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_up_glycoproteins_3.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_down_glycoproteins_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_down_glycoproteins_2.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_down_glycoproteins_3.pdf")
-merger.append("tests/Glycan structures coding rule.pdf")
-merger.write("tests/StrucGAP_FunctionAnnotation.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_both_glycoproteins_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_both_glycoproteins_2.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_both_glycoproteins_3.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_up_glycoproteins_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_up_glycoproteins_2.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_up_glycoproteins_3.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_down_glycoproteins_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_down_glycoproteins_2.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_down_glycoproteins_3.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/Glycan structures coding rule.pdf")
+merger.write("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation.pdf")
 merger.close()
 
 # combined key information pdf
 merger = PdfMerger()
-merger.append("tests/key_StrucGAP_GlycanStructure_1.pdf")
-merger.append("tests/StrucGAP_GlycoPeptideQuant_key_information_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_up_result_key_information_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_down_result_key_information_1.pdf")
-merger.append("tests/StrucGAP_FunctionAnnotation_down_result_key_information_2.pdf")
-merger.append("tests/key_StrucGAP_GlycoNetwork_up.pdf")
-merger.append("tests/key_StrucGAP_GlycoNetwork_down.pdf")
-merger.append("tests/Glycan structures coding rule.pdf")
-merger.write("tests/Key information.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/key_StrucGAP_GlycanStructure_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_GlycoPeptideQuant_key_information_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_up_result_key_information_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_down_result_key_information_1.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/StrucGAP_FunctionAnnotation_down_result_key_information_2.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/key_StrucGAP_GlycoNetwork_up.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/key_StrucGAP_GlycoNetwork_down.pdf")
+merger.append("D:/doctor/analysisys/StrucGAP/Glycan structures coding rule.pdf")
+merger.write("D:/doctor/analysisys/StrucGAP/Key information.pdf")
 merger.close()
 

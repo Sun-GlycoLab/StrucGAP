@@ -2091,7 +2091,9 @@ class StrucGAP_Preprocess:
                 children[k] = sorted(children[k])
             return root, children, set(order)
 
-        def wurcs_to_custom(wurcs: str) -> str | None:
+        # def wurcs_to_custom(wurcs: str) -> str | None:
+        from typing import Optional
+        def wurcs_to_custom(wurcs: str) -> Optional[str]:
             try:
                 node_order, node_to_resid, resid_to_desc, edges = parse_wurcs(wurcs)
                 # 用无向生成树来还原父子关系（以 'a' 为首选根）
@@ -2442,8 +2444,9 @@ class StrucGAP_Preprocess:
             self.data_psm_filtered = add_glytoucan_ids(self.data_psm_filtered, col_in="GlycanComposition", col_out="Glytoucan id")
         #
         if glytoucan_structure:
+            # df = pd.read_csv(glytoucan_wurcs_file)
+            # df["structure_coding"] = df["WURCS"].apply(wurcs_to_custom)
             df = pd.read_csv(glytoucan_wurcs_file)
-            df["structure_coding"] = df["WURCS"].apply(wurcs_to_custom)
             df_grouped = (
                 df.groupby("structure_coding")["GlyTouCan ID"]
                   .apply(lambda x: ",".join(x))
@@ -2486,7 +2489,7 @@ class StrucGAP_Preprocess:
                 return f"{part1}||BR||{part2}"
             
             left = self.data_psm_filtered.copy()
-            left = left.assign(structure_coding=left.index)
+            # left = left.assign(structure_coding=left.index)
             left["__sig__"] = left["structure_coding"].map(structure_signature)
             right = df_grouped.copy()
             # right = right.assign(structure_coding=right.index)
@@ -2528,7 +2531,7 @@ class StrucGAP_Preprocess:
         if glycobiology_filter:
             self.data_psm_filtered = annotate_glycans(self.data_psm_filtered)
         #
-        self.data_psm_filtered['structure_coding'] = self.data_psm_filtered['structure_coding'].str.extract(r'\+(.*?)\+')
+        # self.data_psm_filtered['structure_coding'] = self.data_psm_filtered['structure_coding'].str.extract(r'\+(.*?)\+')
         return self
     
     def output(self):

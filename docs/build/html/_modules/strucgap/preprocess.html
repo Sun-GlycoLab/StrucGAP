@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.preprocess &mdash; StrucGAP 1.1.2 documentation</title>
+  <title>strucgap.preprocess &mdash; StrucGAP 1.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -2191,7 +2191,9 @@
                 <span class="n">children</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">root</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">wurcs_to_custom</span><span class="p">(</span><span class="n">wurcs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># def wurcs_to_custom(wurcs: str) -&gt; str | None:</span>
+        <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+        <span class="k">def</span> <span class="nf">wurcs_to_custom</span><span class="p">(</span><span class="n">wurcs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">node_order</span><span class="p">,</span> <span class="n">node_to_resid</span><span class="p">,</span> <span class="n">resid_to_desc</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">parse_wurcs</span><span class="p">(</span><span class="n">wurcs</span><span class="p">)</span>
                 <span class="c1"># 用无向生成树来还原父子关系（以 &#39;a&#39; 为首选根）</span>
@@ -2542,8 +2544,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">add_glytoucan_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">,</span> <span class="n">col_in</span><span class="o">=</span><span class="s2">&quot;GlycanComposition&quot;</span><span class="p">,</span> <span class="n">col_out</span><span class="o">=</span><span class="s2">&quot;Glytoucan id&quot;</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="k">if</span> <span class="n">glytoucan_structure</span><span class="p">:</span>
+            <span class="c1"># df = pd.read_csv(glytoucan_wurcs_file)</span>
+            <span class="c1"># df[&quot;structure_coding&quot;] = df[&quot;WURCS&quot;].apply(wurcs_to_custom)</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">glytoucan_wurcs_file</span><span class="p">)</span>
-            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;WURCS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">wurcs_to_custom</span><span class="p">)</span>
             <span class="n">df_grouped</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">)[</span><span class="s2">&quot;GlyTouCan ID&quot;</span><span class="p">]</span>
                   <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -2586,7 +2589,7 @@
                 <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">part1</span><span class="si">}</span><span class="s2">||BR||</span><span class="si">{</span><span class="n">part2</span><span class="si">}</span><span class="s2">&quot;</span>
             
             <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">structure_coding</span><span class="o">=</span><span class="n">left</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="c1"># left = left.assign(structure_coding=left.index)</span>
             <span class="n">left</span><span class="p">[</span><span class="s2">&quot;__sig__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">left</span><span class="p">[</span><span class="s2">&quot;structure_coding&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">structure_signature</span><span class="p">)</span>
             <span class="n">right</span> <span class="o">=</span> <span class="n">df_grouped</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="c1"># right = right.assign(structure_coding=right.index)</span>
@@ -2628,7 +2631,7 @@
         <span class="k">if</span> <span class="n">glycobiology_filter</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span> <span class="o">=</span> <span class="n">annotate_glycans</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">)</span>
         <span class="c1">#</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_psm_filtered</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\+(.*?)\+&#39;</span><span class="p">)</span>
+        <span class="c1"># self.data_psm_filtered[&#39;structure_coding&#39;] = self.data_psm_filtered[&#39;structure_coding&#39;].str.extract(r&#39;\+(.*?)\+&#39;)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
     
 <div class="viewcode-block" id="StrucGAP_Preprocess.output"><a class="viewcode-back" href="../../preprocess.html#strucgap.preprocess.StrucGAP_Preprocess.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
