@@ -63,6 +63,26 @@ Cause: Neither StrucGAP nor gseapy requires Rust directly. However, in some envi
 Alternatively, ensure that your environment has access to the official Python package index (PyPI) so wheels can be downloaded.  
 If compilation still occurs, you may need to install Rust temporarily, but this is not normally required.
 
+### Q6: TypeError: loop of ufunc does not support argument 0 of type float which has no callable log2 method
+
+**A6:**
+```bash
+pip install pandas==1.3.5
+```
+
+### Q7: ERROR: Cannot uninstall 'llvmlite'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall when execute pip install strucgap.
+
+**A7:**
+```bash
+pip install --ignore-installed llvmlite
+```
+
+### Q8: OSError: no library called "cairo-2" was found no library called "cairo" was found no library called "libcairo-2" was found cannot load library 'libcairo.so.2': error 0x7e. Additionally, ctypes.util.find_library() did not manage to locate a library called 'libcairo.so.2' cannot load library 'libcairo.2.dylib': error 0x7e. Additionally, ctypes.util.find_library() did not manage to locate a library called 'libcairo.2.dylib' cannot load library 'libcairo-2.dll': error 0x7e. Additionally, ctypes.util.find_library() did not manage to locate a library called 'libcairo-2.dll' when execute pip install strucgap.
+
+**A8:**
+```bash
+conda install -c conda-forge cairo
+```
 
 ### If your problem is not listed here, please open a GitHub Issue with your error message and environment details (Python version, OS, and package versions).
 
