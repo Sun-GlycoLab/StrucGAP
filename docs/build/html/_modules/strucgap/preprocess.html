@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.preprocess &mdash; StrucGAP 1.1.3 documentation</title>
+  <title>strucgap.preprocess &mdash; StrucGAP 1.1.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -399,23 +399,13 @@
         <span class="n">p_emp</span> <span class="o">=</span> <span class="n">empirical_p_from_null</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">null_abs_log2</span><span class="p">)</span>
         <span class="n">q_emp</span> <span class="o">=</span> <span class="n">bh_fdr</span><span class="p">(</span><span class="n">p_emp</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;p_empirical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_emp</span>
-        <span class="c1"># data[&quot;q_empirical&quot;] = q_emp</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;emp_cutoff_log2_95&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau_log2_95</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;emp_cutoff_FC_95&quot;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">tau_fc_95</span>
         <span class="c1">#</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;emp_cutoff_log2_99&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau_log2_99</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;emp_cutoff_FC_99&quot;</span><span class="p">]</span>   <span class="o">=</span> <span class="n">tau_fc_99</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;pass_FC_cutoff&quot;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">tau_log2_95</span>
-        <span class="c1"># data[&quot;pass_FDR_0.05&quot;]   = data[&quot;q_empirical&quot;] &lt; 0.05</span>
-        <span class="c1"># data[&quot;significant&quot;]     = data[&quot;pass_FC_cutoff&quot;] &amp; data[&quot;pass_FDR_0.05&quot;]</span>
-        <span class="c1"># -----------------------------</span>
-        <span class="c1"># 展示结果</span>
-        <span class="c1"># -----------------------------</span>
-        <span class="c1"># from ace_tools import display_dataframe_to_user</span>
-        <span class="c1"># summary = data[ctrl_cols + exp_cols + [</span>
-        <span class="c1">#     &quot;CV_ctrl_raw&quot;,&quot;log2FC&quot;,&quot;abs_log2FC&quot;,&quot;emp_cutoff_log2&quot;,&quot;emp_cutoff_FC&quot;,</span>
-        <span class="c1">#     &quot;p_empirical&quot;,&quot;q_empirical&quot;,&quot;pass_FC_cutoff&quot;,&quot;pass_FDR_0.05&quot;,&quot;significant&quot;</span>
-        <span class="c1"># ]].round(5)</span>
+
         <span class="n">summary</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">ctrl_cols</span> <span class="o">+</span> <span class="n">exp_cols</span> <span class="o">+</span> <span class="p">[</span>
             <span class="s2">&quot;log2FC&quot;</span><span class="p">,</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">,</span><span class="s2">&quot;emp_cutoff_log2_95&quot;</span><span class="p">,</span><span class="s2">&quot;emp_cutoff_FC_95&quot;</span><span class="p">,</span><span class="s2">&quot;emp_cutoff_log2_99&quot;</span><span class="p">,</span><span class="s2">&quot;emp_cutoff_FC_99&quot;</span><span class="p">,</span>
             <span class="s2">&quot;p_empirical&quot;</span><span class="p">,</span><span class="s2">&quot;pass_FC_cutoff&quot;</span><span class="p">,</span>

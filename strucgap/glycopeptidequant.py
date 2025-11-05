@@ -113,7 +113,7 @@ class StrucGAP_GlycoPeptideQuant:
             - "cv_filtered"
             - "outliers_filtered"
             - "data"
-            Default is "psm_filtered".
+            Default is "psm_filtered", which indicates the final preprocessed data.
     
     """
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered'):

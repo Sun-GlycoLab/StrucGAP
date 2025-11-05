@@ -166,69 +166,6 @@ class StrucGAP_FunctionAnnotation:
         self.data_manager.register_module('StrucGAP_FunctionAnnotation', self, {})
         # self.data_manager.log_params('StrucGAP_FunctionAnnotation', 'GO_data', {'GO_data': GO_data_dir})
         
-    # def download_go_file(self):
-    #     """An auxiliary function."""
-    #     url = "http://current.geneontology.org/ontology/go-basic.obo"
-    #     file_path = os.path.join(os.getcwd(), "go-basic.obo")
-    #     if not os.path.exists(file_path):
-    #         print("Can not find GO file, is downloading go-basic.obo ...")
-    #         response = requests.get(url, stream=True)
-    #         if response.status_code == 200:
-    #             with open(file_path, "wb") as f:
-    #                 for chunk in response.iter_content(chunk_size=8192):
-    #                     f.write(chunk)
-    #             print("Downloading finished. ")
-    #         else:
-    #             raise Exception("Can not download GO file, please try again. ")
-    #     else:
-    #         print("GO file already exists, skip downloading. ")
-    #     return file_path
-        
-    # def parse_go_obo(self, file_path):
-    #     """An auxiliary function."""
-    #     nodes1 = []
-    #     names1 = []
-    #     namespaces = []
-    #     relationships = []
-    #     nodes2 = []
-    #     names2 = []
-    #     def append_all_lists():
-    #         nodes1.append(node1)
-    #         names1.append(name1)
-    #         namespaces.append(namespace)
-    #         relationships.append(relationship)
-    #         nodes2.append(node2)
-    #         names2.append(name2)
-    #     with open(file_path, 'r', encoding='utf-8') as f:
-    #         lines = f.readlines()
-    #     for line in tqdm(lines):
-    #         line = line.strip()
-    #         if line.startswith('id:'):
-    #             node1 = line[line.find('GO:'):].strip()
-    #         elif line.startswith('name:'):
-    #             name1 = line[5:].strip()
-    #         elif line.startswith('namespace:'):
-    #             namespace = line[10:].strip()
-    #         elif line.startswith('is_a:'):
-    #             relationship = 'is a'
-    #             node2 = line.split('!')[0][5:].strip()
-    #             name2 = line.split('!')[1].strip()
-    #             append_all_lists()
-    #         elif line.startswith('relationship:'):
-    #             relationship = line.split('GO:')[0][13:].strip()
-    #             node2 = line[line.find('GO:'):].split('!')[0].strip()
-    #             name2 = line.split('!')[1].strip()
-    #             append_all_lists()
-    #     GO_data = pd.DataFrame({
-    #         'GO_id1': nodes1,
-    #         'GO_name1': names1,
-    #         'type': namespaces,
-    #         'relationship': relationships,
-    #         'GO_id2': nodes2,
-    #         'GO_name2': names2
-    #     })
-    #     return GO_data
-        
     def compute_weighted_fc(self, df, up_down_fc_threshold):
         """An auxiliary function called by other functions to compute weight FC."""
         protein_fc = {}  
@@ -854,10 +791,6 @@ class StrucGAP_FunctionAnnotation:
                     cutoff = input('Please enter the cutoff value (such as: 0.05, 0.01) you would like to use to select the differential pathway: ')
                 function_data = function_data[function_data[p_value]<float(cutoff)]
                 function_data = function_data.rename(columns={'Lead_genes': 'Genes'})
-            # GO_data = GO_data[GO_data['relationship']=='part_of']
-            # GO_data = GO_data.set_index('GO_name1',drop=False)
-            # GO_data['GO_name1'] = GO_data['GO_name1'].str.upper()
-            # GO_data['GO_name2'] = GO_data['GO_name2'].str.upper()
             self.function_data = function_data
             
             #

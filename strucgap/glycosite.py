@@ -150,21 +150,6 @@ class StrucGAP_GlycoSite:
             series
         
         """
-        # 将 ProteinID 和 GeneName 列拆分并映射为字典
-        # protein_to_gene = {}
-        # for idx, row in self.gs_data.data.iterrows():
-        #     protein_ids = row['ProteinID'].split(';')
-        #     gene_names = row['GeneName'].split(';')
-        #     # 构建 ProteinID 到 GeneName 的映射
-        #     for protein_id, gene_name in zip(protein_ids, gene_names):
-        #         protein_to_gene[protein_id] = gene_name
-        # # 定义映射函数，将 protein_column 中的 ProteinID 替换为相应的 GeneName
-        # def map_genes(protein_ids):
-        #     proteins = protein_ids.split(';')
-        #     genes = [protein_to_gene.get(protein, "") for protein in proteins]
-        #     return ';'.join(gene for gene in genes if gene)  # 忽略映射不到的 ProteinID
-        # # 将映射的 GeneName 添加到新的一列中，命名为 `gene_name`
-        # data['gene_name'] = data[protein_column].apply(map_genes)
         protein_to_gene = {}
         for idx, row in self.gs_data.data.iterrows():
             protein_str = row['ProteinID']

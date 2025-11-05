@@ -170,7 +170,7 @@ class StrucGAP_GlycanStructure:
         self.data_manager.register_module('StrucGAP_GlycanStructure', self, {})
         self.data_manager.log_params('StrucGAP_GlycanStructure', 'input_data', {'data_type': data_type})
     
-    def statistics(self, remove_oligo_mannose = True): # , rank = None
+    def statistics(self, remove_oligo_mannose = False): 
         """
         Provides a global overview of glycan structures in the dataset.
         

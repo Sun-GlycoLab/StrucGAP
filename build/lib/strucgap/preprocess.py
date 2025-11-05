@@ -299,23 +299,13 @@ class StrucGAP_Preprocess:
         p_emp = empirical_p_from_null(data["abs_log2FC"].values, null_abs_log2)
         q_emp = bh_fdr(p_emp)
         data["p_empirical"] = p_emp
-        # data["q_empirical"] = q_emp
         data["emp_cutoff_log2_95"] = tau_log2_95
         data["emp_cutoff_FC_95"]   = tau_fc_95
         #
         data["emp_cutoff_log2_99"] = tau_log2_99
         data["emp_cutoff_FC_99"]   = tau_fc_99
         data["pass_FC_cutoff"]  = data["abs_log2FC"] >= tau_log2_95
-        # data["pass_FDR_0.05"]   = data["q_empirical"] < 0.05
-        # data["significant"]     = data["pass_FC_cutoff"] & data["pass_FDR_0.05"]
-        # -----------------------------
-        # 展示结果
-        # -----------------------------
-        # from ace_tools import display_dataframe_to_user
-        # summary = data[ctrl_cols + exp_cols + [
-        #     "CV_ctrl_raw","log2FC","abs_log2FC","emp_cutoff_log2","emp_cutoff_FC",
-        #     "p_empirical","q_empirical","pass_FC_cutoff","pass_FDR_0.05","significant"
-        # ]].round(5)
+
         summary = data[ctrl_cols + exp_cols + [
             "log2FC","abs_log2FC","emp_cutoff_log2_95","emp_cutoff_FC_95","emp_cutoff_log2_99","emp_cutoff_FC_99",
             "p_empirical","pass_FC_cutoff",

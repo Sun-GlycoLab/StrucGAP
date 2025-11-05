@@ -9065,6 +9065,7 @@ class StrucGAP_DataVisualization:
                 'legend': figure_description}
     
     def draw_glycans(self, chain_list, linewidth=0.2,
+                     node_size = 12,
                      subfolder='plot',
                      figure_description = 'Glycans plot',
                      filename = None):
@@ -9087,6 +9088,8 @@ class StrucGAP_DataVisualization:
                 Example: "A1B2b" (root A1 with child B2, then branch closed).
             linewidth (float, optional): 
                 Line width for edges and node borders. Default = 0.2.
+            node_size (int, optional):
+                Monosaccharide node size (if your matplotlib version > 3.5.3, please select 12 as input, otherwise select 400 for lower version).
             subfolder (str, optional): 
                 Subdirectory under `./plot/` for saving outputs. Default = 'plot'.
             figure_description (str, optional): 
@@ -9254,35 +9257,35 @@ class StrucGAP_DataVisualization:
             if version.parse(matplotlib.__version__) > version.parse("3.5.3"):
                 if node.num_type == 1:
                     marker = 'o'
-                    size = 12
+                    size = int(node_size)
                 elif node.num_type == 2:
                     marker = 's'
-                    size = 12
+                    size = int(node_size)
                 elif node.num_type in (3, 4):
                     marker = 'D'
-                    size = 6
+                    size = int(node_size) / 2
                 elif node.num_type == 5:
                     marker = '<'
-                    size = 12
+                    size = int(node_size)
                 else:
                     marker = 'o'
-                    size = 12
+                    size = int(node_size)
             else:
                 if node.num_type == 1:
                     marker = 'o'
-                    size = 400
+                    size = int(node_size)
                 elif node.num_type == 2:
                     marker = 's'
-                    size = 400
+                    size = int(node_size)
                 elif node.num_type in (3, 4):
                     marker = 'D'
-                    size = 200
+                    size = int(node_size) / 2
                 elif node.num_type == 5:
                     marker = '<'
-                    size = 400
+                    size = int(node_size)
                 else:
                     marker = 'o'
-                    size = 400
+                    size = int(node_size)
             ax.scatter(node.x, node.y, s=size, marker=marker, 
                        facecolor=node.color, edgecolor='black', linewidths=linewidth, zorder=2)
             if node.fucose_child:

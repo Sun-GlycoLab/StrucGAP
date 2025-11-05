@@ -149,11 +149,7 @@ class StrucGAP_GlycoNetwork:
             dataframe
         
         """
-        # if sample_size == None:
-        #     sample_size = input("Please enter the sample size (such as: 5 controls vs 5 samples, just enter 5): ")
-        #     self.sample_size = int(sample_size) 
-        # self.sample_size = int(sample_size)
-        # data = data1
+        
         normal_list = {}
         lognormal_list = {}
         half = len(sample_columns) // 2
