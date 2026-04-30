@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.glyconetwork &mdash; StrucGAP 1.1.4 documentation</title>
+  <title>strucgap.glyconetwork &mdash; StrucGAP 1.1.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -70,7 +70,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28pGlyco3%29.html">Tutorials(pGlyco3)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Glyco-Decipher%29.html">Tutorials(Glyco-Decipher)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Byonic%29.html">Tutorials(Byonic)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28GlycanFinder%29.html">Tutorials(GlycanFinder)</a></li>
 </ul>
 
         </div>
@@ -573,7 +572,12 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="n">list1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">list2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_s</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> 
-            <span class="n">fc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">list2</span><span class="p">)</span><span class="o">/</span><span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">list1</span><span class="p">))</span> 
+            <span class="c1"># fc.append(statistics.mean(list2)/statistics.mean(list1)) </span>
+            <span class="n">fc_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="o">/</span> <span class="n">c</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">list2</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">list1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">fc_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fc_all</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+            <span class="n">fc_all</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">n_middle</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_columns</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fc_all</span><span class="p">)))</span>  <span class="c1"># “中间一半”，并防止越界</span>
+            <span class="n">fc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geometric_mean_of_middle</span><span class="p">(</span><span class="n">fc_all</span><span class="p">,</span> <span class="n">n_middle</span><span class="p">))</span>
             <span class="c1"># 计算P值</span>
             <span class="k">if</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">list1</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">list1</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">list2</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">list2</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">pvalue_mannwhitneyu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -707,8 +711,244 @@
 <div class="viewcode-block" id="StrucGAP_GlycoNetwork.transcriptomic"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic">[docs]</a>    <span class="k">def</span> <span class="nf">transcriptomic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
     
+<div class="viewcode-block" id="StrucGAP_GlycoNetwork.proteome_fc_recommendation"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation">[docs]</a>    <span class="k">def</span> <span class="nf">proteome_fc_recommendation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+            <span class="n">zero_ratio_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="n">z</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.96</span><span class="p">,</span>
+            <span class="n">null_quantiles</span><span class="o">=</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">),</span>
+        <span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Recommend FC cutoffs for global proteome data using:</span>
+<span class="sd">              (i) CV-based theoretical MDFC,</span>
+<span class="sd">              (ii) empirical null distribution from Control-Control comparisons (|log2 diff|),</span>
+<span class="sd">              (iii) empirical p-values against that null + BH-FDR.</span>
+<span class="sd">        </span>
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            data : pd.DataFrame</span>
+<span class="sd">                rows: proteins (e.g., Accession)</span>
+<span class="sd">                cols: reporter channels (first half = controls, second half = samples)</span>
+<span class="sd">            zero_ratio_threshold : float</span>
+<span class="sd">                Drop columns whose proportion of zeros exceeds this threshold.</span>
+<span class="sd">                Set to None to disable.</span>
+<span class="sd">            z : float</span>
+<span class="sd">                Z-score for MDFC (default 1.96 for ~95% CI).</span>
+<span class="sd">            null_quantiles : tuple</span>
+<span class="sd">                Quantiles used to derive empirical FC cutoff from null (default 0.95, 0.99).</span>
+<span class="sd">        </span>
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            mdfc_table : pd.DataFrame</span>
+<span class="sd">                Summary of median CV in controls and theoretical MDFC in ln and FC space.</span>
+<span class="sd">            summary : pd.DataFrame</span>
+<span class="sd">                Per-protein table with log2FC, abs_log2FC, empirical cutoffs, empirical p-values, BH-FDR, etc.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        
+            <span class="c1"># -----------------------------</span>
+            <span class="c1"># Helpers</span>
+            <span class="c1"># -----------------------------</span>
+            <span class="k">def</span> <span class="nf">bh_fdr</span><span class="p">(</span><span class="n">pvals</span><span class="p">):</span>
+                <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pvals</span><span class="p">)):</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="c1"># statsmodels multipletests doesn&#39;t like all-nan; mask then restore</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pvals</span><span class="p">)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">q</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fdr_bh&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">q</span>
+        
+            <span class="k">def</span> <span class="nf">cv</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Coefficient of variation: sample SD / mean (linear scale).&quot;&quot;&quot;</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="c1"># ddof=1 -&gt; sample SD (needs at least 2 values)</span>
+                <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">m</span>
+        
+            <span class="k">def</span> <span class="nf">sigma_ln_from_cv</span><span class="p">(</span><span class="n">cv_val</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Map linear CV -&gt; natural-log SD using sigma_ln^2 = ln(1 + CV^2).&quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cv_val</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">cv_val</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        
+            <span class="k">def</span> <span class="nf">mdfc_from_cv</span><span class="p">(</span><span class="n">cv_val</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">1.96</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Theoretical minimal detectable fold-change (MDFC) at confidence z.</span>
+<span class="sd">                Returns ln-space and linear-space MDFC for:</span>
+<span class="sd">                  - group mean difference (two groups, each n_reps)</span>
+<span class="sd">                  - single-pair difference (one channel vs one channel)</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">sig_ln</span> <span class="o">=</span> <span class="n">sigma_ln_from_cv</span><span class="p">(</span><span class="n">cv_val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">sig_ln</span><span class="p">)</span> <span class="ow">or</span> <span class="n">n_reps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">group_mean_log</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">group_mean_fc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+                                <span class="n">single_pair_log</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">single_pair_fc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        
+                <span class="c1"># variance of difference of group means in ln-space:</span>
+                <span class="c1"># Var(mean1 - mean2) = 2 * sigma^2 / n</span>
+                <span class="n">delta_ln_group</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">sig_ln</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_reps</span><span class="p">)</span>
+        
+                <span class="c1"># conservative single-pair bound: difference of two single observations</span>
+                <span class="n">delta_ln_single</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sig_ln</span>
+        
+                <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">group_mean_log</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">delta_ln_group</span><span class="p">),</span>
+                    <span class="n">group_mean_fc</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">delta_ln_group</span><span class="p">)),</span>
+                    <span class="n">single_pair_log</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">delta_ln_single</span><span class="p">),</span>
+                    <span class="n">single_pair_fc</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">delta_ln_single</span><span class="p">)),</span>
+                <span class="p">)</span>
+        
+            <span class="k">def</span> <span class="nf">empirical_null_ctrl_vs_ctrl</span><span class="p">(</span><span class="n">df_ctrl_log2</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Empirical null of |log2 differences| pooling all ctrl-ctrl channel pairs across proteins.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">df_ctrl_log2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">diffs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">df_ctrl_log2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">df_ctrl_log2</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">j</span><span class="p">])</span>
+                    <span class="n">diffs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">diffs</span><span class="p">)</span> <span class="k">if</span> <span class="n">diffs</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        
+            <span class="k">def</span> <span class="nf">empirical_p_from_null</span><span class="p">(</span><span class="n">observed_abs_log2fc</span><span class="p">,</span> <span class="n">null_abs_log2_diffs</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Right-tail empirical p-value:</span>
+<span class="sd">                  p = (count(null &gt;= obs) + 1) / (len(null) + 1)</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">null_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">null_abs_log2_diffs</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">null_abs_log2_diffs</span><span class="p">)])</span>
+                <span class="n">N</span> <span class="o">=</span> <span class="n">null_sorted</span><span class="o">.</span><span class="n">size</span>
+                <span class="n">obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">observed_abs_log2fc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">null_sorted</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+                <span class="n">ge_counts</span> <span class="o">=</span> <span class="n">N</span> <span class="o">-</span> <span class="n">idx</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">ge_counts</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+        
+            <span class="c1"># -----------------------------</span>
+            <span class="c1"># Prepare matrix</span>
+            <span class="c1"># -----------------------------</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;data must be a pandas DataFrame.&quot;</span><span class="p">)</span>
+        
+            <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>  <span class="c1"># force numeric, non-numeric -&gt; NaN</span>
+        
+            <span class="c1"># optional: drop columns with too many zeros (same spirit as glyco pipeline)</span>
+            <span class="k">if</span> <span class="n">zero_ratio_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">zero_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">zero_ratio</span> <span class="o">&lt;=</span> <span class="n">zero_ratio_threshold</span><span class="p">]</span>
+        
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Need an even number of channels &gt;= 4 after filtering; got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns.&quot;</span>
+                <span class="p">)</span>
+        
+            <span class="n">half</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">ctrl_cols</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+            <span class="n">exp_cols</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+            <span class="n">n_reps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctrl_cols</span><span class="p">)</span>
+        
+            <span class="c1"># -----------------------------</span>
+            <span class="c1"># A) CV-based theoretical MDFC (controls)</span>
+            <span class="c1"># -----------------------------</span>
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;CV_ctrl_raw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">ctrl_cols</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">cv</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">cv_median</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;CV_ctrl_raw&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        
+            <span class="n">mdfc_stats</span> <span class="o">=</span> <span class="n">mdfc_from_cv</span><span class="p">(</span><span class="n">cv_median</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">mdfc_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+                <span class="s2">&quot;Metric&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;Median CV (controls)&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;Δ_ln (group means, n=</span><span class="si">{</span><span class="n">n_reps</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;MDFC (group means, linear, n=</span><span class="si">{</span><span class="n">n_reps</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Δ_ln (single pair)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;MDFC (single pair, linear)&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;Value&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">cv_median</span><span class="p">,</span>
+                    <span class="n">mdfc_stats</span><span class="p">[</span><span class="s2">&quot;group_mean_log&quot;</span><span class="p">],</span>
+                    <span class="n">mdfc_stats</span><span class="p">[</span><span class="s2">&quot;group_mean_fc&quot;</span><span class="p">],</span>
+                    <span class="n">mdfc_stats</span><span class="p">[</span><span class="s2">&quot;single_pair_log&quot;</span><span class="p">],</span>
+                    <span class="n">mdfc_stats</span><span class="p">[</span><span class="s2">&quot;single_pair_fc&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">})</span>
+        
+            <span class="c1"># -----------------------------</span>
+            <span class="c1"># B) Empirical null (Ctrl–Ctrl): build on log2 intensities</span>
+            <span class="c1">#     Protect against &lt;=0 before log2</span>
+            <span class="c1"># -----------------------------</span>
+            <span class="n">ctrl_mat</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">ctrl_cols</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">ctrl_mat</span><span class="p">[</span><span class="n">ctrl_mat</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">log2_ctrl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">ctrl_mat</span><span class="p">)</span>
+        
+            <span class="n">null_abs_log2</span> <span class="o">=</span> <span class="n">empirical_null_ctrl_vs_ctrl</span><span class="p">(</span><span class="n">log2_ctrl</span><span class="p">)</span>
+        
+            <span class="c1"># derive cutoffs for requested quantiles</span>
+            <span class="n">cutoffs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">null_clean</span> <span class="o">=</span> <span class="n">null_abs_log2</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">null_abs_log2</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">null_clean</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># no null -&gt; everything becomes NaN</span>
+                <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">null_quantiles</span><span class="p">:</span>
+                    <span class="n">cutoffs</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">null_quantiles</span><span class="p">:</span>
+                    <span class="n">tau_log2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">null_clean</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span>
+                    <span class="n">tau_fc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">tau_log2</span><span class="p">)</span>
+                    <span class="n">cutoffs</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">tau_log2</span><span class="p">,</span> <span class="n">tau_fc</span><span class="p">)</span>
+        
+            <span class="c1"># -----------------------------</span>
+            <span class="c1"># C) Observed log2FC (mean exp - mean ctrl), empirical p, BH-FDR</span>
+            <span class="c1"># -----------------------------</span>
+            <span class="n">exp_mat</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">exp_cols</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">exp_mat</span><span class="p">[</span><span class="n">exp_mat</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        
+            <span class="n">log2_mean_ctrl</span> <span class="o">=</span> <span class="n">log2_ctrl</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">log2_mean_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">exp_mat</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;log2FC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2_mean_exp</span> <span class="o">-</span> <span class="n">log2_mean_ctrl</span>
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;log2FC&quot;</span><span class="p">])</span>
+        
+            <span class="n">p_emp</span> <span class="o">=</span> <span class="n">empirical_p_from_null</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">null_abs_log2</span><span class="p">)</span>
+            <span class="n">q_emp</span> <span class="o">=</span> <span class="n">bh_fdr</span><span class="p">(</span><span class="n">p_emp</span><span class="p">)</span>
+        
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;p_empirical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_emp</span>
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;q_empirical_bh&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">q_emp</span>
+        
+            <span class="c1"># attach cutoffs to each row (for convenience)</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">null_quantiles</span><span class="p">:</span>
+                <span class="n">tau_log2</span><span class="p">,</span> <span class="n">tau_fc</span> <span class="o">=</span> <span class="n">cutoffs</span><span class="p">[</span><span class="n">q</span><span class="p">]</span>
+                <span class="n">X</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;emp_cutoff_log2_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau_log2</span>
+                <span class="n">X</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;emp_cutoff_FC_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tau_fc</span>
+        
+            <span class="c1"># default pass flag uses first quantile (usually 95%)</span>
+            <span class="n">q0</span> <span class="o">=</span> <span class="n">null_quantiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">tau0_log2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cutoffs</span><span class="p">[</span><span class="n">q0</span><span class="p">]</span>
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;pass_FC_cutoff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="s2">&quot;abs_log2FC&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">tau0_log2</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">tau0_log2</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">X</span><span class="p">[</span><span class="s2">&quot;pass_empirical_FDR_0p05&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="s2">&quot;q_empirical_bh&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.05</span>
+        
+            <span class="c1"># output summary</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">ctrl_cols</span> <span class="o">+</span> <span class="n">exp_cols</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="s2">&quot;log2FC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;abs_log2FC&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emp_cutoff_log2_95&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emp_cutoff_FC_95&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emp_cutoff_log2_99&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;emp_cutoff_FC_99&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;p_empirical&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pass_FC_cutoff&quot;</span><span class="p">,</span>
+            <span class="p">]]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        
+            <span class="k">return</span> <span class="n">mdfc_table</span><span class="p">,</span> <span class="n">summary</span></div>
+    
 <div class="viewcode-block" id="StrucGAP_GlycoNetwork.proteomic"><a class="viewcode-back" href="../../glyconetwork.html#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic">[docs]</a>    <span class="k">def</span> <span class="nf">proteomic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protein_data_dir</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">pvalue</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">data_sheet_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest_mannwhitneyu&#39;</span><span class="p">,</span>
-                  <span class="n">fdr</span> <span class="o">=</span> <span class="s1">&#39;Medium&#39;</span><span class="p">,</span> <span class="n">psm</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> 
+                  <span class="n">fdr</span> <span class="o">=</span> <span class="s1">&#39;Medium&#39;</span><span class="p">,</span> <span class="n">psm</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">fc_recommendation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                   <span class="n">normalization_samplewise_method</span> <span class="o">=</span> <span class="s1">&#39;robust normalization&#39;</span><span class="p">,</span>
                   <span class="n">normalization_featurewise_method</span> <span class="o">=</span> <span class="s1">&#39;robust normalization&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -848,7 +1088,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_samplewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">normalization_samplewise_method</span><span class="p">)</span>
         <span class="c1"># featurewise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_featurewise_normalized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalization_featurewise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">normalization_featurewise_method</span><span class="p">)</span>
-        <span class="c1">#</span>
+        <span class="c1"># fc_recommendation</span>
+        <span class="c1"># ---------------------------------------</span>
+        <span class="c1"># FC recommendation for global proteome</span>
+        <span class="c1"># ---------------------------------------</span>
+        <span class="k">if</span> <span class="n">fc_recommendation</span><span class="p">:</span>
+            <span class="n">prot_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>   <span class="c1"># 或者 self.no_outliers_data / self.no_missing_value_data</span>
+            <span class="n">sample_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filtered_labels</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;Accession&#39;</span><span class="p">]</span>  
+            <span class="n">prot_df</span> <span class="o">=</span> <span class="n">prot_df</span><span class="p">[</span><span class="n">sample_cols</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="c1"># 模仿糖肽：过滤 0 占比 &gt; 0.5 的通道</span>
+            <span class="n">zero_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">prot_df</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">prot_df</span><span class="p">)</span>
+            <span class="n">prot_df</span> <span class="o">=</span> <span class="n">prot_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">zero_ratio</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">]</span>
+        
+            <span class="c1"># 如果过滤后列数太少（比如 &lt;4），推荐结果会不稳定，给 NaN 也行</span>
+            <span class="k">if</span> <span class="n">prot_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="p">(</span><span class="n">prot_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_mdfc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">prot_df</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_mdfc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="c1">## analysis</span>
         <span class="c1"># glycosylation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">glycosylation_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="p">,</span> <span class="n">sample_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filtered_labels</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;Accession&#39;</span><span class="p">])</span>
@@ -987,6 +1244,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;cv filter data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;samplewise normalized data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;samplewise featurewise normalized data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_featurewise_normalized_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;proteome_fc_recommendation_mdfc&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_mdfc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;proteome_fc_recommendation_summary&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_summary</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;proteomic fc&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_fc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;proteomic protein glycosite count&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_protein_glycosite_count</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">,</span> <span class="s1">&#39;proteomic protein glycosite value&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_protein_glycosite_value</span><span class="p">)</span>
@@ -1390,6 +1649,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">cv_filter_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;cv_filter_data&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_normalized_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;samplewise_normalized_data&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">samplewise_featurewise_normalized_data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;samplewise_featurewise_normalized_data&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_mdfc</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;fc_recommendation_mdfc&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proteome_fc_recommendation_summary</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;fc_recommendation_summary&#39;</span><span class="p">)</span>
+            
             <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_fc</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;proteomic_fc&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_protein_glycosite_count</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;protein_glycosite_count&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">proteomic_protein_glycosite_value</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;protein_glycosite_value&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>

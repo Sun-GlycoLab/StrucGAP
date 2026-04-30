@@ -118,6 +118,7 @@ class StrucGAP_GlycoPeptideQuant:
     """
     def __init__(self, gs_data, data_manager, data_type = 'psm_filtered'):
         self.gs_data = gs_data
+        self.search_engine = self.gs_data.search_engine
         self.sample_group = self.gs_data.sample_group
         if hasattr(self.gs_data, 'abundance_ratio'):
             self.abundance_ratio = self.gs_data.abundance_ratio

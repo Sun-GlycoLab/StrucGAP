@@ -7044,10 +7044,20 @@ class StrucGAP_DataVisualization:
                     dataframe_names.append("unknown")  # 如果变量名未知，标记为未知
 
         sets = {name: set(series) for name, series in zip(dataframe_names, dataframes)}
+        n_sets = len(sets)
+        if not (2 <= n_sets <= 6):
+            raise ValueError(f"Venn only supports 2–6 sets, got {n_sets}")
+        
         if isinstance(colors, (list, tuple)):
-            venn_diagram = venn(sets, colors=colors, fontsize=number_fontsize)
+            # 你这个 venn 版本不支持 colors=，那就只能退一步：
+            # 把颜色列表做成一个 ListedColormap，再走 cmap=
+            from matplotlib.colors import ListedColormap
+            cmap_obj = ListedColormap(list(colors))
         else:
-            venn_diagram = venn(sets, cmap=colors, fontsize=number_fontsize)
+            cmap_obj = plt.get_cmap(colors)  # 关键：返回 colormap 对象，不是字符串
+        
+        venn_diagram = venn(sets, cmap=cmap_obj, fontsize=number_fontsize)
+        #
         handles = [plt.Line2D([0], [0], color=venn_diagram.patches[i].get_facecolor(), lw=4) 
                    for i in range(len(dataframe_names))]
         
@@ -7372,7 +7382,7 @@ class StrucGAP_DataVisualization:
 
         # 将 p 值注释向上偏移
         for idx, p_value in enumerate(p_list):
-            plt.text(mid_positions[idx], plt.ylim()[1] + p_text_offset, f"p = {p_value}", ha='center', fontsize=10)
+            plt.text(mid_positions[idx], plt.ylim()[1] + p_text_offset, f"p = {p_value}", ha='center', fontsize=xaxis_label_font_size)
 
         # 设置坐标轴的线条粗细及标签的长度和粗细
         ax = plt.gca()

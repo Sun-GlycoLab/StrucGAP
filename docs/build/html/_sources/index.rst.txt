@@ -59,6 +59,4 @@ Please see our manuscript and our `GitHub repository <https://github.com/Sun-Gly
    tutorials(pGlyco3)
    tutorials(Glyco-Decipher)
    tutorials(Byonic)
-   tutorials(GlycanFinder)
-
 

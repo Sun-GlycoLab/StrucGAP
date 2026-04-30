@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.datavisualization &mdash; StrucGAP 1.1.4 documentation</title>
+  <title>strucgap.datavisualization &mdash; StrucGAP 1.1.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -70,7 +70,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28pGlyco3%29.html">Tutorials(pGlyco3)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Glyco-Decipher%29.html">Tutorials(Glyco-Decipher)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials%28Byonic%29.html">Tutorials(Byonic)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials%28GlycanFinder%29.html">Tutorials(GlycanFinder)</a></li>
 </ul>
 
         </div>
@@ -7144,10 +7143,20 @@
                     <span class="n">dataframe_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>  <span class="c1"># 如果变量名未知，标记为未知</span>
 
         <span class="n">sets</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">series</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">,</span> <span class="n">dataframes</span><span class="p">)}</span>
+        <span class="n">n_sets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sets</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">n_sets</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Venn only supports 2–6 sets, got </span><span class="si">{</span><span class="n">n_sets</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-            <span class="n">venn_diagram</span> <span class="o">=</span> <span class="n">venn</span><span class="p">(</span><span class="n">sets</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">number_fontsize</span><span class="p">)</span>
+            <span class="c1"># 你这个 venn 版本不支持 colors=，那就只能退一步：</span>
+            <span class="c1"># 把颜色列表做成一个 ListedColormap，再走 cmap=</span>
+            <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+            <span class="n">cmap_obj</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">venn_diagram</span> <span class="o">=</span> <span class="n">venn</span><span class="p">(</span><span class="n">sets</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">number_fontsize</span><span class="p">)</span>
+            <span class="n">cmap_obj</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>  <span class="c1"># 关键：返回 colormap 对象，不是字符串</span>
+        
+        <span class="n">venn_diagram</span> <span class="o">=</span> <span class="n">venn</span><span class="p">(</span><span class="n">sets</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_obj</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">number_fontsize</span><span class="p">)</span>
+        <span class="c1">#</span>
         <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">venn_diagram</span><span class="o">.</span><span class="n">patches</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">(),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> 
                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">))]</span>
         
@@ -7472,7 +7481,7 @@
 
         <span class="c1"># 将 p 值注释向上偏移</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p_list</span><span class="p">):</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">mid_positions</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p_text_offset</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;p = </span><span class="si">{</span><span class="n">p_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">mid_positions</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p_text_offset</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;p = </span><span class="si">{</span><span class="n">p_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">xaxis_label_font_size</span><span class="p">)</span>
 
         <span class="c1"># 设置坐标轴的线条粗细及标签的长度和粗细</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>

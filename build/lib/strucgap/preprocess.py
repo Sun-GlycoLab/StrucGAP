@@ -340,7 +340,16 @@ class StrucGAP_Preprocess:
             self.data['structure_coding'] = self.data['structure_coding'].str.replace(r'\+Ammonium\(\+17\)', '', regex=True)
             self.data['Glycosite_Position'] = self.data['Glycosite_Position'].astype(str)
             self.data['GlycanComposition'] = self.data['GlycanComposition'].str.replace(r'\+Ammonium\(\+17\)', '', regex=True)
-            self.data['PeptideSequence+structure_coding+ProteinID'] = self.data['PeptideSequence'] + '+' + self.data['structure_coding'] + '+' + self.data['ProteinID']
+            
+            self.data['PeptideSequence+structure_coding+ProteinID'] = (
+                self.data['PeptideSequence'].astype(str)
+                + '+'
+                + self.data['structure_coding'].astype(str)
+                + '+'
+                + self.data['ProteinID'].astype(str)
+            )
+              
+            # self.data['PeptideSequence+structure_coding+ProteinID'] = self.data['PeptideSequence'] + '+' + self.data['structure_coding'] + '+' + self.data['ProteinID']
             self.data['structure_coding'] = self.data['structure_coding'].replace(np.nan, np.nan)
             self.data['GlycanComposition'] = self.data['GlycanComposition'].str.replace(r'\+Ammonium\(\+17\)', '', regex=True)
             # branches
@@ -1601,13 +1610,17 @@ class StrucGAP_Preprocess:
         #
         return self
     
-    def outliers(self, samplewise_normalization = False, abundance_ratio=None):
+    def outliers(self, samplewise_normalization = False, abundance_ratio=None,
+                 total_intensity_normalization=False,
+                 total_intensity_method='mean'):
         """
         Corrects and normalizes TMT quantification data from matched reporter ions for each IGP.
         
         Parameters:
             abundance_ratio: normalized factors from global proteomics data.
             samplewise_normalization: sample-wise median normalization.
+            total_intensity_normalization: whether to use channel total intensity normalization.
+            total_intensity_method: 'mean' or 'median', used after total intensity normalization.
         
         Returns:
             self.data_outliers_filtered (corrected and normalized TMT quantification data). 
@@ -1617,119 +1630,260 @@ class StrucGAP_Preprocess:
         
         """
         if self.search_engine == 'StrucGP':
-            Pep0 = pd.DataFrame(self.data_fdr_filtered['PeptideSequence+structure_coding+ProteinID'])
-            Pep1 = pd.DataFrame(self.data_fdr_filtered['Matched_Reporter_Ions'])
-            if abundance_ratio is None:
-                abundance_ratio = input("Please enter the abundance ratio as a comma-separated list (e.g., 1, 1.019488, 1.740756, 1.554661, 2.674981,1.071297, 1.145732, 1.082529, 1.733719, 1.850238), when you done, please click 'Enter' in your keyboard:  ")
-                abundance_ratio = [float(x) for x in abundance_ratio.split(',')]
-                print('Your data has been successfully entered, please waiting ... ')
-            self.abundance_ratio = abundance_ratio
-            #    
-            glycopep= []
-            ions = []
-            for i in Pep0.values.tolist():
-                glycopep.append(i[0])
-            z = 0
-            #
-            for i in Pep1.values.tolist(): 
-                tmp0 = str(i[0]).split('),')  
-                tmp1 = [glycopep[z]]
-                for j in tmp0:
+            
+            def parse_matched_reporter_ions(x):
+                """
+                Parse StrucGP Matched_Reporter_Ions.
+
+                Expected example:
+                {'126.1277': (..., ..., 125038.0), ...}
+
+                Returns:
+                    dict: {channel: intensity}
+                """
+                if pd.isna(x):
+                    return {}
+                if isinstance(x, dict):
+                    obj = x
+                else:
                     try:
-                        tmp1.append(float(j.split(',')[-1]))
-                    except:
-                        tmp1.append(float(j.split(',')[-1][:-2]))
-                z+=1
-                tmp2 = [tmp1[0]]
-                for j in range(len(tmp1[1:])):
+                        obj = ast.literal_eval(str(x))
+                    except Exception:
+                        obj = None
+
+                if isinstance(obj, dict):
+                    parsed = {}
+                    for channel, values in obj.items():
+                        try:
+                            parsed[str(channel)] = float(values[-1])
+                        except Exception:
+                            parsed[str(channel)] = np.nan
+                    return parsed
+
+                # fallback: compatible with your old string-splitting logic
+                tmp = str(x).split('),')
+                parsed = {}
+                for idx, item in enumerate(tmp):
                     try:
-                        rat = abundance_ratio[j]
-                        abundance = tmp1[j+1]
-                        value = (abundance*rat)
-                        tmp2.append(value)
-                    except:
-                        continue
-                ions.append(tmp2)
-            #
-            header = ['PeptideSequence+structure_coding+ProteinID', *map(str, self.sample_group.index), 'psm']
-            result = [header]
-            result1 = [header]
-            # 转 ions 为 DataFrame 便于分组处理
-            ion_df = pd.DataFrame(ions)
-            ion_df.rename(columns={0: 'peptide'}, inplace=True)
-            # Melt所有的定量值（后续使用groupby）
-            value_cols = ion_df.columns[1:]
-            ion_melted = ion_df.melt(id_vars='peptide', value_vars=value_cols, var_name='channel', value_name='abundance')
-            # Group by peptide → 列表化每个 channel 对应的 abundance 值
-            grouped = ion_melted.groupby(['peptide', 'channel'])['abundance'].apply(list).unstack(fill_value=[]).reset_index()
-            if samplewise_normalization is True:
+                        value = float(item.split(',')[-1])
+                    except Exception:
+                        try:
+                            value = float(item.split(',')[-1][:-2])
+                        except Exception:
+                            value = np.nan
+                    parsed[str(idx)] = value
+
+                return parsed
+            
+            pep_col = 'PeptideSequence+structure_coding+ProteinID'
+            reporter_col = 'Matched_Reporter_Ions'
+            
+            # ==========================================================
+            # New option:
+            # channel total intensity normalization
+            # 每个 PSM 的每个通道强度 / 该通道总强度
+            # 然后同一 IGP 的多个 PSM 对每个通道取 mean 或 median
+            # ==========================================================
+            if total_intensity_normalization is True:
+                if total_intensity_method not in ['mean', 'median']:
+                    raise ValueError("total_intensity_method must be 'mean' or 'median'.")
+            
+                # 按 sample_group.index 确定通道顺序
+                sample_channels = list(map(str, self.sample_group.index))
+            
+                # 先处理每个 PSM：乘 abundance_ratio + PSM 内归一化
                 records = []
-                # 假设 grouped 是原始 DataFrame，第一列是 peptide 名，其它列是样本
-                for idx, row in grouped.iterrows():
-                    glycopeptide = row.peptide
-                    for sample in grouped.columns[1:]:
-                        intensities = row[sample]
-                        for val in intensities:
-                            records.append((glycopeptide, sample, val))
-                # 一次性创建 DataFrame，极大加快速度
-                df_flattened = pd.DataFrame(records, columns=['Glycopeptide', 'Sample', 'Intensity']) 
-                # 计算每个样本自己的中位数
-                sample_medians = df_flattened.groupby('Sample')['Intensity'].median()
-                # 每个 intensity 除以所属样本的中位数
-                df_flattened['Normalized_Intensity'] = df_flattened.apply(
-                    lambda row: row['Intensity'] / sample_medians[row['Sample']],
-                    axis=1
+                for _, row in self.data_fdr_filtered.iterrows():
+                    pep_id = row[pep_col]
+                    ion_dict = parse_matched_reporter_ions(row[reporter_col])
+            
+                    # 先乘 abundance_ratio
+                    corrected = []
+                    for i, channel in enumerate(sample_channels):
+                        intensity = ion_dict.get(channel, np.nan)
+                        if i < len(abundance_ratio):
+                            corrected.append(intensity * abundance_ratio[i])
+                        else:
+                            corrected.append(intensity)
+            
+                    # PSM 内归一化
+                    total = sum([v for v in corrected if not pd.isna(v)])
+                    if total == 0 or np.isnan(total):
+                        normalized = [np.nan for v in corrected]
+                    else:
+                        normalized = [v / total if not pd.isna(v) else np.nan for v in corrected]
+            
+                    for ch, val in zip(sample_channels, normalized):
+                        records.append({
+                            'peptide': pep_id,
+                            'channel': ch,
+                            'normalized_intensity': val
+                        })
+            
+                ion_long = pd.DataFrame(records)
+            
+                if ion_long.empty:
+                    raise ValueError("No valid reporter ion intensity was parsed from Matched_Reporter_Ions.")
+            
+                # 同一糖肽、同一通道聚合
+                if total_intensity_method == 'mean':
+                    quantified = ion_long.groupby(['peptide', 'channel'])['normalized_intensity'].mean()
+                else:
+                    quantified = ion_long.groupby(['peptide', 'channel'])['normalized_intensity'].median()
+            
+                quantified = quantified.unstack()
+            
+                # 保证列顺序与 sample_group.index 一致
+                available_channels = list(quantified.columns)
+                if set(sample_channels).issubset(set(available_channels)):
+                    quantified = quantified[sample_channels]
+                    quantified.columns = sample_channels
+                else:
+                    quantified = quantified[available_channels]
+            
+                # 计算每个 peptide 的 PSM 数量
+                psm_counts = self.data_fdr_filtered.reset_index(drop=True).groupby(pep_col).size()
+                quantified['psm'] = quantified.index.map(psm_counts)
+            
+                self.data_outliers_filtered = quantified
+                self.data_outliers_filtered.index.name = pep_col
+                self.data_outliers_filtered[pep_col] = self.data_outliers_filtered.index
+            
+                # Merge 回原始数据
+                self.data_outliers_filtered = pd.merge(
+                    self.data_fdr_filtered,
+                    self.data_outliers_filtered,
+                    left_index=True,
+                    right_index=True,
+                    how='left'
                 )
-                grouped = df_flattened.groupby(['Glycopeptide', 'Sample'])['Normalized_Intensity'].apply(list).unstack()
-                grouped.reset_index(inplace=True)
-                grouped.rename(columns={'Glycopeptide': 'peptide'}, inplace=True)
-                def replace_nan_in_list(x):
-                    if isinstance(x, list):
-                        return [0.0 if (pd.isna(i) or (isinstance(i, float) and math.isnan(i))) else i for i in x]
-                    return x
-                # 仅对样本列进行替换（排除 peptide 列）
-                sample_cols = [col for col in grouped.columns if col != 'peptide']
-                grouped[sample_cols] = grouped[sample_cols].applymap(replace_nan_in_list)
-            for _, row in grouped.iterrows():
-                pep_id = row['peptide']
-                values_per_channel = row[1:].tolist()
-                # 拆分前/后半部分（即：control/sample）
-                half = len(values_per_channel) // 2
-                data_c = pd.DataFrame(values_per_channel[:half]).replace(0, np.nan)
-                data_s = pd.DataFrame(values_per_channel[half:]).replace(0, np.nan)
-                # 归一化（使用 module1.median_cheng）
-                for col in data_c.columns:
-                    median_val = self.median_cheng(data_c[col].tolist())
-                    # if not np.isnan(median_val) and median_val != 0:
-                    data_c[col] = data_c[col] / median_val
-                    data_s[col] = data_s[col] / median_val
-                # 汇总统计 → 中位数输出行
-                tmp3 = [pep_id]
-                # 对每一行（通道）进行归一化并取中位数
-                for l in range(data_c.shape[0]):
-                    row_values = data_c.loc[l].tolist()
-                    tmp3.append(self.median_cheng(row_values))
-                for l in range(data_s.shape[0]):
-                    row_values = data_s.loc[l].tolist()
-                    tmp3.append(self.median_cheng(row_values))
-                tmp3.append(data_s.shape[1])  # psm count
-                result1.append(tmp3)
-            #
-            self.data_outliers_filtered = pd.DataFrame(result1)
-            self.data_outliers_filtered.columns = self.data_outliers_filtered.iloc[0]
-            self.data_outliers_filtered = self.data_outliers_filtered.drop(self.data_outliers_filtered.index[0])
-            self.data_outliers_filtered = self.data_outliers_filtered.set_index('PeptideSequence+structure_coding+ProteinID',drop=False)
-            data_outliers_filtered_cleaned = self.data_outliers_filtered.dropna(axis=1, how='all')
-            dropped_columns = self.data_outliers_filtered.columns.difference(data_outliers_filtered_cleaned.columns).tolist()
-            dropped_columns = [float(x) for x in dropped_columns]
-            self.sample_group = self.sample_group.drop(index=dropped_columns)
-            self.data_outliers_filtered = data_outliers_filtered_cleaned
-            # self.data_outliers_filtered = pd.concat([self.data_fdr_filtered, self.data_outliers_filtered],axis=1,join='inner')
-            self.data_outliers_filtered = pd.merge(self.data_fdr_filtered, self.data_outliers_filtered, left_index=True, right_index=True, how='left')
-            self.data_outliers_filtered = self.data_outliers_filtered.rename(columns={'PeptideSequence+structure_coding+ProteinID_x':'PeptideSequence+structure_coding+ProteinID',
-                                                                                      'PeptideSequence+structure_coding+ProteinID_y':'PeptideSequence+structure_coding+ProteinID'})
-            #
-            self.data_outliers_filtered = self.data_outliers_filtered[~self.data_outliers_filtered.index.duplicated()]
+                self.data_outliers_filtered = self.data_outliers_filtered.rename(
+                    columns={pep_col + '_x': pep_col, pep_col + '_y': pep_col}
+                )
+                self.data_outliers_filtered = self.data_outliers_filtered[
+                    ~self.data_outliers_filtered.index.duplicated()
+                ]
+                
+                sample_cols = [col for col in self.data_outliers_filtered.columns if col != pep_col and col != 'psm']
+                self.data_outliers_filtered[sample_cols] = self.data_outliers_filtered[sample_cols].replace(0, np.nan)
+                            
+            else:
+                # ==========================================================
+                # Original StrucGP logic
+                # ==========================================================
+                Pep0 = pd.DataFrame(self.data_fdr_filtered['PeptideSequence+structure_coding+ProteinID'])
+                Pep1 = pd.DataFrame(self.data_fdr_filtered['Matched_Reporter_Ions'])
+                if abundance_ratio is None:
+                    abundance_ratio = input("Please enter the abundance ratio as a comma-separated list (e.g., 1, 1.019488, 1.740756, 1.554661, 2.674981,1.071297, 1.145732, 1.082529, 1.733719, 1.850238), when you done, please click 'Enter' in your keyboard:  ")
+                    abundance_ratio = [float(x) for x in abundance_ratio.split(',')]
+                    print('Your data has been successfully entered, please waiting ... ')
+                self.abundance_ratio = abundance_ratio
+                #    
+                glycopep= []
+                ions = []
+                for i in Pep0.values.tolist():
+                    glycopep.append(i[0])
+                z = 0
+                #
+                for i in Pep1.values.tolist(): 
+                    tmp0 = str(i[0]).split('),')  
+                    tmp1 = [glycopep[z]]
+                    for j in tmp0:
+                        try:
+                            tmp1.append(float(j.split(',')[-1]))
+                        except:
+                            tmp1.append(float(j.split(',')[-1][:-2]))
+                    z+=1
+                    tmp2 = [tmp1[0]]
+                    for j in range(len(tmp1[1:])):
+                        try:
+                            rat = abundance_ratio[j]
+                            abundance = tmp1[j+1]
+                            value = (abundance*rat)
+                            tmp2.append(value)
+                        except:
+                            continue
+                    ions.append(tmp2)
+                #
+                header = ['PeptideSequence+structure_coding+ProteinID', *map(str, self.sample_group.index), 'psm']
+                result = [header]
+                result1 = [header]
+                # 转 ions 为 DataFrame 便于分组处理
+                ion_df = pd.DataFrame(ions)
+                ion_df.rename(columns={0: 'peptide'}, inplace=True)
+                # Melt所有的定量值（后续使用groupby）
+                value_cols = ion_df.columns[1:]
+                ion_melted = ion_df.melt(id_vars='peptide', value_vars=value_cols, var_name='channel', value_name='abundance')
+                # Group by peptide → 列表化每个 channel 对应的 abundance 值
+                grouped = ion_melted.groupby(['peptide', 'channel'])['abundance'].apply(list).unstack(fill_value=[]).reset_index()
+                if samplewise_normalization is True:
+                    records = []
+                    # 假设 grouped 是原始 DataFrame，第一列是 peptide 名，其它列是样本
+                    for idx, row in grouped.iterrows():
+                        glycopeptide = row.peptide
+                        for sample in grouped.columns[1:]:
+                            intensities = row[sample]
+                            for val in intensities:
+                                records.append((glycopeptide, sample, val))
+                    # 一次性创建 DataFrame，极大加快速度
+                    df_flattened = pd.DataFrame(records, columns=['Glycopeptide', 'Sample', 'Intensity']) 
+                    # 计算每个样本自己的中位数
+                    sample_medians = df_flattened.groupby('Sample')['Intensity'].median()
+                    # 每个 intensity 除以所属样本的中位数
+                    df_flattened['Normalized_Intensity'] = df_flattened.apply(
+                        lambda row: row['Intensity'] / sample_medians[row['Sample']],
+                        axis=1
+                    )
+                    grouped = df_flattened.groupby(['Glycopeptide', 'Sample'])['Normalized_Intensity'].apply(list).unstack()
+                    grouped.reset_index(inplace=True)
+                    grouped.rename(columns={'Glycopeptide': 'peptide'}, inplace=True)
+                    def replace_nan_in_list(x):
+                        if isinstance(x, list):
+                            return [0.0 if (pd.isna(i) or (isinstance(i, float) and math.isnan(i))) else i for i in x]
+                        return x
+                    # 仅对样本列进行替换（排除 peptide 列）
+                    sample_cols = [col for col in grouped.columns if col != 'peptide']
+                    grouped[sample_cols] = grouped[sample_cols].applymap(replace_nan_in_list)
+                for _, row in grouped.iterrows():
+                    pep_id = row['peptide']
+                    values_per_channel = row[1:].tolist()
+                    # 拆分前/后半部分（即：control/sample）
+                    half = len(values_per_channel) // 2
+                    data_c = pd.DataFrame(values_per_channel[:half]).replace(0, np.nan)
+                    data_s = pd.DataFrame(values_per_channel[half:]).replace(0, np.nan)
+                    # 归一化（使用 module1.median_cheng）
+                    for col in data_c.columns:
+                        median_val = self.median_cheng(data_c[col].tolist())
+                        # if not np.isnan(median_val) and median_val != 0:
+                        data_c[col] = data_c[col] / median_val
+                        data_s[col] = data_s[col] / median_val
+                    # 汇总统计 → 中位数输出行
+                    tmp3 = [pep_id]
+                    # 对每一行（通道）进行归一化并取中位数
+                    for l in range(data_c.shape[0]):
+                        row_values = data_c.loc[l].tolist()
+                        tmp3.append(self.median_cheng(row_values))
+                    for l in range(data_s.shape[0]):
+                        row_values = data_s.loc[l].tolist()
+                        tmp3.append(self.median_cheng(row_values))
+                    tmp3.append(data_s.shape[1])  # psm count
+                    result1.append(tmp3)
+                #
+                self.data_outliers_filtered = pd.DataFrame(result1)
+                self.data_outliers_filtered.columns = self.data_outliers_filtered.iloc[0]
+                self.data_outliers_filtered = self.data_outliers_filtered.drop(self.data_outliers_filtered.index[0])
+                self.data_outliers_filtered = self.data_outliers_filtered.set_index('PeptideSequence+structure_coding+ProteinID',drop=False)
+                data_outliers_filtered_cleaned = self.data_outliers_filtered.dropna(axis=1, how='all')
+                dropped_columns = self.data_outliers_filtered.columns.difference(data_outliers_filtered_cleaned.columns).tolist()
+                dropped_columns = [float(x) for x in dropped_columns]
+                self.sample_group = self.sample_group.drop(index=dropped_columns)
+                self.data_outliers_filtered = data_outliers_filtered_cleaned
+                # self.data_outliers_filtered = pd.concat([self.data_fdr_filtered, self.data_outliers_filtered],axis=1,join='inner')
+                self.data_outliers_filtered = pd.merge(self.data_fdr_filtered, self.data_outliers_filtered, left_index=True, right_index=True, how='left')
+                self.data_outliers_filtered = self.data_outliers_filtered.rename(columns={'PeptideSequence+structure_coding+ProteinID_x':'PeptideSequence+structure_coding+ProteinID',
+                                                                                          'PeptideSequence+structure_coding+ProteinID_y':'PeptideSequence+structure_coding+ProteinID'})
+                #
+                self.data_outliers_filtered = self.data_outliers_filtered[~self.data_outliers_filtered.index.duplicated()]
         #
         elif self.search_engine != 'StrucGP':
             self.data_outliers_filtered = self.data_fdr_filtered

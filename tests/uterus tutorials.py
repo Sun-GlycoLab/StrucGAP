@@ -15,12 +15,12 @@ data_manager = StrucGAP_InsightTracker()
 # data_manager.outputs
 # data_manager.key_information_extraction()
 
-data_manager.read_pickle()
+# data_manager.read_pickle()
 
 os.chdir('D:\\doctor\\analysisys\\StrucGAP')
 
 # 
-module1 = StrucGAP_Preprocess(data_dir="D:\\doctor\\analysisys\\data\\mouse uterus.xlsx",
+module1 = StrucGAP_Preprocess(data_dir="D:\\doctor\\StrucGAP\\tests\\mouse uterus.xlsx",
                       data_sheet_name = '1 PSM',
                       sample_group_data_dir = 'D:\\doctor\\analysisys\\data\\sample_group.xlsx',
                       branch_list_dir = "D:\\doctor\\wyq\\branch_structures_18_mice uterus.0240401.xlsx",
@@ -30,10 +30,13 @@ module1.cv_raw(threshold='no')
 # 1.172277596,1.142983373,1,1.46390136,1.466662624,1.449428354,1.109519196,1.387464059,1.291746761,1.487440464
 module1.fdr(feature_type='no')
 module1.outliers(abundance_ratio=[1.172277596,1.142983373,1,1.46390136,1.466662624,1.449428354,1.109519196,1.387464059,1.291746761,1.487440464],
-                 samplewise_normalization = False)
+                 samplewise_normalization = False,
+                 total_intensity_normalization=True,
+                 total_intensity_method='mean')
 module1.cv(threshold = 'no')
 module1.psm(psm_number = 'no')
-module1.annotation(glytoucan = True, biosynthetic_pathways = True, glycobiology_filter = True)
+# Using glytoucan = True and biosynthetic_pathways = True is a very time-consuming task, due to the limitations of the GlyTouCan and KEGG APIs. Please be patient when enabling these two annotations. If you prefer faster execution, set both options to False.
+module1.annotation(glytoucan = True, glytoucan_structure = True, glytoucan_wurcs_file = "D:\\doctor\\StrucGAP\\tests\\glycosmos_glycans_wurcs.csv", biosynthetic_pathways = True, glycobiology_filter = True)
 module1.output() 
 
 # 
@@ -583,7 +586,7 @@ module7.multi_bar(
 
 plot_data = module1.data_psm_filtered.copy()
 plot_data1 = plot_data[plot_data['fucosylated type']=='core fucosylated']
-module5 = StrucGAP_FunctionAnnotation(plot_data1, GO_data_dir = "D:\\doctor\\analysisys\\GAP\\go-basic.obo", 
+module5 = StrucGAP_FunctionAnnotation(plot_data1, 
                                   data_manager=data_manager)  
 module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 69,76,83
 # module5.go_function_structure(function_data = 'ora_no_background_both_proteins_result')  
@@ -593,7 +596,7 @@ plot_data1 = plot_data1[plot_data1['P-value']<0.05]
 plot_data1['type'] = 'core fucosylated'
 plot_data1 = plot_data1.iloc[:10,:]
 plot_data2 = plot_data[plot_data['fucosylated type']=='antenna fucosylated']
-module5 = StrucGAP_FunctionAnnotation(plot_data2, GO_data_dir = "D:\\doctor\\analysisys\\GAP\\go-basic.obo", 
+module5 = StrucGAP_FunctionAnnotation(plot_data2,
                                   data_manager=data_manager)  
 module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 69,76,83
 # module5.go_function_structure(function_data = 'ora_no_background_both_proteins_result')  
@@ -618,7 +621,7 @@ module7.dotplot_col(
 
 plot_data = module1.data_psm_filtered.copy()
 plot_data1 = plot_data[plot_data['Ac/Gc']=='Ac']
-module5 = StrucGAP_FunctionAnnotation(plot_data1, GO_data_dir = "D:\\doctor\\analysisys\\GAP\\go-basic.obo", 
+module5 = StrucGAP_FunctionAnnotation(plot_data1, 
                                   data_manager=data_manager)  
 module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 69,76,83
 plot_data1 = module5.ora_no_background_both_proteins_result
@@ -627,7 +630,7 @@ plot_data1 = plot_data1[plot_data1['P-value']<0.05]
 plot_data1['type'] = 'Ac'
 plot_data1 = plot_data1.iloc[:10,:]
 plot_data2 = plot_data[plot_data['Ac/Gc']=='Gc']
-module5 = StrucGAP_FunctionAnnotation(plot_data2, GO_data_dir = "D:\\doctor\\analysisys\\GAP\\go-basic.obo", 
+module5 = StrucGAP_FunctionAnnotation(plot_data2, 
                                   data_manager=data_manager)  
 module5.ora(organism='mmusculus', background_input=False, up_down_fc_threshold=1.5) # 69,76,83
 plot_data2 = module5.ora_no_background_both_proteins_result
@@ -1371,7 +1374,7 @@ module7.line(data = plot_data,
              )
 
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
                           sheet_name = 'bp_core_structure')
 plot_data = plot_data.iloc[6:,1:]
 plot_data.columns = plot_data.iloc[0]
@@ -1391,7 +1394,7 @@ module7.bar_multi_columns(
     filename='bp_core_structure'
 )
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
                           sheet_name = 'bp_glycan_type')
 plot_data = plot_data.iloc[5:,1:]
 plot_data.columns = plot_data.iloc[0]
@@ -1411,7 +1414,7 @@ module7.bar_multi_columns(
     filename='bp_glycan_type'
 )
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
                           sheet_name = 'bp_fucosylated_type')
 plot_data = plot_data.iloc[5:,1:]
 plot_data.columns = plot_data.iloc[0]
@@ -1431,7 +1434,7 @@ module7.bar_multi_columns(
     filename='bp_fucosylated_type'
 )
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 10_StrucGAP_FunctionAnnotation_GO_ora_no_background_up_result_key_information.xlsx",
                           sheet_name = 'bp_acgc')
 plot_data = plot_data.iloc[5:,1:]
 plot_data.columns = plot_data.iloc[0]
@@ -1451,7 +1454,7 @@ module7.bar_multi_columns(
     filename='bp_acgc'
 )
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 11_StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx",
                           sheet_name = 'bp_core_structure')
 plot_data = plot_data.iloc[6:,1:]
 plot_data.columns = plot_data.iloc[0]
@@ -1471,7 +1474,7 @@ module7.bar_multi_columns(
     filename='down bp_core_structure'
 )
 
-plot_data = pd.read_excel("D:\\doctor\\analysisys\\StrucGAP\\analysis_result\\StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx",
+plot_data = pd.read_excel("D:\\doctor\\analysisys\\GAP_manuscript\\Supplementary Tables\\analysis_result\\Supplementary Table 11_StrucGAP_FunctionAnnotation_GO_ora_no_background_down_result_key_information.xlsx",
                           sheet_name = 'bp_acgc')
 plot_data = plot_data.iloc[5:,1:]
 plot_data.columns = plot_data.iloc[0]

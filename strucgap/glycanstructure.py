@@ -156,7 +156,7 @@ class StrucGAP_GlycanStructure:
             else:
                 raise ValueError("Invalid data_type provided.")  
         else:
-            if isinstance(gs_data, StrucGAP_GlycoPeptideQuant):
+            # if isinstance(gs_data, StrucGAP_GlycoPeptideQuant):
                 self.data = pd.concat([self.gs_data.data, self.gs_data.fc_result],axis=1)
                 self.data = self.data[self.data[pvalue_type]<pvalue]
                 if differential_data_type=='both':

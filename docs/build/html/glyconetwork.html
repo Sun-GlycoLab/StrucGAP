@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_GlycoNetwork Module &mdash; StrucGAP 1.1.4 documentation</title>
+  <title>StrucGAP_GlycoNetwork Module &mdash; StrucGAP 1.1.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -78,6 +78,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycoprotein_site"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.glycoprotein_site()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycopeptide_site"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.glycopeptide_site()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.transcriptomic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.proteome_fc_recommendation()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.proteomic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosyltransferases"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.glycosyltransferases()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosidases"><code class="docutils literal notranslate"><span class="pre">StrucGAP_GlycoNetwork.glycosidases()</span></code></a></li>
@@ -103,7 +104,6 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials%28pGlyco3%29.html">Tutorials(pGlyco3)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials%28Glyco-Decipher%29.html">Tutorials(Glyco-Decipher)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials%28Byonic%29.html">Tutorials(Byonic)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials%28GlycanFinder%29.html">Tutorials(GlycanFinder)</a></li>
 </ul>
 
         </div>
@@ -396,8 +396,40 @@ self.glycopeptide_site_value</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation">
+<span class="sig-name descname"><span class="pre">proteome_fc_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_ratio_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.96</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_quantiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.95,</span> <span class="pre">0.99)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteome_fc_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Recommend FC cutoffs for global proteome data using:</dt><dd><ol class="lowerroman simple">
+<li><p>CV-based theoretical MDFC,</p></li>
+<li><p>empirical null distribution from Control-Control comparisons (<a href="#id1"><span class="problematic" id="id2">|log2 diff|</span></a>),</p></li>
+<li><p>empirical p-values against that null + BH-FDR.</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pd.DataFrame</em>) – rows: proteins (e.g., Accession)
+cols: reporter channels (first half = controls, second half = samples)</p></li>
+<li><p><strong>zero_ratio_threshold</strong> (<em>float</em>) – Drop columns whose proportion of zeros exceeds this threshold.
+Set to None to disable.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z-score for MDFC (default 1.96 for ~95% CI).</p></li>
+<li><p><strong>null_quantiles</strong> (<em>tuple</em>) – Quantiles used to derive empirical FC cutoff from null (default 0.95, 0.99).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mdfc_table</strong> (<em>pd.DataFrame</em>) – Summary of median CV in controls and theoretical MDFC in ln and FC space.</p></li>
+<li><p><strong>summary</strong> (<em>pd.DataFrame</em>) – Per-protein table with log2FC, abs_log2FC, empirical cutoffs, empirical p-values, BH-FDR, etc.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic">
-<span class="sig-name descname"><span class="pre">proteomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Medium'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_samplewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_featurewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">proteomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Medium'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_samplewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_featurewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic" title="Permalink to this definition"></a></dt>
 <dd><p>Implements a comprehensive preprocessing pipeline for global proteomic datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

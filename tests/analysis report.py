@@ -6,6 +6,8 @@ Created on Mon May 12 17:08:44 2025
 """
 from PyPDF2 import PdfMerger
 import random
+import pandas as pd
+
 def generate_random_colors(n):
     colors = []
     for _ in range(n):
@@ -288,7 +290,7 @@ data2 = data2.iloc[:,0]
 fig2 = module7.venn_diagram(
     data1,
     data2,
-    colors = 'Tropic',
+    colors = 'BuGn',
     subfolder='StrucGAP_GlycanStructure_2',
     legend = ['Core fucosylated', 'Antenna fucosylated'],
     filename='fucosylated type',
@@ -815,6 +817,7 @@ fig6 = module7.heatmap2(data = plot_data,
                  text_annotation = True,
                  text_size = 30,
                  text_color = 'white',
+                 # cluster='none',
                  figure_description = 'Co-occurrence analysis revealing preferential pairing between LacdiNAc and sialylated types.',
                  )
 
@@ -1413,6 +1416,7 @@ fig5 = module7.heatmap2(data = plot_data,
                  text_annotation = True,
                  text_size = 30,
                  text_color = 'white',
+                 # cluster='none',
                  figure_description = 'Co-occurrence analysis revealing preferential pairing between sialylated types and LacdiNAc.',
                  )
 

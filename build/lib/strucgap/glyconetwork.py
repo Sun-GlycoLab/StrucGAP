@@ -473,7 +473,12 @@ class StrucGAP_GlycoNetwork:
         for i in data.index:
             list1 = list(data_c.loc[i])
             list2 = list(data_s.loc[i]) 
-            fc.append(statistics.mean(list2)/statistics.mean(list1)) 
+            # fc.append(statistics.mean(list2)/statistics.mean(list1)) 
+            fc_all = [s / c for s in list2 for c in list1 if not pd.isna(s) and not pd.isna(c) and c != 0]
+            fc_all = [x for x in fc_all if np.isfinite(x)]
+            fc_all.sort()
+            n_middle = max(1, min(len(sample_columns)//2, len(fc_all)))  # “中间一半”，并防止越界
+            fc.append(self.geometric_mean_of_middle(fc_all, n_middle))
             # 计算P值
             if (sum(list1)/len(list1))/(sum(list2)/len(list2))==1:
                 pvalue_mannwhitneyu.append(1)
@@ -607,8 +612,244 @@ class StrucGAP_GlycoNetwork:
     def transcriptomic(self):
         pass
     
+    def proteome_fc_recommendation(
+            self,
+            data: pd.DataFrame,
+            zero_ratio_threshold: float = 0.5,
+            z: float = 1.96,
+            null_quantiles=(0.95, 0.99),
+        ):
+            """
+            Recommend FC cutoffs for global proteome data using:
+              (i) CV-based theoretical MDFC,
+              (ii) empirical null distribution from Control-Control comparisons (|log2 diff|),
+              (iii) empirical p-values against that null + BH-FDR.
+        
+            Parameters
+            ----------
+            data : pd.DataFrame
+                rows: proteins (e.g., Accession)
+                cols: reporter channels (first half = controls, second half = samples)
+            zero_ratio_threshold : float
+                Drop columns whose proportion of zeros exceeds this threshold.
+                Set to None to disable.
+            z : float
+                Z-score for MDFC (default 1.96 for ~95% CI).
+            null_quantiles : tuple
+                Quantiles used to derive empirical FC cutoff from null (default 0.95, 0.99).
+        
+            Returns
+            -------
+            mdfc_table : pd.DataFrame
+                Summary of median CV in controls and theoretical MDFC in ln and FC space.
+            summary : pd.DataFrame
+                Per-protein table with log2FC, abs_log2FC, empirical cutoffs, empirical p-values, BH-FDR, etc.
+            """
+        
+            # -----------------------------
+            # Helpers
+            # -----------------------------
+            def bh_fdr(pvals):
+                pvals = np.asarray(pvals, dtype=float)
+                if np.all(np.isnan(pvals)):
+                    return np.full_like(pvals, np.nan, dtype=float)
+                # statsmodels multipletests doesn't like all-nan; mask then restore
+                mask = ~np.isnan(pvals)
+                q = np.full_like(pvals, np.nan, dtype=float)
+                if mask.sum() > 0:
+                    q[mask] = multipletests(pvals[mask], method="fdr_bh")[1]
+                return q
+        
+            def cv(arr):
+                """Coefficient of variation: sample SD / mean (linear scale)."""
+                a = np.asarray(arr, dtype=float)
+                a = a[~np.isnan(a)]
+                if a.size == 0:
+                    return np.nan
+                m = np.mean(a)
+                if m == 0:
+                    return np.nan
+                # ddof=1 -> sample SD (needs at least 2 values)
+                if a.size < 2:
+                    return np.nan
+                return np.std(a, ddof=1) / m
+        
+            def sigma_ln_from_cv(cv_val):
+                """Map linear CV -> natural-log SD using sigma_ln^2 = ln(1 + CV^2)."""
+                if np.isnan(cv_val):
+                    return np.nan
+                return np.sqrt(np.log(1.0 + cv_val**2))
+        
+            def mdfc_from_cv(cv_val, n_reps, z=1.96):
+                """
+                Theoretical minimal detectable fold-change (MDFC) at confidence z.
+                Returns ln-space and linear-space MDFC for:
+                  - group mean difference (two groups, each n_reps)
+                  - single-pair difference (one channel vs one channel)
+                """
+                sig_ln = sigma_ln_from_cv(cv_val)
+                if np.isnan(sig_ln) or n_reps <= 0:
+                    return dict(group_mean_log=np.nan, group_mean_fc=np.nan,
+                                single_pair_log=np.nan, single_pair_fc=np.nan)
+        
+                # variance of difference of group means in ln-space:
+                # Var(mean1 - mean2) = 2 * sigma^2 / n
+                delta_ln_group = z * np.sqrt(2 * (sig_ln**2) / n_reps)
+        
+                # conservative single-pair bound: difference of two single observations
+                delta_ln_single = z * np.sqrt(2) * sig_ln
+        
+                return dict(
+                    group_mean_log=float(delta_ln_group),
+                    group_mean_fc=float(np.exp(delta_ln_group)),
+                    single_pair_log=float(delta_ln_single),
+                    single_pair_fc=float(np.exp(delta_ln_single)),
+                )
+        
+            def empirical_null_ctrl_vs_ctrl(df_ctrl_log2):
+                """
+                Empirical null of |log2 differences| pooling all ctrl-ctrl channel pairs across proteins.
+                """
+                k = df_ctrl_log2.shape[1]
+                diffs = []
+                for i, j in combinations(range(k), 2):
+                    d = np.abs(df_ctrl_log2.iloc[:, i] - df_ctrl_log2.iloc[:, j])
+                    diffs.append(d.values)
+                return np.concatenate(diffs) if diffs else np.array([])
+        
+            def empirical_p_from_null(observed_abs_log2fc, null_abs_log2_diffs):
+                """
+                Right-tail empirical p-value:
+                  p = (count(null >= obs) + 1) / (len(null) + 1)
+                """
+                null_sorted = np.sort(null_abs_log2_diffs[~np.isnan(null_abs_log2_diffs)])
+                N = null_sorted.size
+                obs = np.asarray(observed_abs_log2fc, dtype=float)
+                if N == 0:
+                    return np.full(obs.shape, np.nan, dtype=float)
+        
+                idx = np.searchsorted(null_sorted, obs, side="left")
+                ge_counts = N - idx
+                return (ge_counts + 1.0) / (N + 1.0)
+        
+            # -----------------------------
+            # Prepare matrix
+            # -----------------------------
+            if not isinstance(data, pd.DataFrame):
+                raise TypeError("data must be a pandas DataFrame.")
+        
+            X = data.copy()
+            X = X.apply(pd.to_numeric, errors="coerce")  # force numeric, non-numeric -> NaN
+        
+            # optional: drop columns with too many zeros (same spirit as glyco pipeline)
+            if zero_ratio_threshold is not None:
+                zero_ratio = (X == 0).sum(axis=0) / len(X)
+                X = X.loc[:, zero_ratio <= zero_ratio_threshold]
+        
+            cols = X.columns.tolist()
+            if len(cols) < 4 or (len(cols) % 2 != 0):
+                raise ValueError(
+                    f"Need an even number of channels >= 4 after filtering; got {len(cols)} columns."
+                )
+        
+            half = len(cols) // 2
+            ctrl_cols = cols[:half]
+            exp_cols = cols[half:]
+            n_reps = len(ctrl_cols)
+        
+            # -----------------------------
+            # A) CV-based theoretical MDFC (controls)
+            # -----------------------------
+            X["CV_ctrl_raw"] = X[ctrl_cols].apply(lambda r: cv(r.values), axis=1)
+            cv_median = float(np.nanmedian(X["CV_ctrl_raw"].values))
+        
+            mdfc_stats = mdfc_from_cv(cv_median, n_reps=n_reps, z=z)
+            mdfc_table = pd.DataFrame({
+                "Metric": [
+                    "Median CV (controls)",
+                    f"Δ_ln (group means, n={n_reps})",
+                    f"MDFC (group means, linear, n={n_reps})",
+                    "Δ_ln (single pair)",
+                    "MDFC (single pair, linear)",
+                ],
+                "Value": [
+                    cv_median,
+                    mdfc_stats["group_mean_log"],
+                    mdfc_stats["group_mean_fc"],
+                    mdfc_stats["single_pair_log"],
+                    mdfc_stats["single_pair_fc"],
+                ]
+            })
+        
+            # -----------------------------
+            # B) Empirical null (Ctrl–Ctrl): build on log2 intensities
+            #     Protect against <=0 before log2
+            # -----------------------------
+            ctrl_mat = X[ctrl_cols].astype(float).copy()
+            ctrl_mat[ctrl_mat <= 0] = np.nan
+            log2_ctrl = np.log2(ctrl_mat)
+        
+            null_abs_log2 = empirical_null_ctrl_vs_ctrl(log2_ctrl)
+        
+            # derive cutoffs for requested quantiles
+            cutoffs = {}
+            null_clean = null_abs_log2[~np.isnan(null_abs_log2)]
+            if null_clean.size == 0:
+                # no null -> everything becomes NaN
+                for q in null_quantiles:
+                    cutoffs[q] = (np.nan, np.nan)
+            else:
+                for q in null_quantiles:
+                    tau_log2 = float(np.quantile(null_clean, q))
+                    tau_fc = float(2 ** tau_log2)
+                    cutoffs[q] = (tau_log2, tau_fc)
+        
+            # -----------------------------
+            # C) Observed log2FC (mean exp - mean ctrl), empirical p, BH-FDR
+            # -----------------------------
+            exp_mat = X[exp_cols].astype(float).copy()
+            exp_mat[exp_mat <= 0] = np.nan
+        
+            log2_mean_ctrl = log2_ctrl.mean(axis=1)
+            log2_mean_exp = np.log2(exp_mat).mean(axis=1)
+        
+            X["log2FC"] = log2_mean_exp - log2_mean_ctrl
+            X["abs_log2FC"] = np.abs(X["log2FC"])
+        
+            p_emp = empirical_p_from_null(X["abs_log2FC"].values, null_abs_log2)
+            q_emp = bh_fdr(p_emp)
+        
+            X["p_empirical"] = p_emp
+            X["q_empirical_bh"] = q_emp
+        
+            # attach cutoffs to each row (for convenience)
+            for q in null_quantiles:
+                tau_log2, tau_fc = cutoffs[q]
+                X[f"emp_cutoff_log2_{int(q*100)}"] = tau_log2
+                X[f"emp_cutoff_FC_{int(q*100)}"] = tau_fc
+        
+            # default pass flag uses first quantile (usually 95%)
+            q0 = null_quantiles[0]
+            tau0_log2, _ = cutoffs[q0]
+            X["pass_FC_cutoff"] = X["abs_log2FC"] >= tau0_log2 if not np.isnan(tau0_log2) else np.nan
+            X["pass_empirical_FDR_0p05"] = X["q_empirical_bh"] <= 0.05
+        
+            # output summary
+            summary = X[ctrl_cols + exp_cols + [
+                "log2FC",
+                "abs_log2FC",
+                "emp_cutoff_log2_95",
+                "emp_cutoff_FC_95",
+                "emp_cutoff_log2_99",
+                "emp_cutoff_FC_99",
+                "p_empirical",
+                "pass_FC_cutoff",
+            ]].round(5)
+        
+            return mdfc_table, summary
+    
     def proteomic(self, protein_data_dir, fc=1.5, pvalue=0.05, data_sheet_name=None, pvalue_type='pvalue_ttest_mannwhitneyu',
-                  fdr = 'Medium', psm = 3, cv = 0.3, 
+                  fdr = 'Medium', psm = 3, cv = 0.3, fc_recommendation = True,
                   normalization_samplewise_method = 'robust normalization',
                   normalization_featurewise_method = 'robust normalization'):
         """
@@ -748,7 +989,24 @@ class StrucGAP_GlycoNetwork:
         self.samplewise_normalized_data = self.normalization_samplewise(self.cv_filter_data, method = normalization_samplewise_method)
         # featurewise
         self.samplewise_featurewise_normalized_data = self.normalization_featurewise(self.samplewise_normalized_data, method = normalization_featurewise_method)
-        #
+        # fc_recommendation
+        # ---------------------------------------
+        # FC recommendation for global proteome
+        # ---------------------------------------
+        if fc_recommendation:
+            prot_df = self.cv_filter_data.copy()   # 或者 self.no_outliers_data / self.no_missing_value_data
+            sample_cols = [x for x in filtered_labels if x != 'Accession']  
+            prot_df = prot_df[sample_cols].astype(float)
+            # 模仿糖肽：过滤 0 占比 > 0.5 的通道
+            zero_ratio = (prot_df == 0).sum() / len(prot_df)
+            prot_df = prot_df.loc[:, zero_ratio <= 0.5]
+        
+            # 如果过滤后列数太少（比如 <4），推荐结果会不稳定，给 NaN 也行
+            if prot_df.shape[1] >= 4 and (prot_df.shape[1] % 2 == 0):
+                self.proteome_fc_recommendation_mdfc, self.proteome_fc_recommendation_summary = self.proteome_fc_recommendation(data=prot_df)
+            else:
+                self.proteome_fc_recommendation_mdfc = pd.DataFrame()
+                self.proteome_fc_recommendation_summary = pd.DataFrame()
         ## analysis
         # glycosylation
         self.proteomic_fc = self.glycosylation_rate(self.cv_filter_data, sample_columns = [x for x in filtered_labels if x != 'Accession'])
@@ -887,6 +1145,8 @@ class StrucGAP_GlycoNetwork:
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'cv filter data', self.cv_filter_data)
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'samplewise normalized data', self.samplewise_normalized_data)
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'samplewise featurewise normalized data', self.samplewise_featurewise_normalized_data)
+        self.data_manager.log_output('StrucGAP_GlycoNetwork', 'proteome_fc_recommendation_mdfc', self.proteome_fc_recommendation_mdfc)
+        self.data_manager.log_output('StrucGAP_GlycoNetwork', 'proteome_fc_recommendation_summary', self.proteome_fc_recommendation_summary)
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'proteomic fc', self.proteomic_fc)
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'proteomic protein glycosite count', self.proteomic_protein_glycosite_count)
         self.data_manager.log_output('StrucGAP_GlycoNetwork', 'proteomic protein glycosite value', self.proteomic_protein_glycosite_value)
@@ -1290,6 +1550,10 @@ class StrucGAP_GlycoNetwork:
             self.cv_filter_data.to_excel(writer, sheet_name='cv_filter_data')
             self.samplewise_normalized_data.to_excel(writer, sheet_name='samplewise_normalized_data'[:31])
             self.samplewise_featurewise_normalized_data.to_excel(writer, sheet_name='samplewise_featurewise_normalized_data'[:31])
+            
+            self.proteome_fc_recommendation_mdfc.to_excel(writer, sheet_name='fc_recommendation_mdfc')
+            self.proteome_fc_recommendation_summary.to_excel(writer, sheet_name='fc_recommendation_summary')
+            
             self.proteomic_fc.to_excel(writer, sheet_name='proteomic_fc')
             self.proteomic_protein_glycosite_count.to_excel(writer, sheet_name='protein_glycosite_count'[:31])
             self.proteomic_protein_glycosite_value.to_excel(writer, sheet_name='protein_glycosite_value'[:31])

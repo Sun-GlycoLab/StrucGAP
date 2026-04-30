@@ -41,7 +41,7 @@ The abundance ratio used for the outliers calibration was calculated as follows:
     module1.cv_raw(threshold='no')
     module1.fdr(feature_type='no')
     module1.outliers(abundance_ratio=[1.172277596,1.142983373,1,1.46390136,1.466662624,1.449428354,1.109519196,1.387464059,1.291746761,1.487440464],
-                 samplewise_normalization = False)
+                 samplewise_normalization = False, total_intensity_normalization=False, total_intensity_method='mean')
     module1.cv(threshold = 'no')
     module1.psm(psm_number = 'no')
     # Using glytoucan = True and biosynthetic_pathways = True is a very time-consuming task, due to the limitations of the GlyTouCan and KEGG APIs. Please be patient when enabling these two annotations. If you prefer faster execution, set both options to False.
