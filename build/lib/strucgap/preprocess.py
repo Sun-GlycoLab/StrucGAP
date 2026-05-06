@@ -1693,7 +1693,8 @@ class StrucGAP_Preprocess:
             
                 # 先处理每个 PSM：乘 abundance_ratio + PSM 内归一化
                 records = []
-                for _, row in self.data_fdr_filtered.iterrows():
+            
+                for psm_id, row in self.data_fdr_filtered.iterrows():
                     pep_id = row[pep_col]
                     ion_dict = parse_matched_reporter_ions(row[reporter_col])
             
@@ -1701,23 +1702,33 @@ class StrucGAP_Preprocess:
                     corrected = []
                     for i, channel in enumerate(sample_channels):
                         intensity = ion_dict.get(channel, np.nan)
+            
                         if i < len(abundance_ratio):
                             corrected.append(intensity * abundance_ratio[i])
                         else:
                             corrected.append(intensity)
             
-                    # PSM 内归一化
-                    total = sum([v for v in corrected if not pd.isna(v)])
+                    # 计算该 PSM 的总强度，作为后续加权平均的权重
+                    valid_values = [v for v in corrected if not pd.isna(v)]
+                    total = sum(valid_values)
+            
                     if total == 0 or np.isnan(total):
-                        normalized = [np.nan for v in corrected]
+                        normalized = [np.nan for _ in corrected]
+                        weight = np.nan
                     else:
-                        normalized = [v / total if not pd.isna(v) else np.nan for v in corrected]
+                        normalized = [
+                            v / total if not pd.isna(v) else np.nan
+                            for v in corrected
+                        ]
+                        weight = total
             
                     for ch, val in zip(sample_channels, normalized):
                         records.append({
                             'peptide': pep_id,
+                            'psm_id': psm_id,
                             'channel': ch,
-                            'normalized_intensity': val
+                            'normalized_intensity': val,
+                            'weight': weight
                         })
             
                 ion_long = pd.DataFrame(records)
@@ -1727,14 +1738,29 @@ class StrucGAP_Preprocess:
             
                 # 同一糖肽、同一通道聚合
                 if total_intensity_method == 'mean':
-                    quantified = ion_long.groupby(['peptide', 'channel'])['normalized_intensity'].mean()
+            
+                    def weighted_mean(group):
+                        values = group['normalized_intensity']
+                        weights = group['weight']
+            
+                        valid = values.notna() & weights.notna() & (weights > 0)
+            
+                        if valid.sum() == 0:
+                            return np.nan
+            
+                        return np.average(values[valid], weights=weights[valid])
+            
+                    quantified = ion_long.groupby(['peptide', 'channel']).apply(weighted_mean)
+            
                 else:
+                    # median 仍然使用未加权中位数
                     quantified = ion_long.groupby(['peptide', 'channel'])['normalized_intensity'].median()
             
                 quantified = quantified.unstack()
             
                 # 保证列顺序与 sample_group.index 一致
                 available_channels = list(quantified.columns)
+            
                 if set(sample_channels).issubset(set(available_channels)):
                     quantified = quantified[sample_channels]
                     quantified.columns = sample_channels
@@ -1757,15 +1783,23 @@ class StrucGAP_Preprocess:
                     right_index=True,
                     how='left'
                 )
+            
                 self.data_outliers_filtered = self.data_outliers_filtered.rename(
                     columns={pep_col + '_x': pep_col, pep_col + '_y': pep_col}
                 )
+            
                 self.data_outliers_filtered = self.data_outliers_filtered[
                     ~self.data_outliers_filtered.index.duplicated()
                 ]
-                
-                sample_cols = [col for col in self.data_outliers_filtered.columns if col != pep_col and col != 'psm']
-                self.data_outliers_filtered[sample_cols] = self.data_outliers_filtered[sample_cols].replace(0, np.nan)
+            
+                sample_cols = [
+                    col for col in self.data_outliers_filtered.columns
+                    if col != pep_col and col != 'psm'
+                ]
+            
+                self.data_outliers_filtered[sample_cols] = (
+                    self.data_outliers_filtered[sample_cols].replace(0, np.nan)
+                )
                             
             else:
                 # ==========================================================
