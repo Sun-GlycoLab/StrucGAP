@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_GlycanStructure Module &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+  <title>StrucGAP_GlycanStructure Module &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370aedac"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -116,16 +114,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="strucgap-glycanstructure-module">
-<h1>StrucGAP_GlycanStructure Module<a class="headerlink" href="#strucgap-glycanstructure-module" title="Permalink to this heading"></a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+  <section id="strucgap-glycanstructure-module">
+<h1>StrucGAP_GlycanStructure Module<a class="headerlink" href="#strucgap-glycanstructure-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>This module delineates N-glycan structural features, profiling their distributions and compositions.</p>
-</div>
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
 <p>Instantiate and use the module as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.glycanstructure</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycanStructure</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.glycanstructure</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_GlycanStructure</span>
 
 <span class="n">module2</span> <span class="o">=</span> <span class="n">StrucGAP_GlycanStructure</span><span class="p">(</span><span class="n">gs_data</span><span class="o">=</span><span class="n">module1</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">,</span>  <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;psm_filtered&#39;</span><span class="p">)</span>
 <span class="n">module2</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="n">remove_oligo_mannose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
@@ -136,15 +134,15 @@
 <span class="n">module2</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="module-strucgap.glycanstructure">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glycanstructure" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-strucgap.glycanstructure">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glycanstructure" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glycanstructure.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycanStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'psm_filtered'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">differential_data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glycanstructure.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycanStructure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'psm_filtered'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">differential_data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gs_data</strong> – Input data, usually derived from the output of the previous module (StrucGAP_Preprocess or StrucGAP_GlycoPeptideQuant), to be further processed by StrucGAP_GlycanStructure.</p></li>
 <li><p><strong>data_manager</strong> – Data manager instance, such as ‘data_manager’ if data_manager = StrucGAP_InsightTracker().</p></li>
@@ -178,13 +176,13 @@ Default is “both”.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remove_oligo_mannose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.statistics" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remove_oligo_mannose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.statistics" title="Link to this definition"></a></dt>
 <dd><p>Provides a global overview of glycan structures in the dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>remove_oligo_mannose</strong> – if exclude high-abundance oligo-mannose glycans to focus on structurally diverse and functionally relevant isomers (True of False).</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.GlycanComposition_rank (The ranking of glycan compositions based on their quantities).
 self.structure_coding_rank (The ranking of glycan structures based on their quantities).</p>
 </dd>
@@ -197,24 +195,24 @@ self.structure_coding_rank (The ranking of glycan structures based on their quan
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_glycan_composition">
-<span class="sig-name descname"><span class="pre">identify_glycan_composition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.identify_glycan_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_glycan_composition" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">identify_glycan_composition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.identify_glycan_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_glycan_composition" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_core_structure">
-<span class="sig-name descname"><span class="pre">identify_core_structure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.identify_core_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_core_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">identify_core_structure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.identify_core_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.identify_core_structure" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to identify core structure.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.structure_statistics">
-<span class="sig-name descname"><span class="pre">structure_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.structure_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.structure_statistics" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">structure_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.structure_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.structure_statistics" title="Link to this definition"></a></dt>
 <dd><p>Performs independent quantification of all annotated glycan substructural attributes in the dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None.</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.core_structure (The number of IGPs containing different core structures).
 self.glycan_type (The number of IGPs containing different glycan types).
 self.branches_structure (The number of IGPs containing different branch structures).
@@ -236,19 +234,19 @@ self.fsg (The number of IGPs containing different fucosylated/sialylated pattern
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.lacdinac">
-<span class="sig-name descname"><span class="pre">lacdinac</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.lacdinac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.lacdinac" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">lacdinac</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.lacdinac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.lacdinac" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to identify LacdiNAc.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.cor">
-<span class="sig-name descname"><span class="pre">cor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.cor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.cor" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.cor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.cor" title="Link to this definition"></a></dt>
 <dd><p>Computes pairwise co-occurrence frequencies of glycan substructural features across all IGPs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None.</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The co-occurrence rate between pairwise glycan substructure features.
 self.struc_cod_lacdinac
 self.struc_cod_core_structure
@@ -318,13 +316,13 @@ self.acgc_fucosylated_type</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.isoforms">
-<span class="sig-name descname"><span class="pre">isoforms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.isoforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.isoforms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">isoforms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.isoforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.isoforms" title="Link to this definition"></a></dt>
 <dd><p>Investigates isomeric variants within identical glycan compositions.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None.</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycan_composition_isoforms.</p>
 </dd>
 </dl>
@@ -336,14 +334,14 @@ self.acgc_fucosylated_type</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glycanstructure.StrucGAP_GlycanStructure.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glycanstructure.html#StrucGAP_GlycanStructure.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glycanstructure.StrucGAP_GlycanStructure.output" title="Link to this definition"></a></dt>
 <dd><p>Outputs both analysis results.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_FunctionAnnotation Module &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+  <title>StrucGAP_FunctionAnnotation Module &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370aedac"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -115,16 +113,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="strucgap-functionannotation-module">
-<h1>StrucGAP_FunctionAnnotation Module<a class="headerlink" href="#strucgap-functionannotation-module" title="Permalink to this heading"></a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+  <section id="strucgap-functionannotation-module">
+<h1>StrucGAP_FunctionAnnotation Module<a class="headerlink" href="#strucgap-functionannotation-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>This module provides functional interpretations of altered glycan traits.</p>
-</div>
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
 <p>Instantiate and use the module as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.functionannotation</span> <span class="kn">import</span> <span class="n">StrucGAP_FunctionAnnotation</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.functionannotation</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_FunctionAnnotation</span>
 
 <span class="c1"># both glycoproteins</span>
 <span class="n">module5</span> <span class="o">=</span> <span class="n">StrucGAP_FunctionAnnotation</span><span class="p">(</span><span class="n">module1</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
@@ -157,15 +155,15 @@
 <span class="n">module5</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="module-strucgap.functionannotation">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.functionannotation" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-strucgap.functionannotation">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.functionannotation" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.functionannotation.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_FunctionAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein_no_glyco_up'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.functionannotation.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_FunctionAnnotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein_no_glyco_up'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gs_data</strong> – Input data, usually derived from the output of the previous module (StrucGAP_Preprocess, StrucGAP_GlycoPeptideQuant or StrucGAP_GlycoNetwork), to be further processed by StrucGAP_FunctionAnnotation.</p></li>
 <li><p><strong>data_manager</strong> – Data manager instance, such as ‘data_manager’ if data_manager = StrucGAP_InsightTracker().</p></li>
@@ -176,26 +174,26 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.compute_weighted_fc">
-<span class="sig-name descname"><span class="pre">compute_weighted_fc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.compute_weighted_fc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.compute_weighted_fc" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_weighted_fc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.compute_weighted_fc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.compute_weighted_fc" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to compute weight FC.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora">
-<span class="sig-name descname"><span class="pre">ora</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['GO:MF',</span> <span class="pre">'GO:CC',</span> <span class="pre">'GO:BP']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enrich_feature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.ora"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ora</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_down_fc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['GO:MF',</span> <span class="pre">'GO:CC',</span> <span class="pre">'GO:BP']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enrich_feature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.ora"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.ora" title="Link to this definition"></a></dt>
 <dd><p>Performs over-representation analysis using the g:Profiler API.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>organism</strong> – database from [‘mmusculus’,’hsapiens’, ‘rnorvegicus’].</p></li>
 <li><p><strong>up_down_fc_threshold</strong> – FC threshold used to differentiate up and down regulated features.</p></li>
 <li><p><strong>background_input</strong> – use both proteins as background or not.</p></li>
 <li><p><strong>pvalue_type</strong> – ‘pvalue_ttest’, ‘pvalue_mannwhitneyu’ or ‘pvalue_ttest_mannwhitneyu’.</p></li>
-<li><p><strong>selected_terms</strong> – enrichment database from [“<a class="reference external" href="GO:MF">GO:MF</a>”,”<a class="reference external" href="GO:CC">GO:CC</a>”,”<a class="reference external" href="GO:BP">GO:BP</a>”,”KEGG”,”REAC”,”WP”,”TF”,”MIRNA”,”HPA”,”CORUM”,”HP”], such as [‘<a class="reference external" href="GO:MF">GO:MF</a>’, ‘<a class="reference external" href="GO:CC">GO:CC</a>’, ‘<a class="reference external" href="GO:BP">GO:BP</a>’].</p></li>
+<li><p><strong>selected_terms</strong> – enrichment database from [”<a class="reference external" href="GO:MF">GO:MF</a>”,”<a class="reference external" href="GO:CC">GO:CC</a>”,”<a class="reference external" href="GO:BP">GO:BP</a>”,”KEGG”,”REAC”,”WP”,”TF”,”MIRNA”,”HPA”,”CORUM”,”HP”], such as [’<a class="reference external" href="GO:MF">GO:MF</a>’, ‘<a class="reference external" href="GO:CC">GO:CC</a>’, ‘<a class="reference external" href="GO:BP">GO:BP</a>’].</p></li>
 <li><p><strong>enrich_feature</strong> – select feature in [‘protein’, ‘glycopeptide’].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.final_protein_fc
 self.upregulated_proteins
 self.downregulated_proteins
@@ -216,13 +214,13 @@ self.ora_background_both_proteins_result</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.gsea">
-<span class="sig-name descname"><span class="pre">gsea</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.gsea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.gsea" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gsea</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.gsea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.gsea" title="Link to this definition"></a></dt>
 <dd><p>Conducts GSEA using the GSEApy.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None.</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.gsea_result</p>
 </dd>
 </dl>
@@ -234,23 +232,23 @@ self.ora_background_both_proteins_result</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.identify_core_structure">
-<span class="sig-name descname"><span class="pre">identify_core_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.identify_core_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.identify_core_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">identify_core_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.identify_core_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.identify_core_structure" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to identify core structure.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure">
-<span class="sig-name descname"><span class="pre">go_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.go_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">go_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.go_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.go_function_structure" title="Link to this definition"></a></dt>
 <dd><p>Performs integrated analysis between enriched GO terms and glycan substructural features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p></li>
 <li><p><strong>p_value</strong> – [‘P-value’, ‘Adjusted P-value’] used to screen enrichment terms.</p></li>
 <li><p><strong>cutoff</strong> – p_value threshold.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.bp_core_structure
 self.mf_core_structure
 self.cc_core_structure
@@ -333,17 +331,17 @@ self.cc_acgc_count</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure">
-<span class="sig-name descname"><span class="pre">kegg_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.kegg_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kegg_function_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'P-value'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.kegg_function_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.kegg_function_structure" title="Link to this definition"></a></dt>
 <dd><p>Performs integrated analysis between enriched KEGG terms and glycan substructural features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>function_data</strong> – enrichment result in [‘ora_no_background_up_result’, ‘ora_no_background_down_result’, ‘ora_background_up_result’, ‘ora_background_up_result’, ‘gsea_result’, ‘ora_no_background_both_proteins_result’, ‘ora_background_both_proteins_result’].</p></li>
 <li><p><strong>p_value</strong> – [‘P-value’, ‘Adjusted P-value’] used to screen enrichment terms.</p></li>
 <li><p><strong>cutoff</strong> – p_value threshold.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.kegg_core_structure
 self.kegg_glycan_type
 self.kegg_branches_structure
@@ -366,14 +364,14 @@ self.kegg_acgc</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.functionannotation.StrucGAP_FunctionAnnotation.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/functionannotation.html#StrucGAP_FunctionAnnotation.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.functionannotation.StrucGAP_FunctionAnnotation.output" title="Link to this definition"></a></dt>
 <dd><p>Outputs both analysis results.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

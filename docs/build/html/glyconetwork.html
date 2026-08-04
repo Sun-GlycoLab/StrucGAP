@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_GlycoNetwork Module &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+  <title>StrucGAP_GlycoNetwork Module &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370aedac"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -130,16 +128,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="strucgap-glyconetwork-module">
-<h1>StrucGAP_GlycoNetwork Module<a class="headerlink" href="#strucgap-glyconetwork-module" title="Permalink to this heading"></a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+  <section id="strucgap-glyconetwork-module">
+<h1>StrucGAP_GlycoNetwork Module<a class="headerlink" href="#strucgap-glyconetwork-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>This module analyzes upstream and downstream interactions within the glycosylation process, placing site-specific N-glycan alterations in the context of broader biological networks.</p>
-</div>
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
 <p>Instantiate and use the module as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.glyconetwork</span> <span class="kn">import</span> <span class="n">StrucGAP_GlycoNetwork</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.glyconetwork</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_GlycoNetwork</span>
 
 <span class="n">module6</span> <span class="o">=</span> <span class="n">StrucGAP_GlycoNetwork</span><span class="p">(</span><span class="n">module4</span><span class="p">,</span> <span class="n">data_manager</span><span class="o">=</span><span class="n">data_manager</span><span class="p">)</span>
 <span class="n">module6</span><span class="o">.</span><span class="n">proteomic</span><span class="p">(</span><span class="n">protein_data_dir</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">doctor</span><span class="se">\\</span><span class="s2">wyq</span><span class="se">\\</span><span class="s2">WYQ_Mus_uterus_global.xlsx&quot;</span><span class="p">,</span>
@@ -162,15 +160,15 @@
 <span class="n">data_manager</span><span class="o">.</span><span class="n">key_information_extraction</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="module-strucgap.glyconetwork">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glyconetwork" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-strucgap.glyconetwork">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.glyconetwork" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glyconetwork.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycoNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.glyconetwork.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_GlycoNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gs_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gs_data</strong> – Input data, usually derived from the output of the previous module (StrucGAP_GlycoPeptideQuant), to be further processed by StrucGAP_GlycoNetwork.</p></li>
 <li><p><strong>data_manager</strong> – Data manager instance, such as ‘data_manager’ if data_manager = StrucGAP_InsightTracker().</p></li>
@@ -179,22 +177,22 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.median_cheng">
-<span class="sig-name descname"><span class="pre">median_cheng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.median_cheng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.median_cheng" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">median_cheng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.median_cheng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.median_cheng" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to calculates the median.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.normal_distribution_detect">
-<span class="sig-name descname"><span class="pre">normal_distribution_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normal_distribution_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normal_distribution_detect" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">normal_distribution_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normal_distribution_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normal_distribution_detect" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform normal distribution detection.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>sample_columns</strong> – columns of sample list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.normal_list
 self.lognormal_list</p>
 </dd>
@@ -207,16 +205,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.outliers_detect">
-<span class="sig-name descname"><span class="pre">outliers_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.outliers_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.outliers_detect" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">outliers_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.outliers_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.outliers_detect" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform outliers detection.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>sample_columns</strong> – columns of sample list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>no_outliers_data</p>
 </dd>
 </dl>
@@ -228,16 +226,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.missing_values_imputation">
-<span class="sig-name descname"><span class="pre">missing_values_imputation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.missing_values_imputation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.missing_values_imputation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">missing_values_imputation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.missing_values_imputation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.missing_values_imputation" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform missing values imputation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>sample_columns</strong> – columns of sample list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>no_missing_value_data</p>
 </dd>
 </dl>
@@ -249,16 +247,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.cv_filter">
-<span class="sig-name descname"><span class="pre">cv_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.cv_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.cv_filter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cv_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.cv_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.cv_filter" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform cv filtering.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>sample_columns</strong> – columns of sample list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>cv_filter_data</p>
 </dd>
 </dl>
@@ -270,16 +268,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_samplewise">
-<span class="sig-name descname"><span class="pre">normalization_samplewise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normalization_samplewise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_samplewise" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">normalization_samplewise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normalization_samplewise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_samplewise" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform sample-wise normalization.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>method</strong> – normalization method in [‘robust normalization’, ‘quantile normalization’, ‘z-score’, ‘range normalization’, ‘pareto normalization’, ‘level normalization’, ‘no’].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>data_samplewise_normalized</p>
 </dd>
 </dl>
@@ -291,16 +289,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_featurewise">
-<span class="sig-name descname"><span class="pre">normalization_featurewise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normalization_featurewise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_featurewise" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">normalization_featurewise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.normalization_featurewise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.normalization_featurewise" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to perform feature-wise normalization.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be tested.</p></li>
 <li><p><strong>method</strong> – normalization method in [‘robust normalization’, ‘quantile normalization’, ‘z-score’, ‘range normalization’, ‘pareto normalization’, ‘level normalization’, ‘no’].</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>data_featurewise_normalized</p>
 </dd>
 </dl>
@@ -312,16 +310,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.geometric_mean_of_middle">
-<span class="sig-name descname"><span class="pre">geometric_mean_of_middle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.geometric_mean_of_middle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.geometric_mean_of_middle" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">geometric_mean_of_middle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.geometric_mean_of_middle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.geometric_mean_of_middle" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to calculates the geometric mean of the middle ‘n’ elements in a given dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>list</em><em> or </em><em>iterable</em>) – the dataset from which the middle ‘n’ elements will be selected.</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – the number of elements from the center of the data to use for the calculation.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The geometric mean of the selected middle ‘n’ elements.</p>
 </dd>
 </dl>
@@ -333,16 +331,16 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosylation_rate">
-<span class="sig-name descname"><span class="pre">glycosylation_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosylation_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosylation_rate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycosylation_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosylation_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosylation_rate" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to calculates glycosylation rate.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> – the data to be used.</p></li>
 <li><p><strong>sample_columns</strong> – columns of sample list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>fc_result</p>
 </dd>
 </dl>
@@ -354,13 +352,13 @@ self.lognormal_list</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycoprotein_site">
-<span class="sig-name descname"><span class="pre">glycoprotein_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycoprotein_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycoprotein_site" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycoprotein_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycoprotein_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycoprotein_site" title="Link to this definition"></a></dt>
 <dd><p>Auxiliary computation function based on glycosylation sites of glycoproteins.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycoprotein_site_count
 self.glycoprotein_site_value</p>
 </dd>
@@ -373,13 +371,13 @@ self.glycoprotein_site_value</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycopeptide_site">
-<span class="sig-name descname"><span class="pre">glycopeptide_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycopeptide_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycopeptide_site" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycopeptide_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycopeptide_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycopeptide_site" title="Link to this definition"></a></dt>
 <dd><p>Auxiliary computation function based on glycopeptide sites of glycoproteins.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycopeptide_site_count
 self.glycopeptide_site_value</p>
 </dd>
@@ -392,12 +390,12 @@ self.glycopeptide_site_value</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic">
-<span class="sig-name descname"><span class="pre">transcriptomic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.transcriptomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transcriptomic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.transcriptomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.transcriptomic" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation">
-<span class="sig-name descname"><span class="pre">proteome_fc_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_ratio_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.96</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_quantiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.95,</span> <span class="pre">0.99)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteome_fc_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">proteome_fc_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_ratio_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.96</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_quantiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.95,</span> <span class="pre">0.99)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteome_fc_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteome_fc_recommendation" title="Link to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Recommend FC cutoffs for global proteome data using:</dt><dd><ol class="lowerroman simple">
 <li><p>CV-based theoretical MDFC,</p></li>
@@ -407,7 +405,7 @@ self.glycopeptide_site_value</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>pd.DataFrame</em>) – rows: proteins (e.g., Accession)
 cols: reporter channels (first half = controls, second half = samples)</p></li>
@@ -417,7 +415,7 @@ Set to None to disable.</p></li>
 <li><p><strong>null_quantiles</strong> (<em>tuple</em>) – Quantiles used to derive empirical FC cutoff from null (default 0.95, 0.99).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>mdfc_table</strong> (<em>pd.DataFrame</em>) – Summary of median CV in controls and theoretical MDFC in ln and FC space.</p></li>
 <li><p><strong>summary</strong> (<em>pd.DataFrame</em>) – Per-protein table with log2FC, abs_log2FC, empirical cutoffs, empirical p-values, BH-FDR, etc.</p></li>
@@ -429,10 +427,10 @@ Set to None to disable.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic">
-<span class="sig-name descname"><span class="pre">proteomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Medium'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_samplewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_featurewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">proteomic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protein_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pvalue_ttest_mannwhitneyu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Medium'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_samplewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalization_featurewise_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robust</span> <span class="pre">normalization'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.proteomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.proteomic" title="Link to this definition"></a></dt>
 <dd><p>Implements a comprehensive preprocessing pipeline for global proteomic datasets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>protein_data_dir</strong> – proteomic data file directory.</p></li>
 <li><p><strong>data_sheet_name</strong> – data sheet name in proteomic data file.</p></li>
@@ -446,7 +444,7 @@ Set to None to disable.</p></li>
 <li><p><strong>normalization_featurewise_method</strong> – Featurewise normalization methods.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.protein_raw_data.
 self.normal_distribution_result.
 self.no_outliers_data.
@@ -497,16 +495,16 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosyltransferases">
-<span class="sig-name descname"><span class="pre">glycosyltransferases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycosyltransferases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosyltransferases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosyltransferases" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycosyltransferases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycosyltransferases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosyltransferases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosyltransferases" title="Link to this definition"></a></dt>
 <dd><p>Quantifies 161 glycosyltransferases (default) curated from previous literature based on global proteomics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>glycosyltransferases_data_dir</strong> – the file path of glycosyltransferases of interest.</p></li>
 <li><p><strong>data_sheet_name</strong> – sheet name of uploaded data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycosyltransferases</p>
 </dd>
 </dl>
@@ -518,16 +516,16 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosidases">
-<span class="sig-name descname"><span class="pre">glycosidases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycosidases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosidases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosidases" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycosidases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycosidases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycosidases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycosidases" title="Link to this definition"></a></dt>
 <dd><p>Profiles 63 glycosidases annotated in UniProt based on global proteomics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>glycosidases_data_dir</strong> – the file path of glycosidases of interest.</p></li>
 <li><p><strong>data_sheet_name</strong> – sheet name of uploaded data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycosidases</p>
 </dd>
 </dl>
@@ -539,16 +537,16 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.sialyltransferases">
-<span class="sig-name descname"><span class="pre">sialyltransferases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sialyltransferases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.sialyltransferases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.sialyltransferases" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sialyltransferases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sialyltransferases_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.sialyltransferases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.sialyltransferases" title="Link to this definition"></a></dt>
 <dd><p>Covers 21 sialyltransferases from UniProt based on global proteomics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sialyltransferases_data_dir</strong> – the file path of sialyltransferases of interest.</p></li>
 <li><p><strong>data_sheet_name</strong> – sheet name of uploaded data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.sialyltransferases</p>
 </dd>
 </dl>
@@ -560,16 +558,16 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.fucosyltransferase">
-<span class="sig-name descname"><span class="pre">fucosyltransferase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fucosyltransferase_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.fucosyltransferase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.fucosyltransferase" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fucosyltransferase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fucosyltransferase_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.fucosyltransferase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.fucosyltransferase" title="Link to this definition"></a></dt>
 <dd><p>Tracks 51 fucosyltransferases from UniProt based on global proteomics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fucosyltransferase_data_dir</strong> – the file path of fucosyltransferase of interest.</p></li>
 <li><p><strong>data_sheet_name</strong> – sheet name of uploaded data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.fucosyltransferase</p>
 </dd>
 </dl>
@@ -581,16 +579,16 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycan_binding_protein">
-<span class="sig-name descname"><span class="pre">glycan_binding_protein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycan_binding_protein_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycan_binding_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycan_binding_protein" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">glycan_binding_protein</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glycan_binding_protein_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.glycan_binding_protein"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.glycan_binding_protein" title="Link to this definition"></a></dt>
 <dd><p>Annotates 276 glycan-binding proteins curated from the GlyCosmos database based on global proteomics.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>glycan_binding_protein_data_dir</strong> – the file path of glycan binding protein of interest.</p></li>
 <li><p><strong>data_sheet_name</strong> – sheet name of uploaded data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.glycan_binding_protein</p>
 </dd>
 </dl>
@@ -602,10 +600,10 @@ self.protein_down_glyco_down_tree_structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.phosphorylation">
-<span class="sig-name descname"><span class="pre">phosphorylation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phospho_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplewise_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.phosphorylation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.phosphorylation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phosphorylation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phospho_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplewise_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.phosphorylation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.phosphorylation" title="Link to this definition"></a></dt>
 <dd><p>Implements a comprehensive preprocessing pipeline for phosphorylation datasets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>phospho_data_dir</strong> – phosphorylation data file directory.</p></li>
 <li><p><strong>data_sheet_name</strong> – data sheet name in phosphorylation data file.</p></li>
@@ -615,7 +613,7 @@ self.protein_down_glyco_down_tree_structure.</p>
 <li><p><strong>samplewise_normalization</strong> – Whether to execute samplewise normalization.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.phospho_raw_data.
 self.normal_list.
 self.lognormal_list.
@@ -637,16 +635,16 @@ self.glycosylation_vs_phosphorylation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.convert_accession_to_gene">
-<span class="sig-name descname"><span class="pre">convert_accession_to_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10090</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.convert_accession_to_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.convert_accession_to_gene" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">convert_accession_to_gene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protein_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10090</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.convert_accession_to_gene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.convert_accession_to_gene" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to map protein to gene.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – the data that needs to be processed.</p></li>
 <li><p><strong>protein_col</strong> – The column in the data containing protein accession.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Column named ‘gene_id’.</p>
 </dd>
 </dl>
@@ -658,14 +656,14 @@ self.glycosylation_vs_phosphorylation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.glyconetwork.StrucGAP_GlycoNetwork.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/glyconetwork.html#StrucGAP_GlycoNetwork.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.glyconetwork.StrucGAP_GlycoNetwork.output" title="Link to this definition"></a></dt>
 <dd><p>Outputs both analysis results.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

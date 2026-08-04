@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_InsightTracker Module &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+  <title>StrucGAP_InsightTracker Module &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370aedac"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -118,16 +116,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="strucgap-insighttracker-module">
-<h1>StrucGAP_InsightTracker Module<a class="headerlink" href="#strucgap-insighttracker-module" title="Permalink to this heading"></a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+  <section id="strucgap-insighttracker-module">
+<h1>StrucGAP_InsightTracker Module<a class="headerlink" href="#strucgap-insighttracker-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>This module consolidates outputs from two prior modules and distills them into biologically meaningful patterns.</p>
-</div>
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
 <p>Instantiate and use the module as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.insighttracker</span> <span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.insighttracker</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
 <span class="c1"># before the both code</span>
 <span class="n">data_manager</span> <span class="o">=</span> <span class="n">StrucGAP_InsightTracker</span><span class="p">()</span>
 <span class="c1"># output both results in pkl file</span>
@@ -140,26 +138,26 @@
 <span class="n">data_manager</span><span class="o">.</span><span class="n">key_information_extraction</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="module-strucgap.insighttracker">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.insighttracker" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-strucgap.insighttracker">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.insighttracker" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.insighttracker.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_InsightTracker</span></span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.insighttracker.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_InsightTracker</span></span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.register_module">
-<span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.register_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.register_module" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.register_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.register_module" title="Link to this definition"></a></dt>
 <dd><p>Registers a module instance, records the initial parameters, and output locations.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_name</strong> (<em>str</em>) – The name of the module being registered.</p></li>
 <li><p><strong>module_instance</strong> (<em>object</em>) – The instance of the module to be registered.</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – The initial parameters used to configure the module.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -167,17 +165,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.log_params">
-<span class="sig-name descname"><span class="pre">log_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.log_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.log_params" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">log_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.log_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.log_params" title="Link to this definition"></a></dt>
 <dd><p>Logs the parameters for each function call.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_name</strong> (<em>str</em>) – The name of the module.</p></li>
 <li><p><strong>function_name</strong> (<em>str</em>) – The name of the function being logged.</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – The parameters passed to the function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -185,17 +183,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.log_output">
-<span class="sig-name descname"><span class="pre">log_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.log_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.log_output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">log_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.log_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.log_output" title="Link to this definition"></a></dt>
 <dd><p>Logs the output data of a module.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_name</strong> (<em>str</em>) – The name of the module.</p></li>
 <li><p><strong>output_name</strong> (<em>str</em>) – The name of the output being logged.</p></li>
 <li><p><strong>output_data</strong> (<em>object</em>) – The output data produced by the module.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -203,19 +201,19 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data">
-<span class="sig-name descname"><span class="pre">retrieve_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.retrieve_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">retrieve_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.retrieve_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data" title="Link to this definition"></a></dt>
 <dd><p>Retrieves output data from a specified module for use in other modules.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module_name</strong> (<em>str</em>) – The name of the module.</p></li>
 <li><p><strong>output_name</strong> (<em>str</em>) – The name of the output to retrieve.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The output data if found, otherwise None.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>object or None</p>
 </dd>
 </dl>
@@ -223,16 +221,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.show_params">
-<span class="sig-name descname"><span class="pre">show_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.show_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.show_params" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">show_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.show_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.show_params" title="Link to this definition"></a></dt>
 <dd><p>Displays the analysis parameters for a specified module.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>module_name</strong> (<em>str</em>) – The name of the module whose parameters are to be displayed.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The analysis parameters for the specified module, or None if not found.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict or None</p>
 </dd>
 </dl>
@@ -240,16 +238,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data">
-<span class="sig-name descname"><span class="pre">get_all_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.get_all_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_all_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.get_all_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data" title="Link to this definition"></a></dt>
 <dd><p>Returns all registered modules’ parameters and output data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None.</strong> – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None.</strong></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary containing all registered module parameters and output data.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -257,16 +255,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params">
-<span class="sig-name descname"><span class="pre">output_analysis_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./analysis_result'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GAP_analysis_params.xlsx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.output_analysis_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output_analysis_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./analysis_result'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GAP_analysis_params.xlsx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.output_analysis_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params" title="Link to this definition"></a></dt>
 <dd><p>Outputs the analysis parameters to an Excel file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>output_dir</strong> (<em>str</em>) – The directory where the output file will be saved (default is ‘./analysis_result’).</p></li>
 <li><p><strong>output_file</strong> (<em>str</em>) – The name of the output Excel file (default is ‘GAP_analysis_params.xlsx’).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -274,17 +272,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">
-<span class="sig-name descname"><span class="pre">key_information_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.key_information_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">key_information_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.key_information_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction" title="Link to this definition"></a></dt>
 <dd><p>Mines outputs from both StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation and StrucGAP_GlycoNetwork to identify structurally and functionally relevant glycan substructural features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>module</strong> – StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation or StrucGAP_GlycoNetwork.</p></li>
 <li><p><strong>target_percentage</strong> – when extract key information from StrucGAP_FunctionAnnotation, target_percentage means the key information ratio from both analysis results.</p></li>
 <li><p><strong>min_value</strong> – when extract key information from StrucGAP_FunctionAnnotation, target_percentage represents the minimum number of substructural features contained in a term.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None (output key information directly as a table).</p>
 </dd>
 </dl>
@@ -292,10 +290,10 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle">
-<span class="sig-name descname"><span class="pre">output_pickle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.output_pickle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output_pickle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.output_pickle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle" title="Link to this definition"></a></dt>
 <dd><p>Serializes and saves all picklable variables (excluding Flask-related objects) to a file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -303,10 +301,10 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle">
-<span class="sig-name descname"><span class="pre">read_pickle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.read_pickle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_pickle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/insighttracker.html#StrucGAP_InsightTracker.read_pickle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle" title="Link to this definition"></a></dt>
 <dd><p>Loads and restores previously serialized variables from a pickle file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -314,8 +312,8 @@
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -1,26 +1,24 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StrucGAP_Preprocess Module &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="_static/fonts.css" />
+  <title>StrucGAP_Preprocess Module &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=370aedac"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -118,19 +116,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="strucgap-preprocess-module">
-<h1>StrucGAP_Preprocess Module<a class="headerlink" href="#strucgap-preprocess-module" title="Permalink to this heading"></a></h1>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+  <section id="strucgap-preprocess-module">
+<h1>StrucGAP_Preprocess Module<a class="headerlink" href="#strucgap-preprocess-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>This module processes outputs from StrucGP alongside sample metadata and a glycan branch library through sequential correction and filtering steps, harmonizing heterogeneous data into a unified format.</p>
-</div>
-<div class="section" id="how-to-use">
-<h2>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this heading"></a></h2>
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
 <p>Instantiate and use the module as follows (All data used for StrucGAP can be found in our GitHub repository(<a class="reference external" href="https://github.com/Sun-GlycoLab/StrucGAP">https://github.com/Sun-GlycoLab/StrucGAP</a>)):</p>
 <p>The abundance ratio used for the outliers calibration was calculated as follows:</p>
-<div style="margin-top: 60px;"></div><a class="reference internal image-reference" href="_images/factor.png"><img alt="abundance ratio" class="align-center" src="_images/factor.png" style="width: 600px;" /></a>
-<div style="margin-top: 60px;"></div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">strucgap.preprocess</span> <span class="kn">import</span> <span class="n">StrucGAP_Preprocess</span>
-<span class="kn">from</span> <span class="nn">strucgap.insighttracker</span> <span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
+<div style="margin-top: 60px;"></div><a class="reference internal image-reference" href="_images/factor.png"><img alt="abundance ratio" class="align-center" src="_images/factor.png" style="width: 600px;" />
+</a>
+<div style="margin-top: 60px;"></div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_Preprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.insighttracker</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_InsightTracker</span>
 
 <span class="n">module1</span> <span class="o">=</span> <span class="n">StrucGAP_Preprocess</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;tests/mouse uterus.xlsx&quot;</span><span class="p">,</span>
                   <span class="n">data_sheet_name</span> <span class="o">=</span> <span class="s1">&#39;1 PSM&#39;</span><span class="p">,</span>
@@ -149,15 +148,15 @@
 <span class="n">module1</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="module-strucgap.preprocess">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.preprocess" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-strucgap.preprocess">
+<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-strucgap.preprocess" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.preprocess.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_Preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'StrucGP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_group_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_list_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">strucgap.preprocess.</span></span><span class="sig-name descname"><span class="pre">StrucGAP_Preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'StrucGP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_group_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">branch_list_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data_manager</strong> – Data manager instance, such as ‘data_manager’ if data_manager = StrucGAP_InsightTracker().</p></li>
 <li><p><strong>search_engine</strong> – Support multiple search_engine in [‘StrucGP’,’MSFragger-Glyco’,’pGlyco3’,’Glyco-Decipher’,’Byonic’,’GlycanFinder’].</p></li>
@@ -171,22 +170,22 @@
 <p>Both file templates were provided in Github repository (<a class="reference external" href="https://github.com/Sun-GlycoLab/StrucGAP/tree/main/tests">https://github.com/Sun-GlycoLab/StrucGAP/tree/main/tests</a>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.median_cheng">
-<span class="sig-name descname"><span class="pre">median_cheng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.median_cheng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.median_cheng" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">median_cheng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.median_cheng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.median_cheng" title="Link to this definition"></a></dt>
 <dd><p>An auxiliary function called by other functions to calculates the median.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.fc_recommendation">
-<span class="sig-name descname"><span class="pre">fc_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.fc_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.fc_recommendation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fc_recommendation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.fc_recommendation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.fc_recommendation" title="Link to this definition"></a></dt>
 <dd><p>StrucGAP recommends a data-driven fold change (FC) thresholding pipeline that integrates (i) CV-based theoretical minimal detectable fold change (MDFC), (ii) empirical null distributions from control–control comparisons FC, and (iii) empirical P values derived from these nulls. This strategy defines FC cut-offs that are specific to dataset variability, ensuring that at least 95% of control–control comparisons are non-significant, and combines them with empirical significance testing to balance effect-size and statistical rigor.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.data_cleaning">
-<span class="sig-name descname"><span class="pre">data_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantification_from_no_strucgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantification_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.data_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.data_cleaning" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">data_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantification_from_no_strucgp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantification_data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.data_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.data_cleaning" title="Link to this definition"></a></dt>
 <dd><p>Data cleaning and glycan substructure features extraction.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data_type</strong> – output data of StrucGP with TMT or label-free type. Select data_type in [‘tmt’, ‘label free’].</p></li>
 <li><p><strong>quantification_from_no_strucgp</strong> – whether execute quantification for other search engine input (except StrucGP).</p></li>
@@ -195,7 +194,7 @@
 <li><p><strong>quant_cols</strong> – quantification values columns (e.g. [“Young-SN-1”,”Young-SN-2”,”Young-SN-3”,”PD-SN-1”,”PD-SN-2”,”PD-SN-3”]).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data (cleaned data).</p>
 </dd>
 </dl>
@@ -207,16 +206,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.cv_raw">
-<span class="sig-name descname"><span class="pre">cv_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.cv_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.cv_raw" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cv_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.cv_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.cv_raw" title="Link to this definition"></a></dt>
 <dd><p>Raw Data CV Assessment: For each glycopeptide, prior to any normalization or aggregation, we will calculate the CV of TMT channel intensities (across biological replicates or relevant channels) directly from the raw data. This will provide an objective measure of data reproducibility and enable users to evaluate overall dataset quality prior to downstream analysis.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>threshold</strong> – cv(raw) filter threshold (e.g. 0.3).</p></li>
 <li><p><strong>fc_recommendation</strong> – whether execute fc recommendation pipeline (True or False).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_with_cv_raw (cleaned data with cv(raw) information).
 self.data (cleaned and cv(raw) filtered data).</p>
 </dd>
@@ -229,13 +228,13 @@ self.data (cleaned and cv(raw) filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.fdr">
-<span class="sig-name descname"><span class="pre">fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.fdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.fdr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.fdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.fdr" title="Link to this definition"></a></dt>
 <dd><p>Supports four filtering levels—no control, peptide-level, glycan-level, and both—providing customizable stringency for data confidence.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>feature_type</strong> – fdr control level from [‘peptide’,’glycan’,’both’ or ‘no’].</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_peptide_fdr_data (peptide-level fdr filtered data).
 self.data_glycan_fdr_data (glycan-level fdr filtered data).
 self.data_fdr_data (both-level fdr filtered data).</p>
@@ -249,10 +248,10 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.outliers">
-<span class="sig-name descname"><span class="pre">outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samplewise_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abundance_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_intensity_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_intensity_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.outliers" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samplewise_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abundance_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_intensity_normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_intensity_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.outliers" title="Link to this definition"></a></dt>
 <dd><p>Corrects and normalizes TMT quantification data from matched reporter ions for each IGP.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abundance_ratio</strong> – normalized factors from global proteomics data.</p></li>
 <li><p><strong>samplewise_normalization</strong> – sample-wise median normalization.</p></li>
@@ -260,7 +259,7 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 <li><p><strong>total_intensity_method</strong> – ‘mean’ or ‘median’, used after total intensity normalization.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_outliers_filtered (corrected and normalized TMT quantification data).</p>
 </dd>
 </dl>
@@ -272,13 +271,13 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.cv">
-<span class="sig-name descname"><span class="pre">cv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.cv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.cv" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.cv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.cv" title="Link to this definition"></a></dt>
 <dd><p>Enables optional coefficient-of-variation filtering based on user-defined sample groupings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>threshold</strong> – cv filter threshold (e.g. 0.3).</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_cv_filtered (cv filtered data).</p>
 </dd>
 </dl>
@@ -290,16 +289,16 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.psm">
-<span class="sig-name descname"><span class="pre">psm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psm_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.psm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.psm" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">psm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psm_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc_recommendation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.psm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.psm" title="Link to this definition"></a></dt>
 <dd><p>Filters IGPs by the minimum number of supporting PSMs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>psm_filter</strong> – psm filter threshold (e.g. 3).</p></li>
 <li><p><strong>fc_recommendation</strong> – whether execute fc recommendation pipeline (True or False).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_psm_filtered (psm filtered data).</p>
 </dd>
 </dl>
@@ -311,10 +310,10 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.annotation">
-<span class="sig-name descname"><span class="pre">annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glytoucan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glytoucan_structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glytoucan_wurcs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biosynthetic_pathways</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glycobiology_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.annotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.annotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glytoucan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glytoucan_structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glytoucan_wurcs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biosynthetic_pathways</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glycobiology_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.annotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.annotation" title="Link to this definition"></a></dt>
 <dd><p>Glycan plausibility annotation, whereby each glycan composition is mapped to GlyTouCan identifiers, cross-checked against KEGG biosynthetic rules, and further evaluated by rule-based filters derived from biosynthetic logic and chemical constraints, with user-selectable exclusion of implausible glycans.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>glytoucan</strong> – whether the glycan composition has been annotated by GlyTouCan.</p></li>
 <li><p><strong>glytoucan_structure</strong> – whether the plausible glycan structure has been annotated by GlyTouCan.</p></li>
@@ -322,7 +321,7 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 <li><p><strong>glycobiology_filter</strong> – whether the glycan composition has been annotated by rule-based filters.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>self.data_psm_filtered columns [‘Glytoucan id’, ‘in_biosynthetic_pathways’, ‘RuleFlags’].</p>
 </dd>
 </dl>
@@ -334,14 +333,14 @@ self.data_fdr_data (both-level fdr filtered data).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="strucgap.preprocess.StrucGAP_Preprocess.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.output" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/strucgap/preprocess.html#StrucGAP_Preprocess.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#strucgap.preprocess.StrucGAP_Preprocess.output" title="Link to this definition"></a></dt>
 <dd><p>Outputs both analysis results.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

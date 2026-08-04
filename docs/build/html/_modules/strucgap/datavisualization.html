@@ -1,26 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.datavisualization &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css" />
+  <title>strucgap.datavisualization &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=370aedac"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -98,120 +95,122 @@
              
   <h1>Source code for strucgap.datavisualization</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstest</span>
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
-<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
-<span class="kn">import</span> <span class="nn">umap</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">f_classif</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">literal_eval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">kstest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">f_classif</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2</span>
 <span class="c1"># pd.set_option(&#39;display.max_columns&#39;,7)</span>
-<span class="kn">from</span> <span class="nn">gprofiler</span> <span class="kn">import</span> <span class="n">GProfiler</span>
-<span class="kn">import</span> <span class="nn">gseapy</span> <span class="k">as</span> <span class="nn">gp</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">KNNImputer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">RobustScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
-<span class="kn">import</span> <span class="nn">statistics</span>        
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">simpleSplit</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Radar</span>
-<span class="kn">from</span> <span class="nn">pyecharts</span> <span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
-<span class="kn">from</span> <span class="nn">pyecharts_snapshot.main</span> <span class="kn">import</span> <span class="n">make_a_snapshot</span>
-<span class="kn">from</span> <span class="nn">snapshot_phantomjs</span> <span class="kn">import</span> <span class="n">snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.render</span> <span class="kn">import</span> <span class="n">make_snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.globals</span> <span class="kn">import</span> <span class="n">RenderType</span>
-<span class="kn">from</span> <span class="nn">svglib.svglib</span> <span class="kn">import</span> <span class="n">svg2rlg</span>
-<span class="kn">import</span> <span class="nn">cairosvg</span>
-<span class="kn">import</span> <span class="nn">fitz</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">spearmanr</span>
-<span class="kn">from</span> <span class="nn">reportlab.graphics</span> <span class="kn">import</span> <span class="n">renderPDF</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Polar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Funnel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Parallel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Pie</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sankey</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sunburst</span>
-<span class="kn">import</span> <span class="nn">palettable.colorbrewer.qualitative</span> <span class="k">as</span> <span class="nn">brewer_qualitative</span>
-<span class="kn">import</span> <span class="nn">palettable.cartocolors.qualitative</span> <span class="k">as</span> <span class="nn">carto_qualitative</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Boxplot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Bar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.commons.utils</span> <span class="kn">import</span> <span class="n">JsCode</span>
-<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">as</span> <span class="nn">sch</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">HeatMap</span>
-<span class="kn">import</span> <span class="nn">PyComplexHeatmap</span> <span class="k">as</span> <span class="nn">pch</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Line</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Scatter</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">venn</span> <span class="kn">import</span> <span class="n">venn</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">upsetplot</span> <span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Page</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">from</span> <span class="nn">PyComplexHeatmap</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Wedge</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">werkzeug.local</span>
-<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">mm</span>
-<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">FancyArrowPatch</span>
-<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
-<span class="kn">import</span> <span class="nn">matplotlib.lines</span> <span class="k">as</span> <span class="nn">mlines</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gprofiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">GProfiler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gseapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNImputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobustScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>        
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">simpleSplit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Radar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts</span><span class="w"> </span><span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts_snapshot.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_a_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">snapshot_phantomjs</span><span class="w"> </span><span class="kn">import</span> <span class="n">snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">svglib.svglib</span><span class="w"> </span><span class="kn">import</span> <span class="n">svg2rlg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cairosvg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fitz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">spearmanr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">renderPDF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Funnel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pie</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sankey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sunburst</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.colorbrewer.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">brewer_qualitative</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.cartocolors.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">carto_qualitative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Boxplot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.commons.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsCode</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeatMap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pylab</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scatter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">venn</span><span class="w"> </span><span class="kn">import</span> <span class="n">venn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="kn">import</span> <span class="n">linkage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">upsetplot</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Page</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Wedge</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">werkzeug.local</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">difflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_close_matches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">mm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.platypus</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexColor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">FancyArrowPatch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mlines</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 数据可视化和报告生成模块</span>
-<div class="viewcode-block" id="StrucGAP_DataVisualization"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_DataVisualization</span><span class="p">:</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StrucGAP_DataVisualization</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters:</span>
 <span class="sd">        data_manager: Data manager instance, such as &#39;data_manager&#39; if data_manager = StrucGAP_InsightTracker().</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span> <span class="o">=</span> <span class="n">data_manager</span>    
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">register_module</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">{})</span> 
@@ -222,7 +221,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">figure_collections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># {figure_name: [figure_meta1, ...]}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_figure</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># 当前操作的figure名称</span>
         
-<div class="viewcode-block" id="StrucGAP_DataVisualization.trim_white_border"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.trim_white_border">[docs]</a>    <span class="k">def</span> <span class="nf">trim_white_border</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.trim_white_border">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.trim_white_border">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trim_white_border</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An auxiliary function called by other functions to trim the white border from an image.</span>
 
@@ -245,8 +246,11 @@
         <span class="n">bbox</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">getbbox</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">bbox</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.select_palette"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.select_palette">[docs]</a>    <span class="k">def</span> <span class="nf">select_palette</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">child_column</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.select_palette">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.select_palette">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_palette</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">child_column</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An interactive auxiliary function to select a qualitative color palette based on the number of unique values in a specified column.</span>
 <span class="sd">    </span>
@@ -289,8 +293,11 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Palette </span><span class="si">{</span><span class="n">palette_input</span><span class="si">}</span><span class="s2"> not found in available palettes.&quot;</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">palette</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.radar"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.radar">[docs]</a>    <span class="k">def</span> <span class="nf">radar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">screen_column</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">screen_values</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.radar">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.radar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">radar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">screen_column</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">screen_values</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
               <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;circle&#39;</span><span class="p">,</span> 
               <span class="n">text_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
               <span class="n">text_font_weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
@@ -604,8 +611,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;radar&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">)</span><span class="si">}</span><span class="s2">_radar.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.polar1"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.polar1">[docs]</a>    <span class="k">def</span> <span class="nf">polar1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">number_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.polar1">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.polar1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">polar1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">number_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">splitline_color</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#001F78&#39;</span><span class="p">],</span>
                   <span class="n">splitline_type</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
                   <span class="n">splitline_width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
@@ -961,8 +971,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;polar1&#39;</span><span class="p">,</span>  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">)</span><span class="si">}</span><span class="s2">_polar1.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.polar2"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.polar2">[docs]</a>    <span class="k">def</span> <span class="nf">polar2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.polar2">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.polar2">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">polar2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">splitline_color</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#001F78&#39;</span><span class="p">],</span>
               <span class="n">splitline_type</span> <span class="o">=</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
               <span class="n">splitline_width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
@@ -1269,8 +1282,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;polar2&#39;</span><span class="p">,</span>  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">)</span><span class="si">}</span><span class="s2">_polar2.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.funnel"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.funnel">[docs]</a>    <span class="k">def</span> <span class="nf">funnel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.funnel">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.funnel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">funnel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">top</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                <span class="n">orient</span> <span class="o">=</span> <span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
                <span class="n">sort</span> <span class="o">=</span> <span class="s1">&#39;ascending&#39;</span><span class="p">,</span>
@@ -1415,8 +1431,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;funnel&#39;</span><span class="p">,</span>  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item_column</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">number_column</span><span class="si">}</span><span class="s2">_funnel.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.parallel"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.parallel">[docs]</a>    <span class="k">def</span> <span class="nf">parallel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.parallel">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.parallel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parallel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">axis_width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
                  <span class="n">axis_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
                  <span class="n">axis_label_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -1616,8 +1635,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;parallel&#39;</span><span class="p">,</span>  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataframe_names</span><span class="p">)</span><span class="si">}</span><span class="s2">_parallel.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.pie"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.pie">[docs]</a>    <span class="k">def</span> <span class="nf">pie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.pie">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.pie">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">top</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
              <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;10%&quot;</span><span class="p">,</span> <span class="s2">&quot;70%&quot;</span><span class="p">],</span>
@@ -1773,8 +1795,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;pie&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item_column</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">number_column</span><span class="si">}</span><span class="s2">_pie.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.nested_pie"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.nested_pie">[docs]</a>    <span class="k">def</span> <span class="nf">nested_pie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">value_counts_column</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.nested_pie">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.nested_pie">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nested_pie</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">number_column</span><span class="p">,</span> <span class="n">value_counts_column</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                    <span class="n">top</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
                    <span class="n">split</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> 
                    <span class="n">inner_data_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
@@ -1983,8 +2008,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;nested_pie&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item_column</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">number_column</span><span class="si">}</span><span class="s2">_nested_pie.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.sankey_test"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sankey_test">[docs]</a>    <span class="k">def</span> <span class="nf">sankey_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">node1_column</span><span class="p">,</span> <span class="n">node2_column</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.sankey_test">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sankey_test">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sankey_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">node1_column</span><span class="p">,</span> <span class="n">node2_column</span><span class="p">,</span>
                <span class="n">top</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
                <span class="n">plot_title</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2111,8 +2139,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;sankey&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node1_column</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">node2_column</span><span class="si">}</span><span class="s2">_sankey.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.sunburst_mulit"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sunburst_mulit">[docs]</a>    <span class="k">def</span> <span class="nf">sunburst_mulit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">root_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.sunburst_mulit">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sunburst_mulit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sunburst_mulit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">root_column</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;30%&quot;</span><span class="p">,</span> <span class="s2">&quot;90%&quot;</span><span class="p">],</span>
                        <span class="n">label_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                        <span class="n">label_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -2181,7 +2212,7 @@
             <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#bd221f&quot;</span><span class="p">,</span> <span class="s2">&quot;#099eda&quot;</span><span class="p">,</span> <span class="s2">&quot;#fee301&quot;</span><span class="p">,</span> <span class="s2">&quot;#abb7bd&quot;</span><span class="p">,</span> <span class="s2">&quot;#A07EBA&quot;</span><span class="p">,</span> <span class="s2">&quot;#293a6e&quot;</span><span class="p">,</span> 
                       <span class="s2">&quot;#d6c223&quot;</span><span class="p">,</span> <span class="s2">&quot;#6ebb53&quot;</span><span class="p">,</span> <span class="s2">&quot;#d75d73&quot;</span><span class="p">,</span> <span class="s2">&quot;#e63b29&quot;</span><span class="p">,</span> <span class="s2">&quot;#e0592b&quot;</span><span class="p">,</span> <span class="s2">&quot;#58b7b3&quot;</span><span class="p">][:</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">root_column</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())]</span>
 
-        <span class="k">def</span> <span class="nf">create_sunburst_structure</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">create_sunburst_structure</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
             <span class="n">sunburst_data</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="c1"># 获取 root_column 中的唯一值作为图例</span>
@@ -2193,7 +2224,7 @@
                 <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
                     <span class="n">values</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-                    <span class="k">def</span> <span class="nf">create_children</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+                    <span class="k">def</span><span class="w"> </span><span class="nf">create_children</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
                             <span class="k">return</span> <span class="p">[]</span>
                         <span class="k">return</span> <span class="p">[</span>
@@ -2284,8 +2315,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst_mulit&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">root_column</span><span class="si">}</span><span class="s2">_sunburst_mulit.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.sunburst"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sunburst">[docs]</a>    <span class="k">def</span> <span class="nf">sunburst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">root_column</span><span class="p">,</span> <span class="n">child_column</span><span class="p">,</span> <span class="n">child_column_value</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.sunburst">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sunburst">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sunburst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">root_column</span><span class="p">,</span> <span class="n">child_column</span><span class="p">,</span> <span class="n">child_column_value</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;30%&quot;</span><span class="p">,</span> <span class="s2">&quot;90%&quot;</span><span class="p">],</span>
                        <span class="n">label_show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                        <span class="n">label_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -2358,7 +2392,7 @@
             <span class="k">for</span> <span class="n">glycan_type</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_glycan_types</span><span class="p">,</span> <span class="n">glycan_colors_palette</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_glycan_types</span><span class="p">)])</span>
         <span class="p">}</span>
         
-        <span class="k">def</span> <span class="nf">create_sunburst_data</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">create_sunburst_data</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
             <span class="n">sunburst_data</span> <span class="o">=</span> <span class="p">[]</span>
             
             <span class="c1"># 获取每一个Core_structure的唯一值</span>
@@ -2468,8 +2502,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">root_column</span><span class="si">}</span><span class="s2">_sunburst.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.bar"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar">[docs]</a>    <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.bar">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">top</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
             <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="n">if_stack</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -2625,7 +2662,7 @@
                 <span class="n">label_font_weight</span> <span class="o">=</span> <span class="s1">&#39;normal&#39;</span> 
             
             <span class="c1"># 用于处理堆积柱状图的数据生成函数</span>
-            <span class="k">def</span> <span class="nf">generate_data_for_bar</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">core_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">glycan_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform_ratio</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">generate_data_for_bar</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">core_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">glycan_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transform_ratio</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">core_column</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">transform_ratio</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
                         <span class="c1"># 堆积柱状图</span>
@@ -2892,8 +2929,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x_column</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y_column</span><span class="si">}</span><span class="s2">_bar.pdf&quot;</span><span class="p">)</span>
     
             <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.butterfly_plot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.butterfly_plot">[docs]</a>    <span class="k">def</span> <span class="nf">butterfly_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data1</span><span class="p">,</span><span class="n">data2</span><span class="p">,</span><span class="n">item_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">count_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.butterfly_plot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.butterfly_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">butterfly_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data1</span><span class="p">,</span><span class="n">data2</span><span class="p">,</span><span class="n">item_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">count_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">top</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                    <span class="n">order_by</span> <span class="o">=</span> <span class="s1">&#39;descending&#39;</span><span class="p">,</span> 
                    <span class="n">bar_width</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
@@ -3062,8 +3102,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_butterfly_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.multi_bar"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.multi_bar">[docs]</a>    <span class="k">def</span> <span class="nf">multi_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">y_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.multi_bar">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.multi_bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multi_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">y_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_column_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                   <span class="n">label_show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">label_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
                   <span class="n">label_font_weight</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
@@ -3299,8 +3342,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;multi_bar&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x_column</span><span class="si">}</span><span class="s2">_multi_bar.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_up_down"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_up_down">[docs]</a>    <span class="k">def</span> <span class="nf">bar_up_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_up_down">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_up_down">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar_up_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">if_stack</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
               <span class="n">label_show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">label_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -3420,7 +3466,7 @@
                 <span class="n">stack</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="c1"># bar_width = bar_width</span>
 
-        <span class="k">def</span> <span class="nf">handle_duplicate_columns</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">handle_duplicate_columns</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">):</span>
             <span class="c1"># 检测重复列并自动重命名</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
             <span class="n">duplicated_columns</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="n">cols</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
@@ -3448,7 +3494,7 @@
         <span class="c1"># 生成 all_lists</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">handle_duplicate_columns</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">)</span>
         
-        <span class="k">def</span> <span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">core_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">core_column</span><span class="p">,</span> <span class="n">up_column</span><span class="p">,</span> <span class="n">down_column</span><span class="p">):</span>
             <span class="c1"># 获取唯一的 Core_structure</span>
             <span class="n">unique_core_structures</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">core_column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             
@@ -3463,7 +3509,7 @@
                 <span class="c1"># 获取对应的 up 和 down 值</span>
                 <span class="n">raw_up</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">core_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">core_structure</span><span class="p">,</span> <span class="n">up_column</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">raw_down</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">core_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">core_structure</span><span class="p">,</span> <span class="n">down_column</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">def</span> <span class="nf">normalize_number</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">normalize_number</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                         <span class="k">return</span> <span class="mi">0</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)):</span>
@@ -3702,8 +3748,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;bar_up_down&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x_column</span><span class="si">}</span><span class="s2">_bar_up_down.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_up_down_ratio"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_up_down_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">bar_up_down_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_up_down_ratio">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_up_down_ratio">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar_up_down_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span>
                       <span class="n">screen_feature</span> <span class="o">=</span> <span class="p">[],</span>
                       <span class="n">axis_line_width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                       <span class="n">axis_line_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -3904,8 +3953,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_bar_up_down_ratio_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_multi_columns"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_multi_columns">[docs]</a>    <span class="k">def</span> <span class="nf">bar_multi_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.bar_multi_columns">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.bar_multi_columns">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar_multi_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">if_stack</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
               <span class="n">label_show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">label_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -4060,7 +4112,7 @@
         <span class="k">if</span> <span class="n">label_font_weight</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;bolder&#39;</span><span class="p">,</span> <span class="s1">&#39;lighter&#39;</span><span class="p">]:</span>
             <span class="n">label_font_weight</span> <span class="o">=</span> <span class="s1">&#39;normal&#39;</span> 
         
-        <span class="k">def</span> <span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">):</span>
             <span class="c1"># 获取唯一的 Core_structure</span>
             <span class="n">unique_core_structures</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">y_column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             
@@ -4279,8 +4331,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;bar_multi_columns&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y_column</span><span class="si">}</span><span class="s2">_bar_multi_columns.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.frequency_bar"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.frequency_bar">[docs]</a>    <span class="k">def</span> <span class="nf">frequency_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.frequency_bar">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.frequency_bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frequency_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                        <span class="n">log2_transformation</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                        <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> 
                        <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
@@ -4456,8 +4511,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;histogram_plot&#39;</span><span class="p">,</span> <span class="n">pdf_name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">png_file</span><span class="p">),</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.boxplot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.boxplot">[docs]</a>    <span class="k">def</span> <span class="nf">boxplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">group1_columns</span><span class="p">,</span> <span class="n">group2_columns</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.boxplot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.boxplot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boxplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">group1_columns</span><span class="p">,</span> <span class="n">group2_columns</span><span class="p">,</span> 
               <span class="n">p_data</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">label_show</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">label_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
@@ -4769,8 +4827,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;boxplot&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item_column</span><span class="si">}</span><span class="s2">_item_</span><span class="si">{</span><span class="n">p_column</span><span class="si">}</span><span class="s2">_boxplot.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap1"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap1">[docs]</a>    <span class="k">def</span> <span class="nf">heatmap1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap1">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap1">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heatmap1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                 <span class="n">cluster</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
                 <span class="n">cluster_method</span> <span class="o">=</span> <span class="s1">&#39;weighted&#39;</span><span class="p">,</span>
                 <span class="n">log</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -4985,8 +5046,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;heatmap1&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">columns</span><span class="si">}</span><span class="s2">_heatmap1.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap2"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap2">[docs]</a>    <span class="k">def</span> <span class="nf">heatmap2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap2">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap2">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heatmap2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                  <span class="n">filter_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">filter_columns</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">filter_values</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5109,7 +5173,7 @@
             <span class="n">annot</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">annot_kws</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">text_annotation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">format_value</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">format_value</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()):</span>
                     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -5251,8 +5315,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_heatmap2_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.correlation_heatmap"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.correlation_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">correlation_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.correlation_heatmap">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.correlation_heatmap">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">correlation_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_list</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span>
                             <span class="n">minvalue</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> 
                             <span class="n">centervalue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                              <span class="n">maxvalue</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -5427,8 +5494,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_correlation_heatmap_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap_multi_data"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap_multi_data">[docs]</a>    <span class="k">def</span> <span class="nf">heatmap_multi_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">statistical_methods</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.heatmap_multi_data">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.heatmap_multi_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">heatmap_multi_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">statistical_methods</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                 <span class="n">count_top</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
                 <span class="n">cluster</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
                 <span class="n">cluster_method</span> <span class="o">=</span> <span class="s1">&#39;weighted&#39;</span><span class="p">,</span>
@@ -5776,8 +5846,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_heatmap_multi_data_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.complexheatmap"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.complexheatmap">[docs]</a>    <span class="k">def</span> <span class="nf">complexheatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.complexheatmap">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.complexheatmap">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complexheatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> 
                        <span class="n">row_annotation_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">row_annotation_data_log2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                        <span class="n">row_annotation_plot_type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5981,8 +6054,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_complexheatmap_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.line"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.line">[docs]</a>    <span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.line">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.line">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">if_stack</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">is_smooth</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
               <span class="n">area_opacity</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -6126,7 +6202,7 @@
 
         <span class="c1"># x_columns = list(set(x_columns) &amp; set(data.columns))</span>
 
-        <span class="k">def</span> <span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate_all_lists</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">):</span>
             <span class="c1"># 获取唯一的 Core_structure</span>
             <span class="n">unique_core_structures</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">y_column</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="c1"># 初始化大列表</span>
@@ -6349,8 +6425,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;line&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y_column</span><span class="si">}</span><span class="s2">_line.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.scatter"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.scatter">[docs]</a>    <span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">group_column</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.scatter">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.scatter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">group_column</span><span class="p">,</span> <span class="n">x_column</span><span class="p">,</span> <span class="n">y_column</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
               <span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;circle&#39;</span><span class="p">,</span> <span class="s1">&#39;rect&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle&#39;</span><span class="p">],</span>
               <span class="n">symbol_size</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
               <span class="n">is_step</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -6669,8 +6748,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y_column</span><span class="si">}</span><span class="s2">_scatter.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.up_down_scatter"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.up_down_scatter">[docs]</a>    <span class="k">def</span> <span class="nf">up_down_scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.up_down_scatter">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.up_down_scatter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">up_down_scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> 
                            <span class="n">fc_threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
                            <span class="n">rectangle_width</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span>
                            <span class="n">show_xaxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
@@ -6744,10 +6826,10 @@
 <span class="sd">            - Dataset label is centered inside a rounded box (`bbox_facecolor`).</span>
 <span class="sd">            - Jittering is applied in the x-direction to avoid overplotting.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span> <span class="nf">jitter</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.6</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">jitter</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.6</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">width</span> <span class="o">/</span> <span class="mf">2.3</span><span class="p">,</span> <span class="n">center</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="mf">2.3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
         
-        <span class="k">def</span> <span class="nf">generate_centers</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.65</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate_centers</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.65</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">interval</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">)]</span>
     
         <span class="k">if</span> <span class="n">rectangle_colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -6833,8 +6915,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_up_down_scatter_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.tree"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.tree">[docs]</a>    <span class="k">def</span> <span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">node1_column</span><span class="p">,</span> <span class="n">node2_column</span><span class="p">,</span> <span class="n">screen_index_value</span><span class="p">,</span> <span class="n">screen_index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.tree">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.tree">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">node1_column</span><span class="p">,</span> <span class="n">node2_column</span><span class="p">,</span> <span class="n">screen_index_value</span><span class="p">,</span> <span class="n">screen_index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
              <span class="n">rootname</span> <span class="o">=</span> <span class="s1">&#39;pathway&#39;</span><span class="p">,</span>
              <span class="n">layout</span> <span class="o">=</span> <span class="s1">&#39;radial&#39;</span><span class="p">,</span>
              <span class="n">symbol</span> <span class="o">=</span> <span class="s1">&#39;emptyCircle&#39;</span><span class="p">,</span>
@@ -6929,7 +7014,7 @@
         <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Short_Term&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Term&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">term_mapping</span><span class="p">)</span>
 
         <span class="c1"># 定义函数生成嵌套字典</span>
-        <span class="k">def</span> <span class="nf">generate_dict</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">first_name</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">generate_dict</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">first_name</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">:</span> <span class="p">[]}</span>
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
                 <span class="n">term</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Short_Term&#39;</span><span class="p">]</span>  <span class="c1"># 使用简短的名称</span>
@@ -7040,8 +7125,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node1_column</span><span class="si">}</span><span class="s2">_tree.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.venn_diagram"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.venn_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">venn_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.venn_diagram">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.venn_diagram">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">venn_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> 
                      <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;Tropic&#39;</span><span class="p">,</span>
                      <span class="n">legend_loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> 
                      <span class="n">font_name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span>
@@ -7150,7 +7238,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="c1"># 你这个 venn 版本不支持 colors=，那就只能退一步：</span>
             <span class="c1"># 把颜色列表做成一个 ListedColormap，再走 cmap=</span>
-            <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span>
             <span class="n">cmap_obj</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cmap_obj</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>  <span class="c1"># 关键：返回 colormap 对象，不是字符串</span>
@@ -7198,8 +7286,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_venn_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.upset_plot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.upset_plot">[docs]</a>    <span class="k">def</span> <span class="nf">upset_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.upset_plot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.upset_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upset_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_names</span><span class="p">,</span> 
                    <span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;navyblue&#39;</span><span class="p">,</span>
                    <span class="n">font_name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> 
                    <span class="n">legend_loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> 
@@ -7326,8 +7417,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_upset_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.violin_plot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.violin_plot">[docs]</a>    <span class="k">def</span> <span class="nf">violin_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">group1_columns</span><span class="p">,</span> <span class="n">group2_columns</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.violin_plot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.violin_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">violin_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item_column</span><span class="p">,</span> <span class="n">item_name</span><span class="p">,</span> <span class="n">group1_columns</span><span class="p">,</span> <span class="n">group2_columns</span><span class="p">,</span> 
                     <span class="n">p_data</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                     <span class="n">showmeans</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                     <span class="n">showmedians</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -7535,8 +7629,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_violin_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.volcano_plot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.volcano_plot">[docs]</a>    <span class="k">def</span> <span class="nf">volcano_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fc_column</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.volcano_plot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.volcano_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">volcano_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fc_column</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                     <span class="n">fc</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
                     <span class="n">p_value</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
                     <span class="n">color_na</span> <span class="o">=</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
@@ -7681,8 +7778,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_volcano_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_col"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_col">[docs]</a>    <span class="k">def</span> <span class="nf">dotplot_col</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_col">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_col">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dotplot_col</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span>
                 <span class="n">annotation_cmap</span> <span class="o">=</span> <span class="s1">&#39;Pastel2&#39;</span><span class="p">,</span> <span class="n">col_split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">row_cluster</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">col_cluster</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">dot_cmap</span> <span class="o">=</span> <span class="s1">&#39;RdYlGn&#39;</span><span class="p">,</span>
                 <span class="n">xaxis_font_size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
@@ -7796,8 +7896,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_dotplot_col_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_row"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_row">[docs]</a>    <span class="k">def</span> <span class="nf">dotplot_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_row">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_row">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dotplot_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span>
                 <span class="n">annotation_cmap</span> <span class="o">=</span> <span class="s1">&#39;Pastel2&#39;</span><span class="p">,</span><span class="n">row_split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">row_cluster</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">col_cluster</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">dot_cmap</span> <span class="o">=</span> <span class="s1">&#39;RdYlGn&#39;</span><span class="p">,</span>
                 <span class="n">xaxis_font_size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
@@ -7913,8 +8016,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_dotplot_row_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_row_col"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_row_col">[docs]</a>    <span class="k">def</span> <span class="nf">dotplot_row_col</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">row_category</span><span class="p">,</span> <span class="n">col_category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.dotplot_row_col">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dotplot_row_col">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dotplot_row_col</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">row_category</span><span class="p">,</span> <span class="n">col_category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> 
                         <span class="n">dot_color_column</span><span class="p">,</span> 
                         <span class="n">dot_size_column</span><span class="p">,</span>
                         <span class="n">annotate_rows</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
@@ -8106,8 +8212,11 @@
     
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_dotplot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.sankey_dotplot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sankey_dotplot">[docs]</a>    <span class="k">def</span> <span class="nf">sankey_dotplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.sankey_dotplot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.sankey_dotplot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sankey_dotplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">dot_color_column</span><span class="p">,</span> <span class="n">dot_size_column</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span>
                 <span class="n">colors_term</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">color_node</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">annotation_cmap</span> <span class="o">=</span> <span class="s1">&#39;mrybm&#39;</span><span class="p">,</span>
@@ -8194,7 +8303,7 @@
         <span class="n">top10_combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">top10_list</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">top10_combined_df</span>
         
-        <span class="k">def</span> <span class="nf">calculate_ratio</span><span class="p">(</span><span class="n">overlap_str</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">calculate_ratio</span><span class="p">(</span><span class="n">overlap_str</span><span class="p">):</span>
             <span class="n">num</span><span class="p">,</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">overlap_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>  
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">denom</span><span class="p">)</span>  
         
@@ -8434,8 +8543,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_DataVisualization&#39;</span><span class="p">,</span> <span class="s1">&#39;sankey_dotplot&#39;</span><span class="p">,</span><span class="s2">&quot;sankey_dotplot.pdf&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">png_file</span><span class="p">,</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.dimension_reduction"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dimension_reduction">[docs]</a>    <span class="k">def</span> <span class="nf">dimension_reduction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_columns</span><span class="p">,</span> <span class="n">sample_group</span><span class="p">,</span> <span class="n">filter_data</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.dimension_reduction">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.dimension_reduction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dimension_reduction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_columns</span><span class="p">,</span> <span class="n">sample_group</span><span class="p">,</span> <span class="n">filter_data</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> 
                             <span class="n">method</span><span class="o">=</span><span class="s1">&#39;tsne&#39;</span><span class="p">,</span>
                             <span class="n">dimension_number</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                             <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -8624,8 +8736,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.network_plot"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.network_plot">[docs]</a>    <span class="k">def</span> <span class="nf">network_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">gene</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.network_plot">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.network_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">network_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">gene</span><span class="p">,</span> <span class="n">p_column</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span>
                      <span class="n">species</span><span class="o">=</span><span class="mi">10090</span><span class="p">,</span>
                      <span class="n">pathway_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
                      <span class="n">pathway_font_size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -8694,7 +8809,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">[[</span><span class="n">term</span><span class="p">]],</span> <span class="n">genes_split</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         
-        <span class="k">def</span> <span class="nf">get_string_interactions</span><span class="p">(</span><span class="n">proteins</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span> <span class="n">required_score</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">caller_identity</span><span class="o">=</span><span class="s2">&quot;my_tool&quot;</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_string_interactions</span><span class="p">(</span><span class="n">proteins</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span> <span class="n">required_score</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">caller_identity</span><span class="o">=</span><span class="s2">&quot;my_tool&quot;</span><span class="p">):</span>
             <span class="n">identifiers</span> <span class="o">=</span> <span class="s2">&quot;%0D&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proteins</span><span class="p">)</span>
             <span class="c1"># 使用特定版本的STRING URL</span>
             <span class="n">versioned_url</span> <span class="o">=</span> <span class="s2">&quot;https://version-12-0.string-db.org/api/json/network&quot;</span>
@@ -8720,7 +8835,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JSON decoding error when fetching interactions for </span><span class="si">{</span><span class="n">proteins</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="p">[]</span>  <span class="c1"># 返回空列表，表示解析失败</span>
             
-        <span class="k">def</span> <span class="nf">map_to_string_ids</span><span class="p">(</span><span class="n">proteins</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span> <span class="n">caller_identity</span><span class="o">=</span><span class="s2">&quot;my_tool&quot;</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">map_to_string_ids</span><span class="p">(</span><span class="n">proteins</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="n">species</span><span class="p">,</span> <span class="n">caller_identity</span><span class="o">=</span><span class="s2">&quot;my_tool&quot;</span><span class="p">):</span>
             <span class="c1"># 构建STRING的映射API URL</span>
             <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://version-12-0.string-db.org/api/json/get_string_ids&quot;</span>
             
@@ -8826,12 +8941,12 @@
                 <span class="n">node_colors</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pathway_colors</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pathways</span><span class="p">]</span>
 
         <span class="c1"># 计算多色节点的半径，使其面积与单色节点相等</span>
-        <span class="k">def</span> <span class="nf">calculate_total_size</span><span class="p">(</span><span class="n">protein_size</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">0.0015</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">calculate_total_size</span><span class="p">(</span><span class="n">protein_size</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mf">0.0015</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">protein_size</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">scaling_factor</span>
         
         <span class="n">total_radius</span> <span class="o">=</span> <span class="n">calculate_total_size</span><span class="p">(</span><span class="n">protein_size</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">draw_piechart_node</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">total_radius</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">draw_piechart_node</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">total_radius</span><span class="p">):</span>
             <span class="n">start</span> <span class="o">=</span> <span class="mf">0.</span>
             <span class="k">for</span> <span class="n">frac</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">frac</span>
@@ -8909,8 +9024,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{filename}</span><span class="s1">_network_plot_</span><span class="si">{timestamp}</span><span class="s1">.png&#39;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.glyconetwork"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.glyconetwork">[docs]</a>    <span class="k">def</span> <span class="nf">glyconetwork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_dict</span><span class="p">,</span> <span class="n">regulation_type</span><span class="p">,</span> 
+<div class="viewcode-block" id="StrucGAP_DataVisualization.glyconetwork">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.glyconetwork">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">glyconetwork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_dict</span><span class="p">,</span> <span class="n">regulation_type</span><span class="p">,</span> 
                                   <span class="n">feature</span><span class="p">,</span> 
                                   <span class="n">fc_scale</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> 
                                   <span class="n">overlap_scale</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> 
@@ -9044,7 +9162,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
         
-        <span class="k">def</span> <span class="nf">get_radius</span><span class="p">(</span><span class="n">node_size</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1600</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_radius</span><span class="p">(</span><span class="n">node_size</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1600</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">node_size</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="n">k</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -9172,8 +9290,11 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">regulation_type</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s1">_network_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.draw_glycans"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.draw_glycans">[docs]</a>    <span class="k">def</span> <span class="nf">draw_glycans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_list</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.draw_glycans">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.draw_glycans">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_glycans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_list</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
                      <span class="n">node_size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
                      <span class="n">subfolder</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
                      <span class="n">figure_description</span> <span class="o">=</span> <span class="s1">&#39;Glycans plot&#39;</span><span class="p">,</span>
@@ -9239,8 +9360,8 @@
 <span class="sd">            # Generates and saves glycan diagrams for both chains.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># 内部 Node 类（每个节点记录字母、类型、颜色、坐标等信息）</span>
-        <span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
-            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="n">num_type</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="n">num_type</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">letter</span> <span class="o">=</span> <span class="n">letter</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_type</span> <span class="o">=</span> <span class="n">num_type</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
@@ -9258,7 +9379,7 @@
                 <span class="k">elif</span> <span class="n">num_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#FA0000&quot;</span>
         <span class="c1"># 解析单个糖链字符串，构建糖链树</span>
-        <span class="k">def</span> <span class="nf">parse_chain</span><span class="p">(</span><span class="n">chain_str</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse_chain</span><span class="p">(</span><span class="n">chain_str</span><span class="p">):</span>
             <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">root</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -9293,7 +9414,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unclosed branches in chain string&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">root</span>
         <span class="c1"># 调整颜色规则（可根据需要修改）</span>
-        <span class="k">def</span> <span class="nf">apply_color_rules</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">apply_color_rules</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">num_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="c1"># 这里可根据需求添加或修改规则</span>
@@ -9310,7 +9431,7 @@
                 <span class="n">child</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node</span>
                 <span class="n">apply_color_rules</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
         <span class="c1"># 计算节点的子树宽度，并考虑 F5 额外间距以及特殊调整</span>
-        <span class="k">def</span> <span class="nf">compute_width</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">compute_width</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">1.3</span>   <span class="c1"># 末端分支间隔</span>
             <span class="k">else</span><span class="p">:</span>
@@ -9326,7 +9447,7 @@
                 <span class="n">node</span><span class="o">.</span><span class="n">width</span> <span class="o">+=</span> <span class="mf">2.5</span>  <span class="c1"># F5 分支占用额外宽度</span>
             <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">width</span>
         <span class="c1"># 分配坐标，x_center 为当前糖链的中心位置，y_level 为起始纵坐标</span>
-        <span class="k">def</span> <span class="nf">assign_coords</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">x_center</span><span class="p">,</span> <span class="n">y_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">level_gap</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">side_offset</span><span class="o">=</span><span class="mf">1.5</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">assign_coords</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">x_center</span><span class="p">,</span> <span class="n">y_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">level_gap</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">side_offset</span><span class="o">=</span><span class="mf">1.5</span><span class="p">):</span>
             <span class="n">node</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">x_center</span><span class="p">,</span> <span class="n">y_level</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
                 <span class="n">total_width</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">width</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
@@ -9343,14 +9464,14 @@
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fuc</span><span class="p">,</span> <span class="s2">&quot;children&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fuc</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
                     <span class="n">assign_coords</span><span class="p">(</span><span class="n">fuc</span><span class="p">,</span> <span class="n">fuc</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y_level</span> <span class="o">+</span> <span class="n">level_gap</span><span class="p">,</span> <span class="n">level_gap</span><span class="p">,</span> <span class="n">side_offset</span><span class="p">)</span>
         <span class="c1"># 获取糖链中最大/最小 y 值</span>
-        <span class="k">def</span> <span class="nf">get_max_y</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_max_y</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="n">max_y</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">y</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">fucose_child</span><span class="p">:</span>
                 <span class="n">max_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_y</span><span class="p">,</span> <span class="n">get_max_y</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">fucose_child</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
                 <span class="n">max_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_y</span><span class="p">,</span> <span class="n">get_max_y</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">max_y</span>
-        <span class="k">def</span> <span class="nf">get_min_y</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_min_y</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="n">min_y</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">y</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">fucose_child</span><span class="p">:</span>
                 <span class="n">min_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_y</span><span class="p">,</span> <span class="n">get_min_y</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">fucose_child</span><span class="p">))</span>
@@ -9358,7 +9479,7 @@
                 <span class="n">min_y</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_y</span><span class="p">,</span> <span class="n">get_min_y</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">min_y</span>
         <span class="c1"># 递归绘制节点和连线</span>
-        <span class="k">def</span> <span class="nf">draw_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">draw_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
                 <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">y</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">py</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">y</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -9456,8 +9577,11 @@
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;file_path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">_glycans_plot_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">),</span> 
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="n">figure_description</span><span class="p">}</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_pdf</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.add_figure"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.add_figure">[docs]</a>    <span class="k">def</span> <span class="nf">add_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure_meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">figure_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.add_figure">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.add_figure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure_meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">figure_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a figure to a specified figure collection.</span>
 <span class="sd">    </span>
@@ -9473,8 +9597,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">figure_collections</span><span class="p">[</span><span class="n">figure_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figure_collections</span><span class="p">[</span><span class="n">figure_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">figure_meta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_figure</span> <span class="o">=</span> <span class="n">figure_name</span></div>
+
         
-    <span class="k">def</span> <span class="nf">_calculate_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_plots</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_plots</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the layout for arranging figures on an A4 page.</span>
 <span class="sd">        </span>
@@ -9515,7 +9640,7 @@
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">layout</span>
     
-    <span class="k">def</span> <span class="nf">_number_to_letter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_number_to_letter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a number to a corresponding lowercase letter.</span>
 <span class="sd">    </span>
@@ -9528,7 +9653,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     
-<div class="viewcode-block" id="StrucGAP_DataVisualization.compose_figures"><a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.compose_figures">[docs]</a>    <span class="k">def</span> <span class="nf">compose_figures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">figure_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">custom_sizes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_DataVisualization.compose_figures">
+<a class="viewcode-back" href="../../datavisualization.html#strucgap.datavisualization.StrucGAP_DataVisualization.compose_figures">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compose_figures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">figure_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">custom_sizes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">pdf_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pdf_description_bg_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Composes a combined PDF of figures, allowing for custom image area assignments.</span>
@@ -9668,7 +9795,9 @@
 
         <span class="c1"># 保存并清理</span>
         <span class="n">c</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure_collections</span><span class="p">[</span><span class="n">target_figure</span><span class="p">]</span></div></div>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">figure_collections</span><span class="p">[</span><span class="n">target_figure</span><span class="p">]</span></div>
+</div>
+
         
 
 

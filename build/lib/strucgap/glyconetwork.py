@@ -99,6 +99,8 @@ from reportlab.lib.utils import ImageReader
 from PIL import Image, ImageChops
 import matplotlib
 from reportlab.lib.colors import HexColor
+from itertools import combinations
+from statsmodels.stats.multitest import multipletests
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['font.family'] = 'Arial'
 ## 多组学联合分析模块--39
@@ -1391,6 +1393,9 @@ class StrucGAP_GlycoNetwork:
         phospho_data[['ProteinID', 'Phosphorylation site']] = phospho_data['Modifications in Master Proteins (all Sites)'].apply(extract_info)
         phospho_data['Phosphorylation site'] = phospho_data['Phosphorylation site'].str.split('; ')
         phospho_data = phospho_data.explode('Phosphorylation site')
+        phospho_data = phospho_data[
+            phospho_data['Phosphorylation site'].astype(str).str.contains(r'\d+', na=False)
+        ]
         self.phospho_raw_data = phospho_data
 
         labels = ['Abundances (Normalized): F1: 126, Control',
@@ -1590,17 +1595,72 @@ class StrucGAP_GlycoNetwork:
             self.protein_down_glyco_no_tree_structure.to_excel(writer, sheet_name='protein_down_glyco_no_tree_structure'[:31])
             self.protein_down_glyco_down_tree_structure.to_excel(writer, sheet_name='protein_down_glyco_down_tree_structure'[:31])
             
-            self.phospho_raw_data.to_excel(writer, sheet_name='phospho_raw_data'[:31])
-            self.normal_list.to_excel(writer, sheet_name='phospho_normal_list')
-            self.lognormal_list.to_excel(writer, sheet_name='phospho_lognormal_list')
-            self.ph_no_outliers_data.to_excel(writer, sheet_name='ph_no_outliers_data')
-            self.ph_no_missing_value_data.to_excel(writer, sheet_name='ph_no_missing_value_data'[:31])
-            self.ph_cv_filter_data.to_excel(writer, sheet_name='ph_cv_filter_data')
-            self.ph_samplewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_normalized_data'[:31])
-            self.ph_samplewise_featurewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_featurewise_normalized_data'[:31])
-            self.phospho_fc.to_excel(writer, sheet_name='phospho_fc')
-            self.differential_phospho.to_excel(writer, sheet_name='differential_phospho')
-            self.glycosylation_vs_phosphorylation.to_excel(writer, sheet_name='glycosylation_phosphorylation'[:31])
+            def save_excel(attr_name, sheet_name):
+                if hasattr(self, attr_name):
+                    data = getattr(self, attr_name)
+        
+                    if data is not None and len(data) > 0:
+                        data.to_excel(
+                            writer,
+                            sheet_name=sheet_name[:31]
+                        )
+        
+        
+            save_excel(
+                'protein_raw_data',
+                'protein_raw_data'
+            )
+            save_excel(
+                'normal_list',
+                'phospho_normal_list'
+            )
+            save_excel(
+                'lognormal_list',
+                'phospho_lognormal_list'
+            )
+            save_excel(
+                'ph_no_outliers_data',
+                'ph_no_outliers_data'
+            )
+            save_excel(
+                'ph_no_missing_value_data',
+                'ph_no_missing_value_data'[:31]
+            )
+            save_excel(
+                'ph_cv_filter_data',
+                'ph_cv_filter_data'
+            )
+            save_excel(
+                'ph_samplewise_normalized_data',
+                'ph_samplewise_normalized_data'[:31]
+            )
+            save_excel(
+                'ph_samplewise_featurewise_normalized_data',
+                'ph_samplewise_featurewise_normalized_data'[:31]
+            )
+            save_excel(
+                'phospho_fc',
+                'phospho_fc'
+            )
+            save_excel(
+                'differential_phospho',
+                'differential_phospho'
+            )
+            save_excel(
+                'glycosylation_vs_phosphorylation',
+                'glycosylation_phosphorylation'[:31]
+            )
+            # self.phospho_raw_data.to_excel(writer, sheet_name='phospho_raw_data'[:31])
+            # self.normal_list.to_excel(writer, sheet_name='phospho_normal_list')
+            # self.lognormal_list.to_excel(writer, sheet_name='phospho_lognormal_list')
+            # self.ph_no_outliers_data.to_excel(writer, sheet_name='ph_no_outliers_data')
+            # self.ph_no_missing_value_data.to_excel(writer, sheet_name='ph_no_missing_value_data'[:31])
+            # self.ph_cv_filter_data.to_excel(writer, sheet_name='ph_cv_filter_data')
+            # self.ph_samplewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_normalized_data'[:31])
+            # self.ph_samplewise_featurewise_normalized_data.to_excel(writer, sheet_name='ph_samplewise_featurewise_normalized_data'[:31])
+            # self.phospho_fc.to_excel(writer, sheet_name='phospho_fc')
+            # self.differential_phospho.to_excel(writer, sheet_name='differential_phospho')
+            # self.glycosylation_vs_phosphorylation.to_excel(writer, sheet_name='glycosylation_phosphorylation'[:31])
 
             self.glycosyltransferases.to_excel(writer, sheet_name='glycosyltransferases')
             self.glycosidases.to_excel(writer, sheet_name='glycosidases')

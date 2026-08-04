@@ -1,26 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.glycopeptidequant &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css" />
+  <title>strucgap.glycopeptidequant &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=370aedac"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -98,110 +95,112 @@
              
   <h1>Source code for strucgap.glycopeptidequant</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstest</span>
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
-<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
-<span class="kn">import</span> <span class="nn">umap</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">f_classif</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">literal_eval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">kstest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">f_classif</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2</span>
 <span class="c1"># pd.set_option(&#39;display.max_columns&#39;,7)</span>
-<span class="kn">from</span> <span class="nn">gprofiler</span> <span class="kn">import</span> <span class="n">GProfiler</span>
-<span class="kn">import</span> <span class="nn">gseapy</span> <span class="k">as</span> <span class="nn">gp</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">KNNImputer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">RobustScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
-<span class="kn">import</span> <span class="nn">statistics</span>        
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">simpleSplit</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Radar</span>
-<span class="kn">from</span> <span class="nn">pyecharts</span> <span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
-<span class="kn">from</span> <span class="nn">pyecharts_snapshot.main</span> <span class="kn">import</span> <span class="n">make_a_snapshot</span>
-<span class="kn">from</span> <span class="nn">snapshot_phantomjs</span> <span class="kn">import</span> <span class="n">snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.render</span> <span class="kn">import</span> <span class="n">make_snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.globals</span> <span class="kn">import</span> <span class="n">RenderType</span>
-<span class="kn">from</span> <span class="nn">svglib.svglib</span> <span class="kn">import</span> <span class="n">svg2rlg</span>
-<span class="kn">import</span> <span class="nn">cairosvg</span>
-<span class="kn">import</span> <span class="nn">fitz</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">spearmanr</span>
-<span class="kn">from</span> <span class="nn">reportlab.graphics</span> <span class="kn">import</span> <span class="n">renderPDF</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Polar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Funnel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Parallel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Pie</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sankey</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sunburst</span>
-<span class="kn">import</span> <span class="nn">palettable.colorbrewer.qualitative</span> <span class="k">as</span> <span class="nn">brewer_qualitative</span>
-<span class="kn">import</span> <span class="nn">palettable.cartocolors.qualitative</span> <span class="k">as</span> <span class="nn">carto_qualitative</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Boxplot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Bar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.commons.utils</span> <span class="kn">import</span> <span class="n">JsCode</span>
-<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">as</span> <span class="nn">sch</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">HeatMap</span>
-<span class="kn">import</span> <span class="nn">PyComplexHeatmap</span> <span class="k">as</span> <span class="nn">pch</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Line</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Scatter</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">venn</span> <span class="kn">import</span> <span class="n">venn</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">upsetplot</span> <span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Page</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">from</span> <span class="nn">PyComplexHeatmap</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Wedge</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">werkzeug.local</span>
-<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">mm</span>
-<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gprofiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">GProfiler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gseapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNImputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobustScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>        
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">simpleSplit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Radar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts</span><span class="w"> </span><span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts_snapshot.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_a_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">snapshot_phantomjs</span><span class="w"> </span><span class="kn">import</span> <span class="n">snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">svglib.svglib</span><span class="w"> </span><span class="kn">import</span> <span class="n">svg2rlg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cairosvg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fitz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">spearmanr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">renderPDF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Funnel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pie</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sankey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sunburst</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.colorbrewer.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">brewer_qualitative</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.cartocolors.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">carto_qualitative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Boxplot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.commons.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsCode</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeatMap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pylab</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scatter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">venn</span><span class="w"> </span><span class="kn">import</span> <span class="n">venn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="kn">import</span> <span class="n">linkage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">upsetplot</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Page</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Wedge</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">werkzeug.local</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">difflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_close_matches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">mm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.platypus</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexColor</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 糖肽定量分析模块--86</span>
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_GlycoPeptideQuant</span><span class="p">:</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StrucGAP_GlycoPeptideQuant</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters:</span>
 <span class="sd">        gs_data: Input data, usually derived from the output of the previous module (StrucGAP_Preprocess), to be further processed by StrucGAP_GlycoPeptideQuant.</span>
@@ -215,7 +214,7 @@
 <span class="sd">            Default is &quot;psm_filtered&quot;, which indicates the final preprocessed data.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gs_data</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">,</span> <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;psm_filtered&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gs_data</span><span class="p">,</span> <span class="n">data_manager</span><span class="p">,</span> <span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;psm_filtered&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span> <span class="o">=</span> <span class="n">gs_data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span><span class="o">.</span><span class="n">search_engine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sample_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gs_data</span><span class="o">.</span><span class="n">sample_group</span>
@@ -246,7 +245,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">register_module</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_params</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;input_data&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;data_type&#39;</span><span class="p">:</span> <span class="n">data_type</span><span class="p">})</span>
         
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.statistics"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics">[docs]</a>    <span class="k">def</span> <span class="nf">statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.statistics">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provides a comprehensive overview of glycoproteomic identification results.</span>
 <span class="sd">        </span>
@@ -292,8 +293,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;type_of_identified_glycoprotein&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_of_identified_glycoprotein</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle">[docs]</a>    <span class="k">def</span> <span class="nf">geometric_mean_of_middle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.geometric_mean_of_middle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">geometric_mean_of_middle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An auxiliary function called by other functions to calculates the geometric mean of the middle &#39;n&#39; elements in a given dataset.</span>
 <span class="sd">        </span>
@@ -316,7 +320,10 @@
         <span class="n">geom_mean</span> <span class="o">=</span> <span class="n">product</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geom_mean</span></div>
 
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.statistics_index"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics_index">[docs]</a>    <span class="k">def</span> <span class="nf">statistics_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.statistics_index">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.statistics_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">statistics_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes multiple indices for differential analysis,including:</span>
 <span class="sd">            FC with significance tests (P values from t-tests and Mann-Whitney U tests), </span>
@@ -462,8 +469,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;chi2_result&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chi2_result</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.identify_core_structure"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_core_structure">[docs]</a>    <span class="k">def</span> <span class="nf">identify_core_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span> 
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.identify_core_structure">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_core_structure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">identify_core_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;An auxiliary function called by other functions to identify core structure.&quot;&quot;&quot;</span>
         <span class="n">temp_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;N2H2&#39;</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;N2H2F1&#39;</span><span class="p">)]</span>
         <span class="n">temp_data</span> <span class="o">=</span> <span class="n">temp_data</span><span class="p">[[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">,</span><span class="s1">&#39;Corefucose&#39;</span><span class="p">,</span> <span class="s1">&#39;Bisection&#39;</span><span class="p">]]</span>
@@ -483,8 +493,11 @@
         <span class="n">core_structure</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">core_structure_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span> <span class="s1">&#39;Core_structure&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;PeptideSequence+structure_coding+ProteinID&#39;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
         <span class="k">return</span> <span class="n">core_structure</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.differential_analysis"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.differential_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">differential_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.differential_analysis">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.differential_analysis">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">differential_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">,</span>
                               <span class="n">auxiliary_filter_index</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies significantly regulated glycopeptides under user-defined thresholds.</span>
@@ -810,8 +823,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;differential_analysis&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">differential_analysis_fucosylated_type</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;differential_analysis&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">differential_analysis_acgc</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.identify_glycan_composition"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_glycan_composition">[docs]</a>    <span class="k">def</span> <span class="nf">identify_glycan_composition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>  
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.identify_glycan_composition">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.identify_glycan_composition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">identify_glycan_composition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>  
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;An auxiliary function called by other functions to identify glycan composition.&quot;&quot;&quot;</span>
         <span class="n">temp_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;GlycanComposition&#39;</span><span class="p">,</span> <span class="s1">&#39;structure_coding&#39;</span><span class="p">]]</span> 
         <span class="n">glycancomposition</span> <span class="o">=</span> <span class="p">{}</span>
@@ -821,8 +837,11 @@
         <span class="n">GlycanComposition_rank</span> <span class="o">=</span> <span class="n">GlycanComposition_rank</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;GlycanComposition_count&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>     
         
         <span class="k">return</span> <span class="n">GlycanComposition_rank</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.threshold_variation_analysis"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.threshold_variation_analysis">[docs]</a>    <span class="k">def</span> <span class="nf">threshold_variation_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">statistic_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">,</span> <span class="n">fc_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.threshold_variation_analysis">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.threshold_variation_analysis">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">threshold_variation_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">statistic_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvalue_type</span><span class="o">=</span><span class="s1">&#39;pvalue_ttest&#39;</span><span class="p">,</span> <span class="n">fc_range</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Explores how glycan substructural regulation varies across a range of index thresholds.</span>
 <span class="sd">        </span>
@@ -1062,7 +1081,7 @@
                 <span class="n">result_fucosylated_type_ratio</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result_fucosylated_type_ratio</span><span class="p">,</span> <span class="n">result_fucosylated_type_up</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result_fucosylated_type_down</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">result_acgc_ratio</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result_acgc_ratio</span><span class="p">,</span> <span class="n">result_acgc_up</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">result_acgc_down</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 
-                <span class="k">def</span> <span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
                     <span class="c1"># data = data.replace([0, np.inf, np.nan], 1)</span>
                     <span class="c1"># data = np.log2(data)</span>
                     <span class="k">return</span> <span class="n">data</span>
@@ -1514,8 +1533,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;result_acgc&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_acgc</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation">[docs]</a>    <span class="k">def</span> <span class="nf">glycopeptide_glycosite_glycan_variation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycopeptide_glycosite_glycan_variation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">glycopeptide_glycosite_glycan_variation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Quantifies the number and distribution of upregulated and downregulated glycan structures associated with each glycosylation site at glycopeptide level.</span>
 <span class="sd">        </span>
@@ -1551,8 +1573,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;result_glycopeptide_glycosite_glycan_variation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_glycopeptide_glycosite_glycan_variation</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation">[docs]</a>    <span class="k">def</span> <span class="nf">glycoprotein_glycosite_glycan_variation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.glycoprotein_glycosite_glycan_variation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">glycoprotein_glycosite_glycan_variation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fc</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Quantifies the number and distribution of upregulated and downregulated glycan structures associated with each glycosylation site at glycoprotein level.</span>
 <span class="sd">        </span>
@@ -1588,8 +1613,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_manager</span><span class="o">.</span><span class="n">log_output</span><span class="p">(</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">,</span> <span class="s1">&#39;result_glycoprotein_glycosite_glycan_variation&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_glycoprotein_glycosite_glycan_variation</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.output"><a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_GlycoPeptideQuant.output">
+<a class="viewcode-back" href="../../glycopeptidequant.html#strucgap.glycopeptidequant.StrucGAP_GlycoPeptideQuant.output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Outputs both analysis results.&quot;&quot;&quot;</span>
         <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;./analysis_result&#39;</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1696,7 +1724,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">result_acgc_down_ratio</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;acgc_down_ratio&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
             
             <span class="bp">self</span><span class="o">.</span><span class="n">result_glycopeptide_glycosite_glycan_variation</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;glycopeptide_glycosite_glycan_variation&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">result_glycoprotein_glycosite_glycan_variation</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;glycoprotein_glycosite_glycan_variation&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_glycoprotein_glycosite_glycan_variation</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;glycoprotein_glycosite_glycan_variation&#39;</span><span class="p">[:</span><span class="mi">31</span><span class="p">])</span></div>
+</div>
+
 
 
  

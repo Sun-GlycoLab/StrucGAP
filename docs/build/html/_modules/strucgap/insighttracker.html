@@ -1,26 +1,23 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>strucgap.insighttracker &mdash; StrucGAP 1.1.5 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css" />
+  <title>strucgap.insighttracker &mdash; StrucGAP 1.1.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a6a68382" />
+      <link rel="stylesheet" type="text/css" href="../../_static/fonts.css?v=5583d106" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.png"/>
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=370aedac"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -98,118 +95,122 @@
              
   <h1>Source code for strucgap.insighttracker</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstest</span>
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
-<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
-<span class="kn">import</span> <span class="nn">umap</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">f_classif</span>
-<span class="kn">from</span> <span class="nn">sklearn.feature_selection</span> <span class="kn">import</span> <span class="n">chi2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">literal_eval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">kstest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.manifold</span><span class="w"> </span><span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">f_classif</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">chi2</span>
 <span class="c1"># pd.set_option(&#39;display.max_columns&#39;,7)</span>
-<span class="kn">from</span> <span class="nn">gprofiler</span> <span class="kn">import</span> <span class="n">GProfiler</span>
-<span class="kn">import</span> <span class="nn">gseapy</span> <span class="k">as</span> <span class="nn">gp</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">KNNImputer</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">RobustScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
-<span class="kn">import</span> <span class="nn">statistics</span>        
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">simpleSplit</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Radar</span>
-<span class="kn">from</span> <span class="nn">pyecharts</span> <span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
-<span class="kn">from</span> <span class="nn">pyecharts_snapshot.main</span> <span class="kn">import</span> <span class="n">make_a_snapshot</span>
-<span class="kn">from</span> <span class="nn">snapshot_phantomjs</span> <span class="kn">import</span> <span class="n">snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.render</span> <span class="kn">import</span> <span class="n">make_snapshot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.globals</span> <span class="kn">import</span> <span class="n">RenderType</span>
-<span class="kn">from</span> <span class="nn">svglib.svglib</span> <span class="kn">import</span> <span class="n">svg2rlg</span>
-<span class="kn">import</span> <span class="nn">cairosvg</span>
-<span class="kn">import</span> <span class="nn">fitz</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">spearmanr</span>
-<span class="kn">from</span> <span class="nn">reportlab.graphics</span> <span class="kn">import</span> <span class="n">renderPDF</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Polar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Funnel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Parallel</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Pie</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sankey</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Sunburst</span>
-<span class="kn">import</span> <span class="nn">palettable.colorbrewer.qualitative</span> <span class="k">as</span> <span class="nn">brewer_qualitative</span>
-<span class="kn">import</span> <span class="nn">palettable.cartocolors.qualitative</span> <span class="k">as</span> <span class="nn">carto_qualitative</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Boxplot</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Bar</span>
-<span class="kn">from</span> <span class="nn">pyecharts.commons.utils</span> <span class="kn">import</span> <span class="n">JsCode</span>
-<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">as</span> <span class="nn">sch</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">HeatMap</span>
-<span class="kn">import</span> <span class="nn">PyComplexHeatmap</span> <span class="k">as</span> <span class="nn">pch</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Line</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Scatter</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">venn</span> <span class="kn">import</span> <span class="n">venn</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">upsetplot</span> <span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Page</span>
-<span class="kn">from</span> <span class="nn">pyecharts.charts</span> <span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">from</span> <span class="nn">PyComplexHeatmap</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Wedge</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">werkzeug.local</span>
-<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">reportlab.pdfgen</span> <span class="kn">import</span> <span class="n">canvas</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">A4</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">mm</span>
-<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.utils</span> <span class="kn">import</span> <span class="n">ImageReader</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.colors</span> <span class="kn">import</span> <span class="n">HexColor</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
-<span class="kn">from</span> <span class="nn">strucgap.functionannotation</span> <span class="kn">import</span> <span class="n">StrucGAP_FunctionAnnotation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gprofiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">GProfiler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gseapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNImputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobustScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>        
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">getSampleStyleSheet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">simpleSplit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Radar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts</span><span class="w"> </span><span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts_snapshot.main</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_a_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">snapshot_phantomjs</span><span class="w"> </span><span class="kn">import</span> <span class="n">snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">svglib.svglib</span><span class="w"> </span><span class="kn">import</span> <span class="n">svg2rlg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cairosvg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fitz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">spearmanr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.graphics</span><span class="w"> </span><span class="kn">import</span> <span class="n">renderPDF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Funnel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pie</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sankey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sunburst</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.colorbrewer.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">brewer_qualitative</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">palettable.cartocolors.qualitative</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">carto_qualitative</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Boxplot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.commons.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsCode</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeatMap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pylab</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scatter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">venn</span><span class="w"> </span><span class="kn">import</span> <span class="n">venn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.cluster.hierarchy</span><span class="w"> </span><span class="kn">import</span> <span class="n">linkage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">upsetplot</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpSet</span><span class="p">,</span> <span class="n">generate_counts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Page</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyecharts.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyComplexHeatmap</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ellipse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Wedge</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">werkzeug.local</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">difflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_close_matches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.pdfgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">canvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">A4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">mm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.platypus</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">HexColor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">strucgap.functionannotation</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrucGAP_FunctionAnnotation</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;pdf.fonttype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
 <span class="c1">## 数据分析管理模块</span>
-<div class="viewcode-block" id="StrucGAP_InsightTracker"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker">[docs]</a><span class="k">class</span> <span class="nc">StrucGAP_InsightTracker</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StrucGAP_InsightTracker</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
         
-<div class="viewcode-block" id="StrucGAP_InsightTracker.register_module"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.register_module">[docs]</a>    <span class="k">def</span> <span class="nf">register_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module_instance</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.register_module">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.register_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module_instance</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Registers a module instance, records the initial parameters, and output locations.</span>
 
@@ -225,7 +226,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;instance&#39;</span><span class="p">:</span> <span class="n">module_instance</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">:</span> <span class="p">{}}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.log_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_params">[docs]</a>    <span class="k">def</span> <span class="nf">log_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.log_params">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Logs the parameters for each function call.</span>
 <span class="sd">    </span>
@@ -242,7 +246,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="n">function_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span></div>
 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.log_output"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_output">[docs]</a>    <span class="k">def</span> <span class="nf">log_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">output_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.log_output">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.log_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">log_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">output_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Logs the output data of a module.</span>
 <span class="sd">    </span>
@@ -259,7 +266,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_data</span></div>
 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.retrieve_data"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data">[docs]</a>    <span class="k">def</span> <span class="nf">retrieve_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.retrieve_data">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.retrieve_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrieve_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">output_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves output data from a specified module for use in other modules.</span>
 <span class="sd">    </span>
@@ -273,7 +283,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="n">module_name</span><span class="p">][</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.show_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.show_params">[docs]</a>    <span class="k">def</span> <span class="nf">show_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.show_params">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.show_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays the analysis parameters for a specified module.</span>
 
@@ -285,7 +298,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.get_all_data"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StrucGAP_InsightTracker.get_all_data">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.get_all_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns all registered modules&#39; parameters and output data.</span>
 <span class="sd">    </span>
@@ -297,8 +313,11 @@
 <span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_records</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_InsightTracker.output_analysis_params"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params">[docs]</a>    <span class="k">def</span> <span class="nf">output_analysis_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./analysis_result&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;GAP_analysis_params.xlsx&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.output_analysis_params">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_analysis_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_analysis_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./analysis_result&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;GAP_analysis_params.xlsx&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Outputs the analysis parameters to an Excel file.</span>
 <span class="sd">    </span>
@@ -326,8 +345,11 @@
                 <span class="c1"># 创建一个DataFrame用于存储结果</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">])</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
                 
-<div class="viewcode-block" id="StrucGAP_InsightTracker.key_information_extraction"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">key_information_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">target_percentage</span> <span class="o">=</span> <span class="mf">0.08</span><span class="p">,</span> <span class="n">min_value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.key_information_extraction">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.key_information_extraction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">key_information_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">target_percentage</span> <span class="o">=</span> <span class="mf">0.08</span><span class="p">,</span> <span class="n">min_value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mines outputs from both StrucGAP_GlycoPeptideQuant, StrucGAP_FunctionAnnotation and StrucGAP_GlycoNetwork to identify structurally and functionally relevant glycan substructural features.</span>
 <span class="sd">        </span>
@@ -366,7 +388,7 @@
                 <span class="n">data_down_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoPeptideQuant&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="n">down_ratio_sheetname</span><span class="p">)</span>
                 <span class="n">data_down_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">data_down_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
                 
-                <span class="k">def</span> <span class="nf">is_monotonic</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">is_monotonic</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
                     <span class="n">values</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>  
                     <span class="n">increasing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
                     <span class="n">decreasing</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
@@ -374,7 +396,7 @@
                 
                 <span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
                 
-                <span class="k">def</span> <span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">new_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                         <span class="n">column_names</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
                         <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
@@ -513,7 +535,7 @@
                 <span class="n">data_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_FunctionAnnotation&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="n">ratio_sheetname</span><span class="p">)</span>
                 <span class="n">data_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">data_ratio</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
                 
-                <span class="k">def</span> <span class="nf">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span><span class="o">=</span><span class="n">target_percentage</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">extract_columns_with_dynamic_threshold</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">target_percentage</span><span class="o">=</span><span class="n">target_percentage</span><span class="p">):</span>
                     <span class="n">num_columns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
                     <span class="k">if</span> <span class="n">num_columns</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
                         <span class="n">target_percentage</span><span class="o">=</span><span class="mf">0.5</span>
@@ -535,14 +557,14 @@
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using threshold </span><span class="si">{</span><span class="n">best_threshold</span><span class="si">}</span><span class="s2">, selected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns out of </span><span class="si">{</span><span class="n">num_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
                 
-                <span class="k">def</span> <span class="nf">filter_columns_by_min_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">filter_columns_by_min_value</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
                     <span class="n">first_column</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">first_column</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">min_value</span><span class="p">]</span>
                     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
                 
                 <span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
                 
-                <span class="k">def</span> <span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">stack_with_empty_row</span><span class="p">(</span><span class="n">final_df</span><span class="p">,</span> <span class="n">new_df</span><span class="p">):</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">new_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                         <span class="n">column_names</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
                         <span class="n">new_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">new_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
@@ -583,7 +605,7 @@
             <span class="n">upregulation_only_in_glycopeptide</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;protein_no_glyco_up&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> 
             <span class="n">downregulation_only_in_glycopeptide</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_records</span><span class="p">[</span><span class="s1">&#39;StrucGAP_GlycoNetwork&#39;</span><span class="p">][</span><span class="s1">&#39;instance&#39;</span><span class="p">],</span> <span class="s1">&#39;protein_no_glyco_down&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             
-            <span class="k">def</span> <span class="nf">annotate_glyco_feature</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">annotate_glyco_feature</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
                 <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="c1"># 1. LacNAc</span>
                 <span class="k">if</span> <span class="s1">&#39;E2F1fe&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;structure_coding&#39;</span><span class="p">]):</span>
@@ -627,7 +649,7 @@
             <span class="n">upregulation_only_in_glycopeptide</span><span class="p">[</span><span class="s1">&#39;GlycoFeature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">upregulation_only_in_glycopeptide</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">annotate_glyco_feature</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">downregulation_only_in_glycopeptide</span><span class="p">[</span><span class="s1">&#39;GlycoFeature&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">downregulation_only_in_glycopeptide</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">annotate_glyco_feature</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             
-            <span class="k">def</span> <span class="nf">judge_lacnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lacnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">exclude</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(keratan\s*sulfate|keratan-sulfate|keratan\s*polymer|within\s*(glycan\s*)?chains|keratan$)&quot;</span>
                 <span class="n">strong_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(involved in the synthesis of terminal.*LacNAc|synthesis of terminal.*LacNAc|formation of terminal.*LacNAc|catalyzes.*transfer of Gal.*to the non-reducing terminal N-acetyl[ -]?glucosamine|fucosylates.*LacNAc|modifies.*LacNAc unit)&quot;</span>
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
@@ -637,7 +659,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_glcnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_glcnac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">strong_glcnac_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?i)(</span>
 <span class="s2">                    transfer(s|ed|ing)?\s.*\s(to|on)\s(terminal\s)?(beta-)?N-acetylglucosamine(\s*\(GlcNAc\))? |</span>
 <span class="s2">                    (beta-)?N-acetylglucosamine(\s*\(GlcNAc\))?\s(residue|unit|structure|acceptor) |</span>
@@ -667,7 +689,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_lewis</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lewis</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">exclude</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(serve as (scaffold|backbone|epitope) for.*lewis|may be involved in.*lewis|selectively involved in.*lewis|can also.*lewis|required for.*lewis|backbone for.*lewis|scaffold for.*lewis|participating in (the )?biosynthesis of.*lewis|can lead to.*lewis|(forming|may contribute to the generation of|leads to the formation of).{0,40}(lewis\s*[axy]|lex|ley|sialyl[\s-]?lewis\s*[axy]|slex))&quot;</span>
                 <span class="n">lewis_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(catalyzes|fucosylates|biosynthesi[sz]es?|synthesi[sz]es?|generates|forms|transfer[s]?).{0,100}(lewis\s*[xy]|lex|ley|sialyl[\s-]?lewis\s*x|slex)&quot;</span>
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exclude</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
@@ -677,7 +699,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_lacdinac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lacdinac</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">lacdi_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
 <span class="s2">                    lacdinac</span>
 <span class="s2">                    | n[,&#39;]?n&#39;-?diacetyllactosediamine</span>
@@ -691,7 +713,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(?ix)</span>
 <span class="s2">                (</span>
 <span class="s2">                    sialyltransferase |</span>
@@ -735,7 +757,7 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">return</span> <span class="kc">True</span>
                     
-            <span class="k">def</span> <span class="nf">judge_neu5ac_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_neu5ac_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(sialyltransferase|CMP-?sial(ic|yl)[ -]?acid|catalyzes[^.]{0,50}transfer[^.]{0,20}sial(ic|yl)[ -]?acid|transfer[sred]?[^.]{0,60}sial(ic|yl)[ -]?acid)&quot;</span>
                 <span class="n">Neu5Ac_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(Neu5Ac|N-acetyl-neuraminic acid|N-acetylneuraminic acid|CMP-?Neu5Ac|CMP-?N-acetyl-neuraminic acid|CMP-?N-acetyl-beta-neuraminate)&quot;</span>
                 <span class="n">N_glycan_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(N-?glycan|N-?linked|N-?oligosaccharide|type II glycan|Galbeta1-4GlcNAc|terminal galactose residue|type II lactosamine)&quot;</span>
@@ -754,10 +776,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_neu5gc_sialylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(fucosyltransferase|catalyzes[^.]{0,50}(transfer|addition)[^.]{0,20}fucos|&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;transfer[sred]?[^.]{0,60}fucos|addition of fucose|fucosylates|fucosylation|&quot;</span>
@@ -784,7 +806,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_core_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_core_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">core_fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)(core fucosylation&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;|fucose in (alpha|α)[ -]?1[,-&gt;]*6 linkage&quot;</span>
@@ -799,7 +821,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_antenna_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_antenna_fucosylation</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">antenna_fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;fucosylation (at|of|on|to) (the )?(terminal|distal|outer|non-reducing|antenna|arm|branch) (GlcNAc|N-acetylglucosamine)&quot;</span>
@@ -844,7 +866,7 @@
                 <span class="s1">&#39;Antenna fucosylation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;glycosyltransferases&#39;</span><span class="p">,</span> <span class="s1">&#39;fucosyltransferase&#39;</span><span class="p">],</span>
             <span class="p">}</span>
 
-            <span class="k">def</span> <span class="nf">judge_lacnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lacnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">exclude_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(?i)(does not bind lactose|does not bind (carbohydrate|galactoside|galactose))&quot;</span>
                 <span class="n">lacunac_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(beta-?galactoside|galactose-specific|lactose|LacNAc|N-acetyllactosamine|&quot;</span>
@@ -857,7 +879,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_glcnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_glcnac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">glcnac_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;binds?([^.;]*?)n-acetylglucosamine|&quot;</span>
@@ -902,7 +924,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_lewis_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lewis_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">lewis_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;sialyl[\s-]?lewis[\s-]?(x|a|y)|&quot;</span>
@@ -915,7 +937,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_lacdinac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_lacdinac_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">lacdiNAc_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;lacdiNac|&quot;</span>
@@ -933,7 +955,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">sialylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;siglec|&quot;</span>
@@ -952,16 +974,16 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
                     
-            <span class="k">def</span> <span class="nf">judge_neu5ac_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_neu5ac_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_neu5gc_sialylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(fucosyltransferase|catalyzes[^.]{0,50}(transfer|addition)[^.]{0,20}fucos|&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;transfer[sred]?[^.]{0,60}fucos|addition of fucose|fucosylates|fucosylation|&quot;</span>
@@ -988,7 +1010,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="n">fucosylation_pattern</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">r</span><span class="s2">&quot;(?i)\b(&quot;</span>
                     <span class="sa">r</span><span class="s2">&quot;binds?([^.;]*?)fucose|&quot;</span>
@@ -1010,10 +1032,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
-            <span class="k">def</span> <span class="nf">judge_core_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_core_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
                 
-            <span class="k">def</span> <span class="nf">judge_antenna_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">judge_antenna_fucosylation_gbp</span><span class="p">(</span><span class="n">description</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
             <span class="n">glyco_feature_gbp_judge_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -1032,7 +1054,7 @@
             <span class="c1"># 2. 缓存Uniprot Function</span>
             <span class="n">function_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
-            <span class="k">def</span> <span class="nf">get_function_from_uniprot</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_function_from_uniprot</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">accession</span> <span class="ow">in</span> <span class="n">function_cache</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">function_cache</span><span class="p">[</span><span class="n">accession</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1041,7 +1063,7 @@
                     <span class="n">function_cache</span><span class="p">[</span><span class="n">accession</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_str</span>
                     <span class="k">return</span> <span class="n">func_str</span>
 
-            <span class="k">def</span> <span class="nf">get_function_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_function_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://rest.uniprot.org/uniprotkb/</span><span class="si">{</span><span class="n">accession</span><span class="si">}</span><span class="s2">.json&quot;</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -1060,7 +1082,7 @@
                     <span class="c1"># print(f&quot;Error fetching {accession}: {e}&quot;)</span>
                     <span class="k">return</span> <span class="s2">&quot;&quot;</span>
                 
-            <span class="k">def</span> <span class="nf">get_gene_name_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_gene_name_from_uniprot_api</span><span class="p">(</span><span class="n">accession</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                通过Uniprot API，根据蛋白accession获取gene name（如ST3GAL6）。</span>
 <span class="sd">                找不到则返回空字符串。</span>
@@ -1244,8 +1266,11 @@
                         <span class="c1"># Sheet名如 Up-Fucosylation</span>
                         <span class="n">nodes_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reg_label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">-Nodes&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                         <span class="n">edges_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reg_label</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">-Edges&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="StrucGAP_InsightTracker.output_pickle"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">output_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.output_pickle">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.output_pickle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serializes and saves all picklable variables (excluding Flask-related objects) to a file.</span>
 <span class="sd">    </span>
@@ -1253,7 +1278,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># 定义一个函数来检查对象是否可以被序列化</span>
-        <span class="k">def</span> <span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">PicklingError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
@@ -1270,8 +1295,11 @@
                 <span class="k">if</span> <span class="n">is_picklable</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
                     <span class="n">variables_to_save</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">variables_to_save</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
             
-<div class="viewcode-block" id="StrucGAP_InsightTracker.read_pickle"><a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">read_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="StrucGAP_InsightTracker.read_pickle">
+<a class="viewcode-back" href="../../insighttracker.html#strucgap.insighttracker.StrucGAP_InsightTracker.read_pickle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads and restores previously serialized variables from a pickle file.</span>
 <span class="sd">    </span>
@@ -1279,7 +1307,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># 确保在加载前定义所需的自定义函数和类</span>
-        <span class="k">def</span> <span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_picklable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">PicklingError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
@@ -1289,7 +1317,9 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;all_variables.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">loaded_variables</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="c1"># 将变量重新加载到当前全局命名空间中</span>
-        <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loaded_variables</span><span class="p">)</span></div></div>
+        <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loaded_variables</span><span class="p">)</span></div>
+</div>
+
     
     
  
